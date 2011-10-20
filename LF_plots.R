@@ -1,6 +1,6 @@
 #Make Histograms of time series Length Frequency data
-rqFreqPlot <- function(years, freqs, xlim = c(min(years),
-    max(years)), ylim = c(min(years), max(years)), barscale = 100, barcol = length(years),
+rqFreqPlot <- function(years,bins ,freqs, xlim = c(min(years),
+    max(years)), ylim = c(min(bins), max(bins)), barscale = 100, barcol = length(years),
     boxwex = 50, ylab1 = "", ylab2 = "", lty = c(2, 1, 2), ...) {
    #make axis
    matplot(0,0, xaxs = "i", lty = lty, col = 1, lwd = 2, bty = "l", xlim = xlim, ylim = ylim, ylab = ylab1, ...)
