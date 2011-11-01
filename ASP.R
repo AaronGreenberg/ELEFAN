@@ -2,7 +2,7 @@
 ## %############################################################
 ## %############################################################
 ## %
-library(profr)
+source("LF_plots.R")
 data<-read.table("test.dat",head=TRUE)  #read in data
 ##ROUTINES 
 
@@ -61,7 +61,7 @@ deemph <- function(q,nz){
 }
 
 
-spv <- function(unw){                   #rescale according to Routine F in Manual page 63
+spv <- function(unw){           #rescale according to Routine F in Manual page 63
   y <- ifelse(unw==(-1),0,unw)
   negi <- which(unw<0)
   posi <- which(unw>0)
@@ -88,8 +88,8 @@ availablesumpeaks <- function(x){
     ytemp[i-1] <- 0
     ytemp[i+1] <- 0
   }
-  print(ytemp)
-  print(sum(ytemp))
+  #print(ytemp)
+  #print(sum(ytemp))
   return(sum(ytemp))
 }
 
@@ -109,4 +109,17 @@ data$F <- spv(data$E)
 ASP <- availablesumpeaks(data$F)
 print(data)
 print(ASP)
+curves <- function(times,Linf,K,tw){#plots
+  c <- Linf*(1-exp(-K*(times-tw)-sin(2*pi*(times-tw))))
+return(c)
+}
 
+timecurves <- 1:12
+c1 <- curves(1:12,35,.9,.2)
+
+plotdata <- as.data.frame(cbind(data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F))
+plotdata2 <- as.data.frame(cbind(data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS))
+x11()
+rqFreqPlot(1:12,data$ML,plotdata,c1)
+x11()
+rqFreqPlot(1:12,data$ML,plotdata2,c1)
