@@ -1,0 +1,12 @@
+ window title="Plotting a growth curve"
+grid 1 4
+  label text=Plot: font=bold
+  button text=PlotLF func=plotlf 
+  button text="PlotPeaks" func=plotpeak 
+  
+grid 1 2
+  label text=Input: font=bold
+  vector length=3 names="Linf K tw" \
+    labels="'Linf' 'K' 'tw'" \
+    values="35 .6 1" vertical=T width=12
+    

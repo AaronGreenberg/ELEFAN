@@ -1,9 +1,8 @@
-## % ~~~~THIS FUNCTION COMPUTES AVALIABLE SUMS OF PEAKS.
+ ## % ~~~~THIS FUNCTION COMPUTES AVALIABLE SUMS OF PEAKS.
 ## %############################################################
 ## %############################################################
 ## %
-source("LF_plots.R")
-data<-read.table("test.dat",head=TRUE)  #read in data
+
 ##ROUTINES 
 
 ma5 <- function(x){                     #moving average function
@@ -99,7 +98,7 @@ availablesumpeaks <- function(x){
 ## %############################################################
 ## %
 
-
+main <- function(data){
 data$A <- ma5(data$OBS)
 data$B <- quotientsN_ma(data$OBS,data$A)
 data$C <- peaks(data$B)
@@ -109,17 +108,5 @@ data$F <- spv(data$E)
 ASP <- availablesumpeaks(data$F)
 print(data)
 print(ASP)
-curves <- function(times,Linf,K,tw){#plots
-  c <- Linf*(1-exp(-K*(times-tw)-sin(2*pi*(times-tw))))
-return(c)
+return(data)
 }
-
-timecurves <- 1:12
-c1 <- curves(1:12,35,.9,.2)
-
-plotdata <- as.data.frame(cbind(data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F))
-plotdata2 <- as.data.frame(cbind(data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS))
-x11()
-rqFreqPlot(1:12,data$ML,plotdata,c1)
-x11()
-rqFreqPlot(1:12,data$ML,plotdata2,c1)
