@@ -27,4 +27,27 @@ plotpeak <- function(da=data,pd2=plotdata){
 rqFreqPlot(1:12,da$ML,pd2,c2,barcol="red")
 }
 
+ESP <- function(data2=data){
+  getWinVal(scope="L");
+  count=0;
+  ctest <- curves(1:12)
+  print(ctest)
+  for(i in 1:12){
+    print(ctest[i])
+    print(data2$ML)
+    z=min((data2$ML-ctest[i]))#get closest bin?
+    #print(data2$ML-ctest[i])
+    #print(z)
+  #print((data$F[which(data2$ML==z)>=0]>0))
+  if(data$F[which(data2$ML==z)>=0]>0)
+    count=count+1
+  else(data2$F[which(data2$ML==z)>=0]<0)
+  count=count-1
+  }
+  print(Linf)
+  print("hi")
+  print(K)
+  print(count)
+}
+
 
