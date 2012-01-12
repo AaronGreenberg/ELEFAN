@@ -1,5 +1,5 @@
 #library(lattice)
-
+ 
 rectplot <- function(ser,bins,xmin,xmax,ylim,barcol){
   YL=bins[1:(length(bins)-1)]           #lower y limits
   YU=bins[2:(length(bins))]             #upper y limits
@@ -27,7 +27,7 @@ rqFreqPlot <- function(time,bins,freqs,curves, xlim = c(min(time),max(time)), yl
 		rectplot(-ser,bins,xmin,xmax,ylim,barcol)
                 
 	}
-      
+   
    lines(X,Y,type="l")
  }
 
