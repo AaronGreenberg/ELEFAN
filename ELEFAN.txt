@@ -3,6 +3,7 @@ grid 1 4
   label text=Plot: font=bold
   button text=PlotLF func=plotlf 
   button text="PlotPeaks" func=plotpeak 
+  button text="ESP" func=ESP 
   
 grid 1 2
   label text=Input: font=bold
