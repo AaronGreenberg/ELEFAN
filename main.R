@@ -1,33 +1,39 @@
+## Preamble!
+##
 require(PBSmodelling);
 createWin("ELEFAN.txt");
 source("ASP.R")
 source("LF_plots.R")
+##Read Data
 data<-read.table("test.dat",head=TRUE,as.is=TRUE)  #read in data
 date<-read.table("datetest.dat",head=TRUE,as.is=TRUE)  #read in data
-print(data)
+##
 date$Date=(as.Date(date$Date,format="%d/%m/%y"))
+print(data)
 print(date)
 date
 days=365
 lfbin=length(data$ML)
 growthdata <- matrix(0,ncol=days,nrow=lfbin)
-#print(growthdata)
+
 fillgrowthdata <- function(date,data,growthdata){
   #this function fills in the growth data with the data that is being read in.
   interval <- vector()
   
   for(i in 1:(length(date$Date)-1)){
+    # compute intervals between dates so that dates are stored correctly. 
     interval[i]=date$Date[i+1]-date$Date[1] 
   }
-  print(interval)
-  for(i in 1:(length(date$Date)-1)){
+
+  
+  for(i in 1:(length(date$Date)-1)){#assign lf data to big array of date lf data.
     growthdata[,interval[i]]=data[,i+1]
-   
-}
-   
-   print(growthdata)
+  }
 }
 fillgrowthdata(date,data,growthdata)
+
+
+
 
 
 ## curves <- function(ti=1:12){#plots
@@ -43,8 +49,7 @@ fillgrowthdata(date,data,growthdata)
 ## return(c)
 ## }
 
-
-## data <-main(data)## timecurves <- 1:12
+ datafreq<-main(data,date$Date)## timecurves <- 1:12
 ## plotdata <- as.data.frame(cbind(data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F))
 ## plotdata2 <- as.data.frame(cbind(data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS))
 

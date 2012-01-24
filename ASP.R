@@ -98,15 +98,31 @@ availablesumpeaks <- function(x){
 ## %############################################################
 ## %
 
-main <- function(data){
+main1 <- function(data){
+data$OBS <- data
 data$A <- ma5(data$OBS)
 data$B <- quotientsN_ma(data$OBS,data$A)
 data$C <- peaks(data$B)
 data$D <- isolate(data$C,data$OBS)
 data$E <- deemph(data$C,data$D)
 data$F <- spv(data$E)
-ASP <- availablesumpeaks(data$F)
+print(data)
+return(data$F)
+}
+
+main2 <-function(peaks) {
+ASP <- availablesumpeaks(peaks)
 print(data)
 print(ASP)
-return(data)
 }
+
+ main<- function(data,date){
+   ret <- NULL
+   for(j in 1:(length(date)-1))
+     print(data[,j+1])
+   
+     ret$out[,j] <- main1(data[,j+1])
+     ret$asp[i] <-  main2(out[,j+1])
+    return(ret)
+ }
+
