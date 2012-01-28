@@ -52,18 +52,18 @@ fillgrowthdata(date,data,growthdata)
  datafreq<-main(data,date$Date)## timecurves <- 1:12
 ## plotdata <- as.data.frame(cbind(data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F))
 ## plotdata2 <- as.data.frame(cbind(data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS))
-
-
+print("testing data freq")
+print(datafreq)
 
 ## plotlf <- function(da=data,pd=plotdata2){
 ##   c1 <- curves(1:12) 
 ## rqFreqPlot(1:12,da$ML,pd,c1)
 ## }
 
-## plotpeak <- function(da=data,pd2=plotdata){
-##   c2 <- curves(seq(1,100,.01)) 
-## rqFreqPlot(1:12,da$ML,pd2,c2,barcol="red")
-## }
+ plotpeak <- function(da=data[,1],pd2=datafreq){
+   c2 <- 1# curves(seq(1,100,.01)) 
+ rqFreqPlot(1:12,da,pd2,c2,barcol="red")
+  }
 
 ## ESP <- function(data2=data){
 ##   getWinVal(scope="L");

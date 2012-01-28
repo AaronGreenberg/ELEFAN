@@ -24,7 +24,7 @@ ma5 <- function(x){                     #moving average function
 quotientsN_ma <- function(N,ma){      #compute the freq/moving average
   K <- length(N)
   y<-numeric(K)
-  y <- N/ma                             
+  y <- ifelse(ma>0,N/ma,0)                             
   return(y)
 }
 
@@ -99,30 +99,49 @@ availablesumpeaks <- function(x){
 ## %
 
 main1 <- function(data){
-data$OBS <- data
-data$A <- ma5(data$OBS)
-data$B <- quotientsN_ma(data$OBS,data$A)
-data$C <- peaks(data$B)
-data$D <- isolate(data$C,data$OBS)
-data$E <- deemph(data$C,data$D)
-data$F <- spv(data$E)
-print(data)
-return(data$F)
+datatmp <- NULL
+#print("in main1")
+#print(data)
+datatmp$OBS <-data
+#print(datatmp$OBS)
+#print("eh??ma 5")
+datatmp$A <- ma5(datatmp$OBS)
+#print("eh?? quotient")
+datatmp$B <- quotientsN_ma(datatmp$OBS,datatmp$A)
+#print("eh?? peaks")
+datatmp$C <- peaks(datatmp$B)
+#print("eh?? isolate")
+#print(datatmp$C)
+#print(datatmp$OBS)
+datatmp$D <- isolate(datatmp$C,datatmp$OBS)
+#print(datatmp$D)
+#print("eh?? deemph")
+datatmp$E <- deemph(datatmp$C,datatmp$D)
+#print("eh??,spv")
+datatmp$F <- spv(datatmp$E)
+#print(datatmp)
+#print("leaving main")
+return(as.vector(datatmp$F))
 }
 
 main2 <-function(peaks) {
 ASP <- availablesumpeaks(peaks)
-print(data)
-print(ASP)
+#print(data)
+#print(ASP)
 }
 
  main<- function(data,date){
    ret <- NULL
-   for(j in 1:(length(date)-1))
-     print(data[,j+1])
    
-     ret$out[,j] <- main1(data[,j+1])
-     ret$asp[i] <-  main2(out[,j+1])
+   for(j in 2:(length(date))){
+     print(j/(length(date)))
+     print("hi")
+     print(data[,j])
+     print(main1(data[,j]))
+     ret$out[,j] <- main1(data[,j])
+     ret$asp[i] <-  main2(out[,j])
+   }
+     print(ret)
     return(ret)
  }
 
