@@ -132,14 +132,15 @@ ASP <- availablesumpeaks(peaks)
 
  main<- function(data,date){
    ret <- NULL
-   
+   ret$out <- matrix(0,nrow=length(data[,1]),ncol=length(date))
+   ret$asp <- vector()
    for(j in 2:(length(date))){
      print(j/(length(date)))
      print("hi")
      print(data[,j])
      print(main1(data[,j]))
      ret$out[,j] <- main1(data[,j])
-     ret$asp[i] <-  main2(out[,j])
+     ret$asp[j] <-  main2(ret$out[,j])
    }
      print(ret)
     return(ret)

@@ -1,6 +1,7 @@
 ## Preamble!
 ##
 require(PBSmodelling);
+require(TTR)
 createWin("ELEFAN.txt");
 source("ASP.R")
 source("LF_plots.R")
@@ -29,8 +30,9 @@ fillgrowthdata <- function(date,data,growthdata){
   for(i in 1:(length(date$Date)-1)){#assign lf data to big array of date lf data.
     growthdata[,interval[i]]=data[,i+1]
   }
+  return(growthdata)
 }
-fillgrowthdata(date,data,growthdata)
+ lfdata<- fillgrowthdata(date,data,growthdata)
 
 
 
@@ -55,15 +57,17 @@ fillgrowthdata(date,data,growthdata)
 print("testing data freq")
 print(datafreq)
 
-## plotlf <- function(da=data,pd=plotdata2){
-##   c1 <- curves(1:12) 
-## rqFreqPlot(1:12,da$ML,pd,c1)
-## }
+plotlf <- function(da=data,pd=lfdata){
+  c1 <- (1:365)*0 #curves(1:12) 
+rqFreqPlot(1:365,da$ML,pd,c1)
+}
 
- plotpeak <- function(da=data[,1],pd2=datafreq){
-   c2 <- 1# curves(seq(1,100,.01)) 
- rqFreqPlot(1:12,da,pd2,c2,barcol="red")
-  }
+
+ ## plotpeak <- function(da=data[,1],pd2=lfdata){
+ ##   c2 <- (1:365)*0# curves(seq(1,100,.01))
+ ##   print(pd2)
+ ##   rqFreqPlot(1:365,da,pd2,c2,barcol="red")
+ ##  }
 
 ## ESP <- function(data2=data){
 ##   getWinVal(scope="L");

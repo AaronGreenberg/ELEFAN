@@ -1,8 +1,8 @@
 #library(lattice)
  
 rectplot <- function(ser,bins,xmin,xmax,ylim,barcol){
-  YL=bins[1:(length(bins)-1)]           #lower y limits
-  YU=bins[2:(length(bins))]             #upper y limits
+  YL=bins[1:(length(bins))]           #lower y limits
+  YU=bins[2:(length(bins)+1)]             #upper y limits
   XL=ser+xmin
   XR=ser*0+xmin
   rect(XL,YL,XR,YU,col=barcol)
@@ -10,7 +10,7 @@ rectplot <- function(ser,bins,xmin,xmax,ylim,barcol){
 
 
 #Make Rectangles of time series Length Frequency data
-rqFreqPlot <- function(time,bins,freqs,curves, xlim = c(min(time),max(time)), ylim = c(min(bins), max(bins)), barscale = .50, barcol = length(time),boxwex = 50, ylab1 = "", ylab2 = "", lty = c(2, 1, 2), ...) {
+rqFreqPlot <- function(time,bins,freqs,curves, xlim = c(min(time),max(time)), ylim = c(0, max(bins)), barscale = 1, barcol = length(time),boxwex = 50, ylab1 = "", ylab2 = "", lty = c(2, 1, 2), ...) {
    #print(curves)
    X <- time
    Y <- curves
@@ -23,11 +23,16 @@ rqFreqPlot <- function(time,bins,freqs,curves, xlim = c(min(time),max(time)), yl
 		xmin <- time[i] 
 		xmax <- xlim[2] - time[i]
 		ser <- as.vector(freqs[,i])
-		ser <- ser/max(ser) * barscale
+		ser <- ser * barscale
+                if(sum(ser) == 0){
+                }
+                else{
 		rectplot(-ser,bins,xmin,xmax,ylim,barcol)
-                
+              }
 	}
-   
+
+   grid(nx = NA, ny = 10, col = "lightgray", lty = "dotted",
+     lwd = par("lwd"), equilogs = TRUE)
    lines(X,Y,type="l")
  }
 

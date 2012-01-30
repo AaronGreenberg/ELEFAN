@@ -1,7 +1,8 @@
  window title="Plotting a growth curve"
-grid 1 4
+grid 1 5
   label text=Plot: font=bold
   button text=PlotLF func=plotlf 
+  button text=PlotWLF func=plotwindowlf 
   button text="PlotPeaks" func=plotpeak 
   button text="ESP" func=ESP 
   
