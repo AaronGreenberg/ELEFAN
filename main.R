@@ -10,8 +10,8 @@ data<-read.table("test.dat",head=TRUE,as.is=TRUE)  #read in data
 date<-read.table("datetest.dat",head=TRUE,as.is=TRUE)  #read in data
 ##
 date$Date=(as.Date(date$Date,format="%d/%m/%y"))
-print(data)
-print(date)
+#print(data)
+#print(date)
 date
 days=365
 lfbin=length(data$ML)
@@ -36,30 +36,30 @@ fillgrowthdata <- function(date,data,growthdata){
 
 
 
-
-
-## curves <- function(ti=1:12){#plots
-##   getWinVal(scope="L");
-##   c <- Linf*(1-exp(-K*(ti-tw)-sin(2*pi*(ti-tw))))
-## return(c)
-## }
-
-
-## curves2 <- function(ti=1:12,Linf,tw,K){#plots #for optimization
-  
-##   c <- Linf*(1-exp(-K*(ti-tw)-sin(2*pi*(ti-tw))))
-## return(c)
-## }
+curves2 <- function(dm=date,ti=1:5*365,Linf,c,tw,K){#plots #for optimization
+  getWinVal(scope="L");
+  K <- K/365
+  xlab1 <-as.Date(dm$Date[1]+1:365)
+  c <- Linf*(1-exp(-K*(ti-tw)-(c*K)/(2*pi)*sin(2*pi*(ti-tw))))
+return(list(c=c,xlab=xlab1))
+}
 
  datafreq<-main(data,date$Date)## timecurves <- 1:12
+  peaks <- fillgrowthdata(date,datafreq$out,growthdata)
 ## plotdata <- as.data.frame(cbind(data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F,data$F))
 ## plotdata2 <- as.data.frame(cbind(data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS,data$OBS))
-print("testing data freq")
-print(datafreq)
+#print("testing data freq")
+#print(datafreq)
 
-plotlf <- function(da=data,pd=lfdata){
-  c1 <- (1:365)*0 #curves(1:12) 
+
+plotlf <- function(dm=date,da=data,pd=lfdata,Linf,c,tw,K){
+  c1 <- curves2(dm,1:(10*365),Linf,c,tw,K) 
 rqFreqPlot(1:365,da$ML,pd,c1)
+}
+
+plotpeak <- function(dm=date,da=data,pd=peaks,Linf,c,tw,K){
+  c1 <- curves2(dm,1:(10*365),Linf,c,tw,K) 
+rqFreqPlot(1:365,da$ML,pd,c1,barscale=10)
 }
 
 

@@ -10,13 +10,20 @@ rectplot <- function(ser,bins,xmin,xmax,ylim,barcol){
 
 
 #Make Rectangles of time series Length Frequency data
-rqFreqPlot <- function(time,bins,freqs,curves, xlim = c(min(time),max(time)), ylim = c(0, max(bins)), barscale = 1, barcol = length(time),boxwex = 50, ylab1 = "", ylab2 = "", lty = c(2, 1, 2), ...) {
+rqFreqPlot <- function(time,bins,freqs,curves, xlim = c(min(time),max(time)), ylim = c(0, max(bins)), barscale = 1, barcol = length(time),boxwex = 50,xlab1="Dates in Days" ,ylab1 = "", ylab2 = "", lty = c(2, 1, 2), ...) {
    #print(curves)
    X <- time
-   Y <- curves
+   #print(length(curves))
+   years <- length(curves$c)/365
+   #print(years)
+   Y <-matrix(curves$c,nrow=years,ncol=365,byrow=TRUE)
+   #print(head(Y))
+   jpeg("lf.jpeg")
    par(new = FALSE)
-   plot(0,0, type = "l", xaxs = "i", lty = lty, col = 1, lwd = 2, bty = "l", xlim = xlim, ylim = ylim, ylab = ylab1, axes=TRUE,...)
-
+  
+   plot(0,0, type = "l", xaxs = "i", lty = lty, col = 1, lwd = 2, bty = "l", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,...)
+   
+   
    #plot Rectangles
 	for (i in 1:(length(time))){
 		par(new = TRUE)
@@ -30,9 +37,12 @@ rqFreqPlot <- function(time,bins,freqs,curves, xlim = c(min(time),max(time)), yl
 		rectplot(-ser,bins,xmin,xmax,ylim,barcol)
               }
 	}
-
-   grid(nx = NA, ny = 10, col = "lightgray", lty = "dotted",
+   
+   grid(nx = NA, ny = 42, col = "lightgray", lty = "dotted",
      lwd = par("lwd"), equilogs = TRUE)
-   lines(X,Y,type="l")
+   for(i in 1:years){
+   lines(X,Y[i,],type="l")
+ }
+   dev.off()
  }
 

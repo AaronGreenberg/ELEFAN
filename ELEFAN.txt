@@ -8,7 +8,7 @@ grid 1 5
   
 grid 1 2
   label text=Input: font=bold
-  vector length=3 names="Linf K tw" \
-    labels="'Linf' 'K' 'tw'" \
-    values="35 .6 1" vertical=T width=12
+  vector length=4 names="Linf K c tw" \
+    labels="'Linf' 'K' 'c' 'tw'" \
+    values="49.5 .2  1  .95" vertical=T width=12
     
