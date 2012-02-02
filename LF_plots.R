@@ -1,48 +1,53 @@
-#library(lattice)
+#This file makes all the length frequency and peak trough plots.
+#It consists of two functions. rectplot and rqFreqPlot.
+#It was written by Aaron Greenberg for the Project ELEFAN
  
 rectplot <- function(ser,bins,xmin,xmax,ylim,barcol){
+  #This function puts the rectangles into the rqFreqPlot
   YL=bins[1:(length(bins))]           #lower y limits
-  YU=bins[2:(length(bins)+1)]             #upper y limits
-  XL=ser+xmin
-  XR=ser*0+xmin
+  YU=bins[2:(length(bins)+1)]         #upper y limits
+  XL=ser+xmin                         #nonzero x limits may be right or left!
+  XR=ser*0+xmin                       #axis x limits
   rect(XL,YL,XR,YU,col=barcol)
 }
 
 
 #Make Rectangles of time series Length Frequency data
 rqFreqPlot <- function(time,bins,freqs,curves, xlim = c(min(time),max(time)), ylim = c(0, max(bins)), barscale = 1, barcol = length(time),boxwex = 50,xlab1="Dates in Days" ,ylab1 = "", ylab2 = "", lty = c(2, 1, 2), ...) {
-   #print(curves)
-   X <- time
-   #print(length(curves))
-   years <- length(curves$c)/365
-   #print(years)
-   Y <-matrix(curves$c,nrow=years,ncol=365,byrow=TRUE)
-   #print(head(Y))
-   jpeg("lf.jpeg")
-   par(new = FALSE)
+   ## This function makes the fancy graphs that seems central to the output of ELEFAN
+   ## In particular it provides a way of plotting a growth curve over length frequancy data plots over time.
+   ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
+   ##
+   ## At present the xaxis needs better marking and the Y label needs to be properly written.
+   ## In particular it would be nice to put the dates samples were taken on the
   
+   X <- time                            #store time
+   years <- length(curves$c)/365        #figure out how many years the growth curve has been computed for.
+   
+   Y <-matrix(curves$c,nrow=years,ncol=365,byrow=TRUE) #form matrix with growth curves wrapped around
+   
+   #create axis for plots
+   par(new = FALSE)
    plot(0,0, type = "l", xaxs = "i", lty = lty, col = 1, lwd = 2, bty = "l", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,...)
-   
-   
    #plot Rectangles
-	for (i in 1:(length(time))){
+	for (i in 1:(length(time))){    #figure out how to make the rectangles
 		par(new = TRUE)
-		xmin <- time[i] 
-		xmax <- xlim[2] - time[i]
-		ser <- as.vector(freqs[,i])
-		ser <- ser * barscale
-                if(sum(ser) == 0){
+		xmin <- time[i]         #at time i
+		xmax <- xlim[2] - time[i] #got to find two points for 
+		ser <- as.vector(freqs[,i]) #putting right and left sides of rectangles
+		ser <- ser * barscale       #scaleing... sometimes it is nice make things bigger or smaller
+                if(sum(ser) == 0){          #if there is no lf data at time i don't plot anything
                 }
-                else{
+                else{                   #if there is lf data at time i make plot
 		rectplot(-ser,bins,xmin,xmax,ylim,barcol)
               }
 	}
    
-   grid(nx = NA, ny = 42, col = "lightgray", lty = "dotted",
-     lwd = par("lwd"), equilogs = TRUE)
-   for(i in 1:years){
+#   grid(nx = NA, ny = 42, col = "lightgray", lty = "dotted", #make grid lines sort of chart junk but 
+     #lwd = par("lwd"), equilogs = TRUE)
+   for(i in 1:years){                   #draw all the growth curves 
    lines(X,Y[i,],type="l")
  }
-   dev.off()
+
  }
 

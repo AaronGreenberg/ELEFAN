@@ -1,7 +1,7 @@
- ## % ~~~~THIS FUNCTION COMPUTES AVALIABLE SUMS OF PEAKS.
+ ## % ~~~~THIS FILE COMPUTES AVALIABLE SUMS OF PEAKS.
 ## %############################################################
 ## %############################################################
-## %
+## % 
 
 ##ROUTINES 
 
@@ -22,6 +22,7 @@ ma5 <- function(x){                     #moving average function
 }
 
 quotientsN_ma <- function(N,ma){      #compute the freq/moving average
+  #perhaps should eventually get moved into moving average function
   K <- length(N)
   y<-numeric(K)
   y <- ifelse(ma>0,N/ma,0)                             
@@ -34,6 +35,8 @@ return(y)
 }
 
 isolate <- function(x,freq){            #Identify isolated peaks
+  #THIS FUNCTION HAS BUG!!! IT DOES SOMETHING FOOLISH IF THERE ARE ZEROS IN
+  #FIRST LENGTH CLASS... THIS IS WRONG AND MUST BE FIXED!
   K <- length(x)
   count <- numeric(K)                   #initalize stuff
   zeros <- numeric(K)
@@ -98,51 +101,33 @@ availablesumpeaks <- function(x){
 ## %############################################################
 ## %
 
-main1 <- function(data){
+main1 <- function(data){#This function just puts things in order and returns a appropreate data structure
 datatmp <- NULL
-#print("in main1")
-#print(data)
 datatmp$OBS <-data
-#print(datatmp$OBS)
-#print("eh??ma 5")
-datatmp$A <- ma5(datatmp$OBS)
-#print("eh?? quotient")
-datatmp$B <- quotientsN_ma(datatmp$OBS,datatmp$A)
-#print("eh?? peaks")
-datatmp$C <- peaks(datatmp$B)
-#print("eh?? isolate")
-#print(datatmp$C)
-#print(datatmp$OBS)
-datatmp$D <- isolate(datatmp$C,datatmp$OBS)
-#print(datatmp$D)
-#print("eh?? deemph")
-datatmp$E <- deemph(datatmp$C,datatmp$D)
-#print("eh??,spv")
-datatmp$F <- spv(datatmp$E)
-#print(datatmp)
-#print("leaving main")
+datatmp$A <- ma5(datatmp$OBS)           #first moving average
+datatmp$B <- quotientsN_ma(datatmp$OBS,datatmp$A) #quotient rescale
+datatmp$C <- peaks(datatmp$B)                     #make peaks
+datatmp$D <- isolate(datatmp$C,datatmp$OBS)       #isolate peaks
+datatmp$E <- deemph(datatmp$C,datatmp$D)          #deemph according to manual (SERIOUSLY see manual...)
+datatmp$F <- spv(datatmp$E)                       #final rescale
 return(as.vector(datatmp$F))
 }
 
-main2 <-function(peaks) {
+main2 <-function(peaks) {               #this computes the available sum of peaks for each data set
 ASP <- availablesumpeaks(peaks)
-#print(data)
-#print(ASP)
+return(ASP)
 }
 
- main<- function(data,date){
-   ret <- NULL
-   ret$out <- matrix(0,nrow=length(data[,1]),ncol=length(date))
+ main<- function(data,date){            #puts main1 and main2 together to 
+   ret <- NULL                          #initalizing output data structure
+   ret$out <- matrix(0,nrow=length(data[,1]),ncol=length(date)) 
    ret$asp <- vector()
-   for(j in 2:(length(date))){
-     #print(j/(length(date)))
-     #print("hi")
-     #print(data[,j])
-     #print(main1(data[,j]))
-     ret$out[,j] <- main1(data[,j])
-     ret$asp[j] <-  main2(ret$out[,j])
+   
+   for(j in 2:(length(date))){          #looping over the different sets of lf data
+     ret$out[,j] <- main1(data[,j])     #applying main1
+     ret$asp[j] <-  main2(ret$out[,j])  #applying main2
    }
      #print(ret)
-    return(ret)
+    return(ret)                         
  }
 

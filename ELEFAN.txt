@@ -1,14 +1,21 @@
- window title="Plotting a growth curve"
-grid 1 5
+window title="Plotting a growth curve"
+grid 1 2
   label text=Plot: font=bold
   button text=PlotLF func=plotlf 
-  button text=PlotWLF func=plotwindowlf 
   button text="PlotPeaks" func=plotpeak 
-  button text="ESP" func=ESP 
+  
   
 grid 1 2
   label text=Input: font=bold
   vector length=4 names="Linf K c tw" \
     labels="'Linf' 'K' 'c' 'tw'" \
     values="49.5 .2  1  .95" vertical=T width=12
+
+
+  
+grid 1 2
+  label text=Optimize: font=bold
+  button text="ESP" func=ESP
+  button text="OPTIMIZE" func=optimize
+  
     
