@@ -1,15 +1,18 @@
 ## % This file organizes several other files to make ELEFAN a reality
 ## %############################################################
 ## %############################################################
-## %
 #%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Preamble load required packages,source files and make gui.
 #%############################################################
+require(compiler)
 require(PBSmodelling);                  #nice software that makes making gui easier
 #require(TTR) #some timeseries stuff may not be needed
 createWin("ELEFAN.txt");                #Make gui
 source("ASP.R")                         #load routines to compute peaks and available sum of peaks
 source("LF_plots.R")                    #load routines to make the special plots
+source("ESP.R")
+source("MISC.R")
+
 
 ## % Read in the data 
 ## %############################################################
@@ -25,6 +28,7 @@ print(date)
 ## %############################################################
 ## %
 days=365                                #set default number of days
+time=1:(10*365)
 lfbin=length(data$ML)                   #get number of bins
 growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
 
@@ -35,88 +39,58 @@ growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will r
 ## %
 
 
-fillgrowthdata <- function(date,data,growthdata){ 
-  ##this function fills in the growth data with the data that is being read in.
-  ##It is important to realize that we need to have a data structure that keeps track of time.
-  ##This is a really sparse structure, but it allows us keep time proportional.
-  interval <- vector()
-  
-  for(i in 1:(length(date$Date)-1)){
-    # compute intervals between dates so that dates are stored correctly. 
-    interval[i]=date$Date[i+1]-date$Date[1] 
-  }
-  
-  for(i in 1:(length(date$Date)-1)){#assign lf data to big array of date lf data.
-    growthdata[,interval[i]]=data[,i+1]
-  }
-  return(growthdata)
-}
-
-
-
-
-
-curves <- function(dm=date,ti=1:5*365,Linf,c,tw,K){
-  #computes growth curve for optimization
-  K <- K/365                            #converts growth parameter from years to days
-  xlab1 <-as.Date(dm$Date[1]+1:365)     #creates a vector of dates... this may not be best way to do this
-  #print(xlab1)
-  c <- Linf*(1-exp(-K*(ti-tw)-(c*K)/(2*pi)*sin(2*pi*(ti-tw)))) #computes growth curve. I am fairly sure this is right, but 
-return(list(c=c,xlab=xlab1))
-}
-
-
-curves2 <- function(dm=date,ti=1:5*365,Linf,c,tw,K){
-  #computes growth curve for plot
-  getWinVal(scope="L");                 #reads in from gui
-  K <- K/365                            #converts growth parameter from years to days
-  xlab1 <-as.Date(dm$Date[1]+1:365)     #creates a vector of dates... this may not be best way to do this
-  print(xlab1)
-  c <- Linf*(1-exp(-K*(ti-tw)-(c*K)/(2*pi)*sin(2*pi*(ti-tw)))) #computes growth curve. I am fairly sure this is right, but 
-return(list(c=c,xlab=xlab1))
-}
-
-
-plotlf <- function(dm=date,da=data,pd=lfdata,Linf,c,tw,K){
-  c1 <- curves2(dm,1:(10*365),Linf,c,tw,K) 
-rqFreqPlot(1:365,da$ML,pd,c1)
-}
-
-plotpeak <- function(dm=date,da=data,pd=peaks,Linf,c,tw,K){
-  c1 <- curves2(dm,1:(10*365),Linf,c,tw,K) 
-rqFreqPlot(1:365,da$ML,pd,c1,barscale=10)
-}
-
-
-
-ESP <- function(data2=data,dm=date){ #this needs rework.
-  getWinVal(scope="L");
-  count=0;
-  ctest <- (curves(dm,1:5*365,Linf,c,tw,K))
-  for(i in 2:length(ctest$c)){
-   z=(data$ML-ctest$c[i])^2
-   k=which.min(z)
-   
-   if(data[k]<0){
-     count=count-data[k]
-   }else if(data[k]>0){ 
-     count=count+data[k]
-     data[k]=0
-   }
- }
-  print("ESP")
-  print(count)
-  return(count)
-}
-
 
 
 lfdata<- fillgrowthdata(date,data,growthdata)
 datafreq<-main(data,date$Date)## timecurves <- 1:12
 peaks <- fillgrowthdata(date,datafreq$out,growthdata)
-explainedpeaks <- ESP(peaks,date)#compute esp
+cESP <- cmpfun(ESP)
+cgoodfit <- cmpfun(goodfit)
+#test<- cESP(peaks,date,time,40,.95,1,.2)
+#out <- cgoodfit(test,datafreq$asp)
+#print(out)
 
-goodfit <-function(esp=explainedpeaks,asp=datafreq$asp){
-  gf <- exp(explainedpeaks/sum(datafreq$asp))
-print(gf)
-}
+## #make plausible ranges of parameter values.
+## rLinf <- 49.5 #seq(30,60,1)
+## rK <- seq(0,10,.05)
+## rc <- seq(0,5,.25)
+## rtw <- .95#seq(-1,1,.25)
+## explainedpeaks <- gf<- vector()
+## fitcrit <- NULL
+## #god this is the scaryest loop I have ever written in R... there may be a more flash way of doing this.
+## count <- 0
+## len <- prod(c(length(rLinf),length(rK),length(rc),length(rtw)))
+## for(l in rLinf){
+##     for(k in rK){
+##       for(c in rc){
+##         for(t in rtw){
+##           count=count+1
+##           explainedpeaks[count] <- cESP(peaks,date,time,l,c,t,k)#compute esp
+##           gf[count] <- cgoodfit(explainedpeaks[count],datafreq$asp)
+##           fitcrit$gf[count] <- gf[count]
+##           fitcrit$esp <- explainedpeaks[count]
+##           fitcrit$t[count] <- t
+##           fitcrit$c[count] <- c
+##           fitcrit$k[count] <- k
+##           fitcrit$l[count] <- l
+##          # print(explainedpeaks[count])
+##           print(gf[count]) 
+##           #print(count/len)
+##      }
+##     }
+##   }
+## }
+
+## OPTIMIZE <- function(fit=fitcrit){
+##   z <- which.max(fit$gf)
+##   print("K")
+##   print(fitcrit$k[z])
+##   print("L")
+##   print(fitcrit$l[z])
+##   print("c")
+##   print(fitcrit$c[z])
+##   print("tw")
+##   print(fitcrit$t[z])
+## }
+
+## OPTIMIZE(fitcrit)

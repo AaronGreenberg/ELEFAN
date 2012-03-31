@@ -20,7 +20,7 @@ rqFreqPlot <- function(time,bins,freqs,curves, xlim = c(min(time),max(time)), yl
    ##
    ## At present the xaxis needs better marking and the Y label needs to be properly written.
    ## In particular it would be nice to put the dates samples were taken on the
-  
+   #jpeg("test.jpeg")
    X <- time                            #store time
    years <- length(curves$c)/365        #figure out how many years the growth curve has been computed for.
    
@@ -48,6 +48,6 @@ rqFreqPlot <- function(time,bins,freqs,curves, xlim = c(min(time),max(time)), yl
    for(i in 1:years){                   #draw all the growth curves 
    lines(X,Y[i,],type="l")
  }
-
+#dev.off()
  }
 
