@@ -123,7 +123,7 @@ return(ASP)
    ret$out <- matrix(0,nrow=length(data[,1]),ncol=length(date)) 
    ret$asp <- vector()
    
-   for(j in 2:(length(date))){          #looping over the different sets of lf data
+   for(j in 2:(length(date)-1)){          #looping over the different sets of lf data
      ret$out[,j] <- main1(data[,j])     #applying main1
      ret$asp[j] <-  main2(ret$out[,j])  #applying main2
    }

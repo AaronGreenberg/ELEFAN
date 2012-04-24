@@ -24,13 +24,14 @@ rqFreqPlot <- function(time,bins,freqs,curves, xlim = c(min(time),max(time)), yl
    X <- time                            #store time
    years <- length(curves$c)/365        #figure out how many years the growth curve has been computed for.
    
-   Y <-matrix(curves$c,nrow=years,ncol=365,byrow=TRUE) #form matrix with growth curves wrapped around
+   Y <-matrix(curves$c,nrow=years,ncol=length(time),byrow=TRUE) #form matrix with growth curves wrapped around
    
    #create axis for plots
    par(new = FALSE)
    plot(0,0, type = "l", xaxs = "i", lty = lty, col = 1, lwd = 2, bty = "l", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,...)
    #plot Rectangles
-	for (i in 1:(length(time))){    #figure out how to make the rectangles
+   lengthtime=length(time)
+	for (i in 1:lengthtime){    #figure out how to make the rectangles
 		par(new = TRUE)
 		xmin <- time[i]         #at time i
 		xmax <- xlim[2] - time[i] #got to find two points for 
