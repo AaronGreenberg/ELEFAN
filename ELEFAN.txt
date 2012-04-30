@@ -14,7 +14,7 @@ grid 1 3 padx=20 pady=20
 
   
 grid 1 2 padx=20 pady=20
-  label text=Optimize: font=bold
-  button text="OPTIMIZE" func=optimize
+  label text=ESP: font=bold
+  button text="ESP" func=ESP
   
     

@@ -2,18 +2,19 @@
 #It consists of two functions. rectplot and rqFreqPlot.
 #It was written by Aaron Greenberg for the Project ELEFAN
  
-rectplot <- function(ser,bins,xmin,xmax,ylim,barcol){
+rectplot <- function(ser,bins,xmin,xmax,ylim,barcol,date){
   #This function puts the rectangles into the rqFreqPlot
   YL=bins[1:(length(bins))]           #lower y limits
   YU=bins[2:(length(bins)+1)]         #upper y limits
   XL=ser+xmin                         #nonzero x limits may be right or left!
   XR=ser*0+xmin                       #axis x limits
   rect(XL,YL,XR,YU,col=barcol)
+  
 }
 
 
 #Make Rectangles of time series Length Frequency data
-rqFreqPlot <- function(time,bins,freqs,curves, xlim = c(min(time),max(time)), ylim = c(0, max(bins)), barscale = 1, barcol = length(time),boxwex = 50,xlab1="Dates in Days" ,ylab1 = "", ylab2 = "", lty = c(2, 1, 2), ...) {
+rqFreqPlot <- function(time,bins,freqs,curves, xlim = c(min(time),max(time)), ylim = c(0, max(bins)), dates=dates,barscale = 1, barcol = length(time),boxwex = 50,xlab1="Dates in Days" ,ylab1 = "", ylab2 = "", lty = c(2, 1, 2), ...) {
    ## This function makes the fancy graphs that seems central to the output of ELEFAN
    ## In particular it provides a way of plotting a growth curve over length frequancy data plots over time.
    ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
@@ -37,6 +38,7 @@ rqFreqPlot <- function(time,bins,freqs,curves, xlim = c(min(time),max(time)), yl
 		xmax <- xlim[2] - time[i] #got to find two points for 
 		ser <- as.vector(freqs[,i]) #putting right and left sides of rectangles
 		ser <- ser * barscale       #scaleing... sometimes it is nice make things bigger or smaller
+                
                 if(sum(ser) == 0){          #if there is no lf data at time i don't plot anything
                 }
                 else{                   #if there is lf data at time i make plot
@@ -49,6 +51,7 @@ rqFreqPlot <- function(time,bins,freqs,curves, xlim = c(min(time),max(time)), yl
    for(i in 1:years){                   #draw all the growth curves 
    lines(X,Y[i,],type="l")
  }
+   #text(c(0,0),label=toString(dates))
 #dev.off()
  }
 

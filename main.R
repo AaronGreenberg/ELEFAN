@@ -29,9 +29,9 @@ print(date)
 ## %
 datelength <- length(date$Date)
 days= as.numeric(julian(date$Date[datelength])-julian(date$Date[1]))                               #set default number of days
-print(days)
+#print(days)
 moddays=(365-days%%365)+days
-print(moddays)
+#print(moddays)
 days=moddays
 lfbin=length(data$ML)                   #get number of bins
 growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
@@ -46,9 +46,10 @@ growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will r
 lfdata<- fillgrowthdata(date,data,growthdata)
 #print(lfdata)
 datafreq<-main(data,date$Date)## timecurves <- 1:12
- peaks <- fillgrowthdata(date,datafreq$out,growthdata)
+peaks <- fillgrowthdata(date,datafreq$out,growthdata)
 ## print(peaks)
 ## test<- ESP(peaks,date,40,.95,1,.2)
+## print("TEST")
+## print(test)
 ## out <- goodfit(test,datafreq$asp)
-
-#print(out)
+## print(out)
