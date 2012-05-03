@@ -71,12 +71,32 @@ return(list(c=cur,xlab=xlab1))
 plotlf <- function(d=days,dm=date,da=data,pd=lfdata,Linf,c,tw,K){
   c1 <- curves2(dm,Linf,c,tw,K)
   #print(d)
-rqFreqPlot(1:d,da$ML,pd,c1)
+rqFreqPlot(1:d,da$ML,pd,c1,dm)
 }
 
 plotpeak <- function(d=days,dm=date,da=data,pd=peaks,Linf,c,tw,K){
   c1 <- curves2(dm,Linf,c,tw,K)
 
   #print(pd)
-rqFreqPlot(1:d,da$ML,pd,c1,barscale=10)
+rqFreqPlot(1:d,da$ML,pd,c1,dm,barscale=10)
+}
+
+
+# Sample Session
+report <- function(d=days,dm=date,da=data,pd=lfdata,pd2=peaks,Linf,c,tw,K){
+getWinVal(scope="L");                 #reads in from gui
+
+library(R2HTML)
+HTMLStart(outdir="~/html", file="myreport",extension="html", echo=FALSE, HTMLframe=TRUE)
+
+
+HTML.title("Length Freq plots", HR=1)
+plotlf(d=days,dm=date,da=data,pd=lfdata,Linf,c,tw,K)
+HTMLplot()
+
+HTML.title("Peak plots", HR=1)
+plotpeak(d=days,dm=date,da=data,pd=peaks,Linf,c,tw,K)
+HTMLplot()
+HTMLChangeCSS(newCSS="my2",from="~/html")
+HTMLStop()
 }

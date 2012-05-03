@@ -18,3 +18,10 @@ grid 1 2 padx=20 pady=20
   button text="ESP" func=ESP
   
     
+
+  
+grid 1 2 padx=20 pady=20
+  label text=REPORT: font=bold
+  button text="report" func=report
+  
+    
