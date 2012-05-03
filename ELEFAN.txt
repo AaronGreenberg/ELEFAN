@@ -24,4 +24,11 @@ grid 1 2 padx=20 pady=20
   label text=REPORT: font=bold
   button text="report" func=report
   
+
+
+  
+grid 1 2 padx=20 pady=20
+  label text=Wetherall: font=bold
+  button text="plotWetherall " func=plotwetherall
+  
     

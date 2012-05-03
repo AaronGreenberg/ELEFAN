@@ -81,22 +81,67 @@ plotpeak <- function(d=days,dm=date,da=data,pd=peaks,Linf,c,tw,K){
 rqFreqPlot(1:d,da$ML,pd,c1,dm,barscale=10)
 }
 
+plotwetherall <- function(da=data){
+  wetherall(data)
+}
+wetherall <- function(da=data){
+  data2 <- data
+  data2$ML <- data$ML*0
+  z <- rowSums(data2)
+  print(z)
+  Li=Liprime=z*0
+  for(i in 1:length(data2$ML)){
+    Li[i]=data$ML[i]
+    Liprime[i]=mean(z[i:length(z)])
+  }
+  print(Li)
+  print(Liprime)
+  plot(Li,Liprime)
+}
+
+
+catch <- function(da=data){
+  data2 <- data
+  data2$ML <- data$ML*0
+  z <- rowSums(data2)
+  print(z)
+  plot(data$ML,z)
+}
 
 # Sample Session
 report <- function(d=days,dm=date,da=data,pd=lfdata,pd2=peaks,Linf,c,tw,K){
 getWinVal(scope="L");                 #reads in from gui
-
+print(dm)
+print(da)
 library(R2HTML)
 HTMLStart(outdir="~/html", file="myreport",extension="html", echo=FALSE, HTMLframe=TRUE)
 
 
+HTML.title("Dates", HR=1)
+HTML(print(dm))
+
+HTML.title("Length Freq Data", HR=1)
+HTML(print(da))
+
+HTML.title("Wetherall Plot", HR=1)
+wetherall(data)
+HTMLplot()
+rnorm(10^6)
+
+HTML.title("K scan",HR=1)
+
+HTML.title("Catch Plot", HR=1)
+catch(data)
+HTMLplot()
+rnorm(10^6)
 HTML.title("Length Freq plots", HR=1)
 plotlf(d=days,dm=date,da=data,pd=lfdata,Linf,c,tw,K)
 HTMLplot()
+rnorm(10^6)
 
 HTML.title("Peak plots", HR=1)
 plotpeak(d=days,dm=date,da=data,pd=peaks,Linf,c,tw,K)
 HTMLplot()
-HTMLChangeCSS(newCSS="my2",from="~/html")
+
 HTMLStop()
 }
