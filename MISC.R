@@ -18,68 +18,87 @@ fillgrowthdata <- function(date,data,growthdata){
 
 
 
-curves <- function(dm=date,Linf,c,tw,K){
+curves <- function(Linf,c,tw,K,ML,modday,lfdata){
   #computes growth curve for optimization
+  
   #getWinVal(scope="L");                 #reads in from gui
   K <- K/365                            #converts growth parameter from years to days
   tw <- tw/365                          #converts winter point from years to days I think winter point has dimenstion t/year ?
-  xlab1 <-as.Date(dm$Date[1]+1:365)     #creates a vector of dates... this may not be best way to do this
-  #print(xlab1)
-  cur <- NULL
-  cur[1] <- tw
-  time=1
-  #print((cur[time]<=.95*Linf))
-  while((cur[time]<=.95*Linf)|(time%%365!=0)){
+  cur <- matrix(0,nrow=1,ncol=4)
 
-    #print((cur[time]<=.95*Linf))
-   cur <- c(cur,Linf*(1-exp(-K*(time-tw)-(c*K)/(2*pi)*sin(2*pi*(time-tw))))) #computes growth curve. I am fairly sure this is right, but
+  bin <- function(ML,x,lf=lfdata,z=z){
+    if(sum(lf[,time%%modday])==0){z <- z}
+    else{
+      z <- ML[which.min(((ML)-x)^2)]
+  }
+    return(z)
+  }
+ time=1
+  z=0
+  cur[1,] <- c(1,1,tw,bin(ML,tw,lfdata,z))
+  
+  while((cur[time,3]<=.95*Linf)|(time%%modday!=0)){
+   g <- Linf*(1-exp(-K*(time-tw)-(c*K)/(2*pi)*sin(2*pi*(time-tw)))) #computes growth curve. I am fairly sure this is right, but
+   #print(time%%modday+1)
+   cur <- rbind(cur,c(time,time%%modday,g,bin(ML,g,lfdata,cur[time,4])))
    time=time+1
-   #print(c(time,(cur[time]<=.95*Linf),(time%%365!=0),cur[time]))
       }
-  #print(c(time%%365,length(cur) ))
-return(list(c=cur,xlab=xlab1))
+return(list(c=cur))
 }
 
 
+aspcompute <- function(peaks){sum(peaks$asp[2:length(peaks$asp)])}
 
-
-
-curves2 <- function(dm=date,Linf,c,tw,K){
-  #computes growth curve for optimization
-  getWinVal(scope="L");                 #reads in from gui
-  K <- K/365                            #converts growth parameter from years to days
-  tw <- tw/365                          #converts winter point from years to days I think winter point has dimenstion t/year ?
-  xlab1 <-as.Date(dm$Date[1]+1:365)     #creates a vector of dates... this may not be best way to do this
-  #print(xlab1)
-  cur <- NULL
-  cur[1] <- tw
-  time=1
-  print((cur[time]<=.95*Linf))
-  while((cur[time]<=.95*Linf)|(time%%365!=0)){
-
-    #print((cur[time]<=.95*Linf))
-   cur <- c(cur,Linf*(1-exp(-K*(time-tw)-(c*K)/(2*pi)*sin(2*pi*(time-tw))))) #computes growth curve. I am fairly sure this is right, but
-   time=time+1
-   #print(c(time,(cur[time]<=.95*Linf),(time%%365!=0),cur[time]))
+espcompute <- function(gcurve,p=peaks$out,modday,ML)
+{
+  esp=0
+  for(time in 1:(length(gcurve$c[,1]))){
+    if(sum(p[,time%%modday])==0) {esp=esp}
+    else{
+      if(gcurve$c[time,4]>0){   
+        jim <- which(ML==gcurve$c[time,4])
+        esp=esp+p[jim,time%%modday]
+        j=0
+        while(p[jim+j,time%%modday]>0 ){
+          p[jim+j,time%%modday]=0
+        
+          j=j+1
+        }
+        indexk=1
+        
+        while(jim-indexk>0&&p[jim-indexk,time%%modday]>0 ){
+          p[jim-indexk,time%%modday]=0
+                                        #print("hi")
+          indexk=indexk+1
+        }
       }
-  #print(c(time%%365,length(cur) ))
-return(list(c=cur,xlab=xlab1))
+    }
+  }
+  return(list(esp=esp,peaks2=p))
+}
+
+gfcompute <- function(asp,esp){10^(esp$esp/asp)/10}
+  
+plotlf <- function(d=days,dm=date,da=data,pd=lfdata,curve=gcurve){
+rqFreqPlot(1:d,da$ML,pd,curve$c[,4],curve$c[,3],dm)
 }
 
 
 
-plotlf <- function(d=days,dm=date,da=data,pd=lfdata,Linf,c,tw,K){
-  c1 <- curves2(dm,Linf,c,tw,K)
-  #print(d)
-rqFreqPlot(1:d,da$ML,pd,c1,dm)
+plotpeak <- function(d=days,dm=date,da=data,pd=peaks$out,curve=gcurve){
+rqFreqPlot(1:d,da$ML,pd,curve$c[,3],curve$c[,4],dm,barscale=10)
 }
 
-plotpeak <- function(d=days,dm=date,da=data,pd=peaks,Linf,c,tw,K){
-  c1 <- curves2(dm,Linf,c,tw,K)
 
-  #print(pd)
-rqFreqPlot(1:d,da$ML,pd,c1,dm,barscale=10)
+
+
+plotpeak2 <- function(d=days,dm=date,da=data,pd=esp$peaks2,curve=gcurve){
+rqFreqPlot(1:d,da$ML,pd,curve$c[,3],curve$c[,4],dm,barscale=10)
 }
+
+
+
+
 
 plotwetherall <- function(da=data){
   wetherall(data)
@@ -108,40 +127,52 @@ catch <- function(da=data){
   plot(data$ML,z)
 }
 
-# Sample Session
-report <- function(d=days,dm=date,da=data,pd=lfdata,pd2=peaks,Linf,c,tw,K){
-getWinVal(scope="L");                 #reads in from gui
-print(dm)
-print(da)
-library(R2HTML)
-HTMLStart(outdir="~/html", file="myreport",extension="html", echo=FALSE, HTMLframe=TRUE)
+## # Sample Session
+## report <- function(d=days,dm=date,da=data,pd=lfdata,pd2=peaks,Linf,c,tw,K){
+## getWinVal(scope="L");                 #reads in from gui
+## print(dm)
+## print(da)
+## library(R2HTML)
+## HTMLStart(outdir="~/html", file="myreport",extension="html", echo=TRUE, HTMLframe=TRUE)
 
 
-HTML.title("Dates", HR=1)
-HTML(print(dm))
+## HTML.title("Dates", HR=1)
+## HTML(print(dm))
+## HTMLhr()
 
-HTML.title("Length Freq Data", HR=1)
-HTML(print(da))
 
-HTML.title("Wetherall Plot", HR=1)
-wetherall(data)
-HTMLplot()
-rnorm(10^6)
+## HTML.title("Length Freq Data", HR=1)
+## HTML(print(da))
+## HTMLhr()
 
-HTML.title("K scan",HR=1)
 
-HTML.title("Catch Plot", HR=1)
-catch(data)
-HTMLplot()
-rnorm(10^6)
-HTML.title("Length Freq plots", HR=1)
-plotlf(d=days,dm=date,da=data,pd=lfdata,Linf,c,tw,K)
-HTMLplot()
-rnorm(10^6)
+## HTML.title("Wetherall Plot", HR=1)
+## wetherall(data)
+## HTMLplot()
+## HTMLhr()
+## rnorm(10^7)
 
-HTML.title("Peak plots", HR=1)
-plotpeak(d=days,dm=date,da=data,pd=peaks,Linf,c,tw,K)
-HTMLplot()
+## HTML.title("K scan",HR=1)
+## ESPplot()
+## HTMLplot()
+## HTMLhr()
+## rnorm(10^7)
 
-HTMLStop()
-}
+## HTML.title("Catch Plot", HR=1)
+## catch(data)
+## HTMLplot()
+## HTMLhr()
+## rnorm(10^7)
+
+## HTML.title("Length Freq plots", HR=1)
+## plotlf(d=days,dm=date,da=data,pd=lfdata,Linf,c,tw,K)
+## HTMLplot()
+## HTMLhr()
+## rnorm(10^7)
+
+## HTML.title("Peak plots", HR=1)
+## plotpeak(d=days,dm=date,da=data,pd=peaks,Linf,c,tw,K)
+## HTMLplot()
+## HTMLhr()
+## HTMLStop()
+## }

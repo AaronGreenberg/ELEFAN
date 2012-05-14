@@ -23,33 +23,34 @@ data<-read.table("test.dat",head=TRUE,as.is=TRUE)      #read in the length frequ
 date<-read.table("datetest.dat",head=TRUE,as.is=TRUE)  #read in date key for the length frequency data This should probably be documented
 date$Date=(as.Date(date$Date,format="%d/%m/%y"))       #convert dates into the date class.
 print(date)
-## %
-## %############################################################
-## %############################################################
-## %
-datelength <- length(date$Date)
-days= as.numeric(julian(date$Date[datelength])-julian(date$Date[1]))                               #set default number of days
-#print(days)
-moddays=(365-days%%365)+days
-#print(moddays)
-days=moddays
+
+datelength <- length(date$Date)                                      #get number of days data was collected
+days= as.numeric(julian(date$Date[datelength])-julian(date$Date[1])) #set default number of days
+moddays=(365-days%%365)+days                                         #compute width of plot window in years... 
+days=moddays                                                         #reset days
 lfbin=length(data$ML)                   #get number of bins
-growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+
 
 
 ## % MAIN routines
 ## %############################################################
 ## %############################################################
 ## %
-
-
-lfdata<- fillgrowthdata(date,data,growthdata)
+K <- .15
+tw <- .95
+Linf <- 40
+c <- 1
+growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
 #print(lfdata)
-datafreq<-main(data,date$Date)## timecurves <- 1:12
-peaks <- fillgrowthdata(date,datafreq$out,growthdata)
-## print(peaks)
-## test<- ESP(peaks,date,40,.95,1,.2)
-## print("TEST")
-## print(test)
-## out <- goodfit(test,datafreq$asp)
-## print(out)
+peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
+#print(head(peaks$out))
+gcurve <- curves(Linf,c,tw,K,data$ML,days,lfdata)      # compute growth curve this has index, day in growthcurve and properbin.
+#print(gcurve)
+asp <- aspcompute(peaks)                      #compute asp
+#print(asp)
+esp <- espcompute(gcurve,peaks$out,days,data$ML)               #compute esp
+gf <- gfcompute(asp,esp)
+print(gf)
+## We need to make plots and 
+

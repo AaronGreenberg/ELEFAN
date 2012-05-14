@@ -118,14 +118,21 @@ ASP <- availablesumpeaks(peaks)
 return(ASP)
 }
 
- main<- function(data,date){            #puts main1 and main2 together to 
+lfrestruc<- function(ldata){            #puts main1 and main2 together to 
    ret <- NULL                          #initalizing output data structure
-   ret$out <- matrix(0,nrow=length(data[,1]),ncol=length(date)) 
+   ret$out <- matrix(0,nrow=length(ldata[,1]),ncol=length(ldata[1,])) 
    ret$asp <- vector()
-   
-   for(j in 2:(length(date))){          #looping over the different sets of lf data
-     ret$out[,j] <- main1(data[,j])     #applying main1
-     ret$asp[j] <-  main2(ret$out[,j])  #applying main2
+   count=1
+   for(j in 2:(length(ldata[1,]))){          #looping over the different sets of lf data
+
+     if(sum(ldata[,j])==0){
+       ldata[,j]=ldata[,j]}
+     else{
+       
+     ret$out[,j] <- main1(ldata[,j])     #applying main1
+     ret$asp[count] <-  main2(ret$out[,j])  #applying main2
+     count=count+1
+     }
    }
      #print(ret)
     return(ret)                         
