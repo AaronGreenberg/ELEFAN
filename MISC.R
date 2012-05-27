@@ -19,9 +19,6 @@ fillgrowthdata <- function(date,data,growthdata){
 
 
 curves <- function(Linf,c,tw,K,ML,modday,lfdata){
-  #computes growth curve for optimization
-  
-  #getWinVal(scope="L");                 #reads in from gui
   K <- K/365                            #converts growth parameter from years to days
   tw <- tw/365                          #converts winter point from years to days I think winter point has dimenstion t/year ?
   cur <- matrix(0,nrow=1,ncol=4)
@@ -39,7 +36,6 @@ curves <- function(Linf,c,tw,K,ML,modday,lfdata){
   
   while((cur[time,3]<=.95*Linf)|(time%%modday!=0)){
    g <- Linf*(1-exp(-K*(time-tw)-(c*K)/(2*pi)*sin(2*pi*(time-tw)))) #computes growth curve. I am fairly sure this is right, but
-   #print(time%%modday+1)
    cur <- rbind(cur,c(time,time%%modday,g,bin(ML,g,lfdata,cur[time,4])))
    time=time+1
       }
@@ -68,7 +64,6 @@ espcompute <- function(gcurve,p=peaks$out,modday,ML)
         
         while(jim-indexk>0&&p[jim-indexk,time%%modday]>0 ){
           p[jim-indexk,time%%modday]=0
-                                        #print("hi")
           indexk=indexk+1
         }
       }
@@ -80,29 +75,39 @@ espcompute <- function(gcurve,p=peaks$out,modday,ML)
 gfcompute <- function(asp,esp){10^(esp$esp/asp)/10}
   
 plotlf <- function(d=days,dm=date,da=data,pd=lfdata,curve=gcurve){
-rqFreqPlot(1:d,da$ML,pd,curve$c[,4],curve$c[,3],dm)
+
+goodfit <- NULL
+getWinVal(scope="L")
+growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
+peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
+gcurve <- curves(Linf,c,tw,K,data$ML,days,lfdata)      # compute growth curve this has index, day in growthcurve and properbin.
+asp <- aspcompute(peaks)                      #compute asp
+esp <- espcompute(gcurve,peaks$out,days,data$ML)               #compute esp
+gf <- gfcompute(asp,esp)
+ 
+rqFreqPlot(1:d,da$ML,pd,curve$c[,3],dm)
 }
-
-
 
 plotpeak <- function(d=days,dm=date,da=data,pd=peaks$out,curve=gcurve){
-rqFreqPlot(1:d,da$ML,pd,curve$c[,3],curve$c[,4],dm,barscale=10)
+
+goodfit <- NULL
+getWinVal(scope="L")
+growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
+peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
+gcurve <- curves(Linf,c,tw,K,data$ML,days,lfdata)      # compute growth curve this has index, day in growthcurve and properbin.
+asp <- aspcompute(peaks)                      #compute asp
+esp <- espcompute(gcurve,peaks$out,days,data$ML)               #compute esp
+gf <- gfcompute(asp,esp)
+ 
+rqFreqPlot(1:d,da$ML,pd,curve$c[,3],dm,barscale=10)
 }
-
-
-
-
-plotpeak2 <- function(d=days,dm=date,da=data,pd=esp$peaks2,curve=gcurve){
-rqFreqPlot(1:d,da$ML,pd,curve$c[,3],curve$c[,4],dm,barscale=10)
-}
-
-
-
-
 
 plotwetherall <- function(da=data){
   wetherall(data)
 }
+
 wetherall <- function(da=data){
   data2 <- data
   data2$ML <- data$ML*0
@@ -113,66 +118,47 @@ wetherall <- function(da=data){
     Li[i]=data$ML[i]
     Liprime[i]=mean(z[i:length(z)])
   }
-  print(Li)
-  print(Liprime)
   plot(Li,Liprime)
 }
 
 
-catch <- function(da=data){
-  data2 <- data
-  data2$ML <- data$ML*0
-  z <- rowSums(data2)
-  print(z)
-  plot(data$ML,z)
+
+plotkscan <- function(Linf,c,tw,smooth,Kmax,data,days,growthdata,lfdata,peaks)
+  { 
+goodfit <- NULL
+getWinVal(scope="L")
+growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
+peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
+gcurve <- curves(Linf,c,tw,K,data$ML,days,lfdata)      # compute growth curve this has index, day in growthcurve and properbin.
+asp <- aspcompute(peaks)                      #compute asp
+esp <- espcompute(gcurve,peaks$out,days,data$ML)               #compute esp
+gf <- gfcompute(asp,esp)
+   
+    kscan(Linf,c,tw,smooth,Kmax,data,days,growthdata,lfdata,peaks)
+  }
+
+kscan <- function(Linf,c,tw,smooth,Kmax,data,days,growthdata,lfdata,peaks)
+{
+  K <- seq(.1,Kmax,length.out=1000)
+  for(j in 1:1000){
+    gcurve <- curves(Linf,c,tw,K[j],data$ML,days,lfdata) #compute growth curve this has index, day in growthcurve and properbin.
+    asp <- aspcompute(peaks)                             #compute asp
+    esp <- espcompute(gcurve,peaks$out,days,data$ML)     #compute esp
+    gf <- gfcompute(asp,esp)                             #compute goodness of fit
+    goodfit[j] <- gf
+    
+  }
+  ma <- function(x,n=smooth){filter(x,rep(1/n,n), sides=2)}
+  goodfit <- ma(goodfit,smooth)
+  plot(K,goodfit,type="l")              #make plots
 }
 
-## # Sample Session
-## report <- function(d=days,dm=date,da=data,pd=lfdata,pd2=peaks,Linf,c,tw,K){
-## getWinVal(scope="L");                 #reads in from gui
-## print(dm)
-## print(da)
-## library(R2HTML)
-## HTMLStart(outdir="~/html", file="myreport",extension="html", echo=TRUE, HTMLframe=TRUE)
 
-
-## HTML.title("Dates", HR=1)
-## HTML(print(dm))
-## HTMLhr()
-
-
-## HTML.title("Length Freq Data", HR=1)
-## HTML(print(da))
-## HTMLhr()
-
-
-## HTML.title("Wetherall Plot", HR=1)
-## wetherall(data)
-## HTMLplot()
-## HTMLhr()
-## rnorm(10^7)
-
-## HTML.title("K scan",HR=1)
-## ESPplot()
-## HTMLplot()
-## HTMLhr()
-## rnorm(10^7)
-
-## HTML.title("Catch Plot", HR=1)
-## catch(data)
-## HTMLplot()
-## HTMLhr()
-## rnorm(10^7)
-
-## HTML.title("Length Freq plots", HR=1)
-## plotlf(d=days,dm=date,da=data,pd=lfdata,Linf,c,tw,K)
-## HTMLplot()
-## HTMLhr()
-## rnorm(10^7)
-
-## HTML.title("Peak plots", HR=1)
-## plotpeak(d=days,dm=date,da=data,pd=peaks,Linf,c,tw,K)
-## HTMLplot()
-## HTMLhr()
-## HTMLStop()
+## catch <- function(da=data){
+##   data2 <- data
+##   data2$ML <- data$ML*0
+##   z <- rowSums(data2)
+## #  print(z)
+##   plot(data$ML,z)
 ## }

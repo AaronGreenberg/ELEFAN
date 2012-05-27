@@ -6,7 +6,6 @@
 #%############################################################
 require(compiler)
 require(PBSmodelling);                  #nice software that makes making gui easier
-#require(TTR) #some timeseries stuff may not be needed
 createWin("ELEFAN.txt");                #Make gui
 source("ASP.R")                         #load routines to compute peaks and available sum of peaks
 source("LF_plots.R")                    #load routines to make the special plots in particular rqFreqplot
@@ -36,21 +35,15 @@ lfbin=length(data$ML)                   #get number of bins
 ## %############################################################
 ## %############################################################
 ## %
-K <- .15
-tw <- .95
-Linf <- 40
-c <- 1
+
+goodfit <- NULL
+getWinVal(scope="L")
 growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
 lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
-#print(lfdata)
 peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
-#print(head(peaks$out))
 gcurve <- curves(Linf,c,tw,K,data$ML,days,lfdata)      # compute growth curve this has index, day in growthcurve and properbin.
-#print(gcurve)
 asp <- aspcompute(peaks)                      #compute asp
-#print(asp)
 esp <- espcompute(gcurve,peaks$out,days,data$ML)               #compute esp
 gf <- gfcompute(asp,esp)
-print(gf)
-## We need to make plots and 
+
 

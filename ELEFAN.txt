@@ -3,28 +3,13 @@ grid 1 4 padx=20 pady=20
   label text=Plot: font=bold
   button text=PlotLF func=plotlf 
   button text="PlotPeaks" func=plotpeak 
-  button text="PlotPeaks2" func=plotpeak2 
+
   
 grid 1 3 padx=20 pady=20
   label text=Input: font=bold
   vector length=4 names="Linf K c tw" \
     labels="'Linf' 'K' 'c' 'tw'" \
     values="49.5 .2  1  .95" vertical=T width=12
-
-
-  
-grid 1 2 padx=20 pady=20
-  label text=ESP: font=bold
-  button text="ESP" func=ESP
-  
-    
-
-  
-grid 1 2 padx=20 pady=20
-  label text=REPORT: font=bold
-  button text="report" func=report
-  
-
 
   
 grid 1 2 padx=20 pady=20
@@ -33,7 +18,9 @@ grid 1 2 padx=20 pady=20
   
 
 grid 1 2 padx=20 pady=20
-  label text=ESPplot: font=bold
-  button text="ESPplot " func=ESPplot
-  
+  label text=Kscan: font=bold
+  button text="kscan " func=kscan
+  vector length=1 names="smooth" \
+    labels="smooth"\
+    values="1"
     

@@ -29,7 +29,7 @@ quotientsN_ma <- function(N,ma){      #compute the freq/moving average
   return(y)
 }
 
-peaks <- function(Q){                   #Compute Peaks
+peaksmap <- function(Q){                   #Compute Peaks
   y <- Q/mean(Q)-1                      #scale and shift
 return(y)
 }
@@ -106,7 +106,7 @@ datatmp <- NULL
 datatmp$OBS <-data
 datatmp$A <- ma5(datatmp$OBS)           #first moving average
 datatmp$B <- quotientsN_ma(datatmp$OBS,datatmp$A) #quotient rescale
-datatmp$C <- peaks(datatmp$B)                     #make peaks
+datatmp$C <- peaksmap(datatmp$B)                     #make peaks
 datatmp$D <- isolate(datatmp$C,datatmp$OBS)       #isolate peaks
 datatmp$E <- deemph(datatmp$C,datatmp$D)          #deemph according to manual (SERIOUSLY see manual...)
 datatmp$F <- spv(datatmp$E)                       #final rescale
