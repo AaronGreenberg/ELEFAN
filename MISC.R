@@ -105,10 +105,12 @@ rqFreqPlot(1:d,da$ML,pd,curve$c[,3],dm,barscale=10)
 }
 
 plotwetherall <- function(da=data){
-  wetherall(data)
+  getWinVal(scope="L")
+  points
+  wetherall(data,points)
 }
 
-wetherall <- function(da=data){
+wetherall <- function(da=data,points=3){
   data2 <- data
   data2$ML <- data$ML*0
   z <- rowSums(data2)
@@ -118,40 +120,109 @@ wetherall <- function(da=data){
     Li[i]=data$ML[i]
     Liprime[i]=mean(z[i:length(z)])
   }
+  Lipoints=Liprime[(length(Liprime)-points):length(Liprime)]
+  Lip=Li[(length(Liprime)-points):length(Liprime)]
+  z=lm(Lipoints~Lip)
+  print(summary(z))
+  #print(head(z))
+  inter=as.vector(z$coefficients)
+  #print(inter)
+  print("xintercept")
+  print(-1*inter[1]/inter[2])
+
   plot(Li,Liprime)
+  points(Lip,Lipoints,col="red")
+  abline(z)
 }
 
 
 
-plotkscan <- function(Linf,c,tw,smooth,Kmax,data,days,growthdata,lfdata,peaks)
+plotkscan <- function(Linf,c,tw,smooth,Kmax,dat=data,d=days,growthdata,lfdata,peaks)
   { 
 goodfit <- NULL
 getWinVal(scope="L")
-growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
+growthdata <- matrix(0,ncol=d,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
 peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
-gcurve <- curves(Linf,c,tw,K,data$ML,days,lfdata)      # compute growth curve this has index, day in growthcurve and properbin.
+gcurve <- curves(Linf,c,tw,K,dat$ML,days,lfdata)      # compute growth curve this has index, day in growthcurve and properbin.
+
 asp <- aspcompute(peaks)                      #compute asp
-esp <- espcompute(gcurve,peaks$out,days,data$ML)               #compute esp
+esp <- espcompute(gcurve,peaks$out,d,dat$ML)               #compute esp
 gf <- gfcompute(asp,esp)
-   
-    kscan(Linf,c,tw,smooth,Kmax,data,days,growthdata,lfdata,peaks)
+    kscan(Linf,c,tw,smooth,Kmin,Kmax,sweep,dat,d,growthdata,lfdata,peaks)
   }
 
-kscan <- function(Linf,c,tw,smooth,Kmax,data,days,growthdata,lfdata,peaks)
+kscan <- function(Linf,c,tw,smooth,Kmin,Kmax,sweep,dat=data,d=days,growthdata,lfdata,peaks)
 {
-  K <- seq(.1,Kmax,length.out=1000)
-  for(j in 1:1000){
-    gcurve <- curves(Linf,c,tw,K[j],data$ML,days,lfdata) #compute growth curve this has index, day in growthcurve and properbin.
+  K <- seq(Kmin,Kmax,length.out=sweep)
+  for(j in 1:length(K)){
+    gcurve <- curves(Linf,c,tw,K[j],dat$ML,days,lfdata) #compute growth curve this has index, day in growthcurve and properbin.
     asp <- aspcompute(peaks)                             #compute asp
-    esp <- espcompute(gcurve,peaks$out,days,data$ML)     #compute esp
+    esp <- espcompute(gcurve,peaks$out,d,dat$ML)     #compute esp
     gf <- gfcompute(asp,esp)                             #compute goodness of fit
     goodfit[j] <- gf
     
   }
-  ma <- function(x,n=smooth){filter(x,rep(1/n,n), sides=2)}
-  goodfit <- ma(goodfit,smooth)
-  plot(K,goodfit,type="l")              #make plots
+  # x: the vector
+# n: the number of samples
+# centered: if FALSE, then average current sample and previous (n-1) samples
+#           if TRUE, then average symmetrically in past and future. (If n is even, use one more sample from future.)
+movingAverage <- function(x, n=1, centered=TRUE) {
+
+    if (centered) {
+        before <- floor  ((n-1)/2)
+        after  <- ceiling((n-1)/2)
+    } else {
+        before <- n-1
+        after  <- 0
+    }
+
+    # Track the sum and count of number of non-NA items
+    s     <- rep(0, length(x))
+    count <- rep(0, length(x))
+
+    # Add the centered data 
+    new <- x
+    # Add to count list wherever there isn't a 
+    count <- count + !is.na(new)
+    # Now replace NA_s with 0_s and add to total
+    new[is.na(new)] <- 0
+    s <- s + new
+
+    # Add the data from before
+    i <- 1
+    while (i <= before) {
+        # This is the vector with offset values to add
+        new   <- c(rep(NA, i), x[1:(length(x)-i)])
+
+        count <- count + !is.na(new)
+        new[is.na(new)] <- 0
+        s <- s + new
+
+        i <- i+1
+    }
+
+    # Add the data from after
+    i <- 1
+    while (i <= after) {
+        # This is the vector with offset values to add
+        new   <- c(x[(i+1):length(x)], rep(NA, i))
+
+        count <- count + !is.na(new)
+        new[is.na(new)] <- 0
+        s <- s + new
+
+        i <- i+1
+    }
+
+    # return sum divided by count
+    s/count
+}
+  
+  goodfit2 <- movingAverage(goodfit,smooth)
+  print(max(goodfit))
+  plot(K,goodfit2,type="l",ylim=c(0.0,max(goodfit)+.1))              #make plots
+  points(K[which.max(goodfit)],max(goodfit),col="red")
 }
 
 
