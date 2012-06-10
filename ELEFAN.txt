@@ -12,12 +12,13 @@ grid 1 3 padx=20 pady=20
     values="41.5 .2  1  .95" vertical=T width=12
 
   
-grid 1 2 padx=20 pady=20
+grid 1 3 padx=20 pady=20
   label text=Wetherall: font=bold
-  button text="plotWetherall " func=plotwetherall
-  vector length=1 names="points" \
-    labels="'points'" \
-    values="1" vertical=T width=12
+  label text=points
+  slide name=points from=1 to=40  value=2  func=plotwetherall
+  vector length=1 names="Linfest" \
+    labels="'Linfest'" \
+    values="0" vertical=T width=12
   
 
 grid 1 2 padx=20 pady=20

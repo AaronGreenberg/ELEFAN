@@ -41,10 +41,10 @@ curves <- function(Linf,c,tw,K,ML,modday,lfdata){
       }
 return(list(c=cur))
 }
-
+ccurves<- cmpfun(curves)
 
 aspcompute <- function(peaks){sum(peaks$asp[2:length(peaks$asp)])}
-
+caspcompute <- cmpfun(aspcompute)
 espcompute <- function(gcurve,p=peaks$out,modday,ML)
 {
   esp=0
@@ -71,9 +71,9 @@ espcompute <- function(gcurve,p=peaks$out,modday,ML)
   }
   return(list(esp=esp,peaks2=p))
 }
-
+cespcompute <- cmpfun(espcompute)
 gfcompute <- function(asp,esp){10^(esp$esp/asp)/10}
-  
+cgfcompute <- cmpfun(gfcompute)
 plotlf <- function(d=days,dm=date,da=data,pd=lfdata,curve=gcurve){
 
 goodfit <- NULL
@@ -106,6 +106,7 @@ rqFreqPlot(1:d,da$ML,pd,curve$c[,3],dm,barscale=10)
 
 plotwetherall <- function(da=data){
   getWinVal(scope="L")
+  setWinVal(list(points=c(length(data$ML))))
   points
   wetherall(data,points)
 }
@@ -125,15 +126,18 @@ wetherall <- function(da=data,points=3){
   z=lm(Lipoints~Lip)
   print(summary(z))
   #print(head(z))
+  
   inter=as.vector(z$coefficients)
   #print(inter)
   print("xintercept")
-  print(-1*inter[1]/inter[2])
+  Linfest=-1*inter[1]/inter[2]
+  setWinVal(list(Linfest=Linfest))
 
-  plot(Li,Liprime)
-  points(Lip,Lipoints,col="red")
+  plot(Li,Liprime,xlim=c(Li[1],Linfest+3))
+  points(Lip,Lipoints,pch=19,col="red")
   abline(z)
 }
+
 
 
 
@@ -149,20 +153,26 @@ gcurve <- curves(Linf,c,tw,K,dat$ML,days,lfdata)      # compute growth curve thi
 asp <- aspcompute(peaks)                      #compute asp
 esp <- espcompute(gcurve,peaks$out,d,dat$ML)               #compute esp
 gf <- gfcompute(asp,esp)
-    kscan(Linf,c,tw,smooth,Kmin,Kmax,sweep,dat,d,growthdata,lfdata,peaks)
+    ckscan(Linf,c,tw,smooth,Kmin,Kmax,sweep,dat,d,growthdata,lfdata,peaks)
   }
+
+
 
 kscan <- function(Linf,c,tw,smooth,Kmin,Kmax,sweep,dat=data,d=days,growthdata,lfdata,peaks)
 {
   K <- seq(Kmin,Kmax,length.out=sweep)
   for(j in 1:length(K)){
     gcurve <- curves(Linf,c,tw,K[j],dat$ML,days,lfdata) #compute growth curve this has index, day in growthcurve and properbin.
-    asp <- aspcompute(peaks)                             #compute asp
-    esp <- espcompute(gcurve,peaks$out,d,dat$ML)     #compute esp
-    gf <- gfcompute(asp,esp)                             #compute goodness of fit
+    asp <- caspcompute(peaks)                             #compute asp
+    esp <- cespcompute(gcurve,peaks$out,d,dat$ML)     #compute esp
+    gf <- cgfcompute(asp,esp)                             #compute goodness of fit
     goodfit[j] <- gf
     
   }
+
+
+
+
   # x: the vector
 # n: the number of samples
 # centered: if FALSE, then average current sample and previous (n-1) samples
@@ -224,7 +234,7 @@ movingAverage <- function(x, n=1, centered=TRUE) {
   plot(K,goodfit2,type="l",ylim=c(0.0,max(goodfit)+.1))              #make plots
   points(K[which.max(goodfit)],max(goodfit),col="red")
 }
-
+ckscan <- cmpfun(kscan)
 
 ## catch <- function(da=data){
 ##   data2 <- data
