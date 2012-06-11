@@ -1,21 +1,22 @@
-window title="Plotting a growth curve"
-grid 1 4 padx=20 pady=20
-  label text=Plot: font=bold
-  button text=PlotLF func=plotlf 
-  button text="PlotPeaks" func=plotpeak 
 
   
-grid 1 3 padx=20 pady=20
+grid 9 1 padx=20 pady=20
   label text=Input: font=bold
-  vector length=4 names="Linf K c tw" \
-    labels="'Linf' 'K' 'c' 'tw'" \
-    values="41.5 .2  1  .95" vertical=T width=12
+  label text=Linf
+  slideplus  name=Linf from=0.6 by=.001 to=1000 value=41 func=plotpeak
+  label text=K
+  slideplus  name=K from=.1 to=10 by=.002 value=.2  func=plotpeak
+  label text=tw
+  slideplus  name=tw from=.1 to=1 by=.002 value=.1  func=plotpeak
+  label text=c
+  slideplus  name=c from=.1 to=1 by=.002 value=.9  func=plotpeak
+  
 
   
-grid 1 3 padx=20 pady=20
+grid 1 4 padx=20 pady=20
   label text=Wetherall: font=bold
   label text=points
-  slide name=points from=1 to=40  value=2  func=plotwetherall
+  slide name=points from=1 to=30  value=2 showvalue=T func=plotwetherall
   vector length=1 names="Linfest" \
     labels="'Linfest'" \
     values="0" vertical=T width=12

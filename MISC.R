@@ -106,9 +106,10 @@ rqFreqPlot(1:d,da$ML,pd,curve$c[,3],dm,barscale=10)
 
 plotwetherall <- function(da=data){
   getWinVal(scope="L")
-  setWinVal(list(points=c(length(data$ML))))
+  #xsetWinVal(list(points.min=1,points.max=length(data$ML),points=2))
   points
-  wetherall(data,points)
+ Linfest<- wetherall(data,points)
+  setWinVal(list(Linfest=Linfest))
 }
 
 wetherall <- function(da=data,points=3){
@@ -131,11 +132,12 @@ wetherall <- function(da=data,points=3){
   #print(inter)
   print("xintercept")
   Linfest=-1*inter[1]/inter[2]
-  setWinVal(list(Linfest=Linfest))
-
+  par(1,las=1)
   plot(Li,Liprime,xlim=c(Li[1],Linfest+3))
+  
   points(Lip,Lipoints,pch=19,col="red")
   abline(z)
+  return(Linfest)
 }
 
 
