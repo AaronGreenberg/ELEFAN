@@ -24,14 +24,16 @@ rqFreqPlot <- function(time,bins,freqs,curves, dates=dates,xlim = c(min(time),ma
    #jpeg("test.jpeg")
    X <- time                            #store time
    years <- length(curves)/365        #figure out how many years the growth curve has been computed for.
-   
+   xlim <- c(min(time),max(time))
    Y <-matrix(curves,nrow=years,ncol=length(time),byrow=TRUE) #form matrix with growth curves wrapped around
-#   Y1 <-matrix(curves1,nrow=years,ncol=length(time),byrow=TRUE) #form matrix with growth curves wrapped around
+   print(date)
+   dateaxis <-as.Date(dates$Date[1]+X)
    
    #create axis for plots
    par(new = FALSE)
-   plot(0,0, type = "l", xaxs = "i", lty = lty, col = 1, lwd = 2, bty = "l", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,...)
+   plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,...)
    #plot Rectangles
+   axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="month"))
    count=0
    lengthtime=length(time)
 	for (i in 1:lengthtime){    #figure out how to make the rectangles

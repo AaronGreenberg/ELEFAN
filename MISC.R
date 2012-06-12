@@ -74,8 +74,8 @@ espcompute <- function(gcurve,p=peaks$out,modday,ML)
 cespcompute <- cmpfun(espcompute)
 gfcompute <- function(asp,esp){10^(esp$esp/asp)/10}
 cgfcompute <- cmpfun(gfcompute)
-plotlf <- function(d=days,dm=date,da=data,pd=lfdata,curve=gcurve){
 
+plotpeak <- function(d=days,dm=date,da=data,pd2=lfdata,pd=peaks$out,curve=gcurve){
 goodfit <- NULL
 getWinVal(scope="L")
 growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
@@ -85,30 +85,19 @@ gcurve <- curves(Linf,c,tw,K,data$ML,days,lfdata)      # compute growth curve th
 asp <- aspcompute(peaks)                      #compute asp
 esp <- espcompute(gcurve,peaks$out,days,data$ML)               #compute esp
 gf <- gfcompute(asp,esp)
- 
-rqFreqPlot(1:d,da$ML,pd,curve$c[,3],dm)
+graphics.off()
+
+if(ptype=="Peaks"){
+  rqFreqPlot(1:d,da$ML,pd,curve$c[,3],dm,barscale=10)
 }
-
-plotpeak <- function(d=days,dm=date,da=data,pd=peaks$out,curve=gcurve){
-
-goodfit <- NULL
-getWinVal(scope="L")
-growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
-peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
-gcurve <- curves(Linf,c,tw,K,data$ML,days,lfdata)      # compute growth curve this has index, day in growthcurve and properbin.
-asp <- aspcompute(peaks)                      #compute asp
-esp <- espcompute(gcurve,peaks$out,days,data$ML)               #compute esp
-gf <- gfcompute(asp,esp)
- 
-rqFreqPlot(1:d,da$ML,pd,curve$c[,3],dm,barscale=10)
+if(ptype=="LF"){
+  rqFreqPlot(1:d,da$ML,pd2,curve$c[,3],dm)
+}
 }
 
 plotwetherall <- function(da=data){
   getWinVal(scope="L")
-  #xsetWinVal(list(points.min=1,points.max=length(data$ML),points=2))
-  points
- Linfest<- wetherall(data,points)
+  Linfest<- wetherall(data,points)
   setWinVal(list(Linfest=Linfest))
 }
 
@@ -125,13 +114,9 @@ wetherall <- function(da=data,points=3){
   Lipoints=Liprime[(length(Liprime)-points):length(Liprime)]
   Lip=Li[(length(Liprime)-points):length(Liprime)]
   z=lm(Lipoints~Lip)
-  print(summary(z))
-  #print(head(z))
-  
   inter=as.vector(z$coefficients)
-  #print(inter)
-  print("xintercept")
   Linfest=-1*inter[1]/inter[2]
+  graphics.off()
   par(1,las=1)
   plot(Li,Liprime,xlim=c(Li[1],Linfest+3))
   
@@ -151,7 +136,6 @@ growthdata <- matrix(0,ncol=d,nrow=lfbin) #create matrix of zeros that will repr
 lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
 peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
 gcurve <- curves(Linf,c,tw,K,dat$ML,days,lfdata)      # compute growth curve this has index, day in growthcurve and properbin.
-
 asp <- aspcompute(peaks)                      #compute asp
 esp <- espcompute(gcurve,peaks$out,d,dat$ML)               #compute esp
 gf <- gfcompute(asp,esp)
