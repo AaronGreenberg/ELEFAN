@@ -22,7 +22,8 @@ curves <- function(Linf,c,tw,K,ML,modday,lfdata){
   K <- K/365                            #converts growth parameter from years to days
   tw <- tw/365                          #converts winter point from years to days I think winter point has dimenstion t/year ?
   cur <- matrix(0,nrow=1,ncol=4)
-
+  #startime <- sdate
+  #MLstart
   bin <- function(ML,x,lf=lfdata,z=z){
     if(sum(lf[,time%%modday])==0){z <- z}
     else{
@@ -30,7 +31,7 @@ curves <- function(Linf,c,tw,K,ML,modday,lfdata){
   }
     return(z)
   }
- time=1
+ time=1#starttime
   z=0
   cur[1,] <- c(1,1,tw,bin(ML,tw,lfdata,z))
   

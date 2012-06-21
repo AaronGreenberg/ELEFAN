@@ -1,33 +1,47 @@
+notebook tabs="GrowthCurve Kscan  Weatherall " name=nbfres #width=380 height=150
 
-  
-grid 11 1 padx=20 pady=20
-  label text=Input: font=bold
-  radio name=ptype  text="Peaks" value="Peaks"  mode=character 
-  radio name=ptype  text="LF" value="LF"  mode=character       
-  label text=Linf
-  slideplus  name=Linf from=0.6 by=.001 to=1000 value=41 
-  label text=K
-  slideplus  name=K from=.1 to=10 by=.002 value=.2  
-  label text=tw
-  slideplus  name=tw from=.1 to=1 by=.002 value=.1  
-  label text=c
-  slideplus  name=c from=.1 to=1 by=.002 value=.9  
-  button text="plot Growth Curve" func=plotpeak
+grid 1 1  # Simulation tab in notebook
+       grid 7 1 #padx=20 pady=20
+              	grid 1 3 
+		     label text="Graph Type": #font=bold
+        	     radio name=ptype  text="Peaks" value="Peaks"  mode=character 
+        	     radio name=ptype  text="LF" value="LF" mode=character
+		grid 2 1                 
+		     label text=Linf #font=bold
+		     slideplus  name=Linf from=0.6 by=.001 to=1000 value=41 
+       		grid 2 1                      
+        	  label text=K #font=bold
+        	  slideplus  name=K from=.1 to=10 by=.002 value=.2
+		grid 2 1                   
+        	  label text=tw #font=bold
+        	  slideplus  name=tw from=.1 to=1 by=.002 value=.1  
+		grid 2 1                 
+        	  label text=c #font=bold
+        	  slideplus  name=c from=.1 to=1 by=.002 value=.9
+		grid 2 1                 
+		  label text="Starting conditions" #font=bold  
+		  vector length=4 names="Month Day Year ML"\
+		  labels=" 'month' 'day' 'year' 'ML'"\
+		  values="1 1 1 20"
+        button text="plot Growth Curve" func=plotpeak
+		  
 
-  
-grid 1 4 padx=20 pady=20
-  label text=Wetherall: font=bold
-  label text=points
-  slideplus name=points from=1 to=30 by=1 value=2 
-  vector length=1 names="Linfest" \
-    labels="'Linfest'" \
-    values="0" vertical=T width=12
-  button text="plot Wetherall " func=plotwetherall
 
-grid 1 2 padx=20 pady=20
-  label text=Kscan: font=bold
-  button text="kscan " func=plotkscan
-  vector length=4 names="smooth Kmin Kmax sweep"\ 
-    labels="'smooth' 'Kmin' 'Kmax' 'sweep'"\
-    values="1 0.1 10 100"
+
+      grid 3 1 #padx=20 pady=20
+         	label text=Kscan: font=bold
+        	button text="kscan " func=plotkscan
+        	vector length=4 names="smooth Kmin Kmax sweep"\ 
+          	labels="'smooth' 'Kmin' 'Kmax' 'sweep'"\
+ 	   	values="1 0.1 10 100"
     
+
+
+      grid 5 1 #padx=20 pady=20
+      	    label text=Wetherall: font=bold
+            label text=points
+            slideplus name=points from=1 to=30 by=1 value=2 
+            vector length=1 names="Linfest" \
+            labels="'Linfest'" \
+            values="0" vertical=T width=12
+            button text="plot Wetherall " func=plotwetherall
