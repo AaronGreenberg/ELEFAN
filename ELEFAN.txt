@@ -1,6 +1,6 @@
-notebook tabs="GrowthCurve Kscan  Weatherall " name=nbfres #width=380 height=150
+notebook tabs="GrowthCurve Kscan  Weatherall CatchCurve" name=nbfres #width=380 height=150
 
-grid 1 1  # Simulation tab in notebook
+grid 1 1  padx=60 pady=60# Simulation tab in notebook
        grid 7 1 #padx=20 pady=20
               	grid 1 3 
 		     label text="Graph Type": #font=bold
@@ -20,12 +20,10 @@ grid 1 1  # Simulation tab in notebook
         	  slideplus  name=c from=.1 to=1 by=.002 value=.9
 		grid 2 1                 
 		  label text="Starting conditions" #font=bold  
-		  vector length=4 names="Month Day Year ML"\
-		  labels=" 'month' 'day' 'year' 'ML'"\
-		  values="1 1 1 20"
+		  vector length=2 names="Date ML"\
+		  labels=" 'DateYMD' 'ML'"\
+		  values="1970/01/01 20" mode=character
         button text="plot Growth Curve" func=plotpeak
-		  
-
 
 
       grid 3 1 #padx=20 pady=20
@@ -35,13 +33,21 @@ grid 1 1  # Simulation tab in notebook
           	labels="'smooth' 'Kmin' 'Kmax' 'sweep'"\
  	   	values="1 0.1 10 100"
     
+       grid 3 1 #padx=20 pady=20
+       	     grid 2 1 padx=2 pady=20
+             	 label text="Points to Use"
+             	 slideplus name=points from=2 to=30 by=1 value=2 
+             vector length=1 names="Linfest" \
+             labels="'Linfest'" \
+             values="0" vertical=T width=12
+             button text="plot Wetherall " func=plotwetherall
 
 
-      grid 5 1 #padx=20 pady=20
-      	    label text=Wetherall: font=bold
-            label text=points
-            slideplus name=points from=1 to=30 by=1 value=2 
-            vector length=1 names="Linfest" \
-            labels="'Linfest'" \
-            values="0" vertical=T width=12
-            button text="plot Wetherall " func=plotwetherall
+       grid 3 1 #padx=20 pady=20
+       	     grid 2 1 padx=0 pady=20
+             	 label text="Points to Use"
+             	 slideplus name=blah  from=2 to=30 by=1 value=2 
+             vector length=1 names="blah" \
+             labels="'blah'" \
+             values="0" vertical=T width=12
+             button text="plot Catch Curve " 

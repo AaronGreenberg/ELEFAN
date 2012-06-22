@@ -18,7 +18,7 @@ fillgrowthdata <- function(date,data,growthdata){
 
 
 
-curves <- function(Linf,c,tw,K,ML,modday,lfdata){
+curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
   K <- K/365                            #converts growth parameter from years to days
   tw <- tw/365                          #converts winter point from years to days I think winter point has dimenstion t/year ?
   cur <- matrix(0,nrow=1,ncol=4)
@@ -31,11 +31,15 @@ curves <- function(Linf,c,tw,K,ML,modday,lfdata){
   }
     return(z)
   }
- time=1#starttime
-  z=0
-  cur[1,] <- c(1,1,tw,bin(ML,tw,lfdata,z))
-  
+ time=sdate
+  z=ML[which.min((ML-sML^2))]
+  print(sdate)
+  print(cur)
+  cur[1,] <-c(time,time%%modday,sML,z)
+
+  time=1
   while((cur[time,3]<=.95*Linf)|(time%%modday!=0)){
+    print("hi")
    g <- Linf*(1-exp(-K*(time-tw)-(c*K)/(2*pi)*sin(2*pi*(time-tw)))) #computes growth curve. I am fairly sure this is right, but
    cur <- rbind(cur,c(time,time%%modday,g,bin(ML,g,lfdata,cur[time,4])))
    time=time+1
@@ -79,20 +83,31 @@ cgfcompute <- cmpfun(gfcompute)
 plotpeak <- function(d=days,dm=date,da=data,pd2=lfdata,pd=peaks$out,curve=gcurve){
 goodfit <- NULL
 getWinVal(scope="L")
+print("date")
+print(Date)
+startdate <- as.Date(Date)
+startime <- as.numeric(startdate-dm[1,1])
+print("stime")
+print(startime)
+print(startdate)
+print("ML")
+ML <- as.numeric(ML)
+print(ML)
+#need to convert start date to dime.
 growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
 lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
 peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
-gcurve <- curves(Linf,c,tw,K,data$ML,days,lfdata)      # compute growth curve this has index, day in growthcurve and properbin.
+gcurve <- curves(Linf,c,tw,K,data$ML,days,lfdata,startime,ML)      # compute growth curve this has index, day in growthcurve and properbin.
 asp <- aspcompute(peaks)                      #compute asp
 esp <- espcompute(gcurve,peaks$out,days,data$ML)               #compute esp
 gf <- gfcompute(asp,esp)
 graphics.off()
 
 if(ptype=="Peaks"){
-  rqFreqPlot(1:d,da$ML,pd,curve$c[,3],dm,barscale=10)
+  rqFreqPlot(1:d,da$ML,pd,startdate,ML,curve$c[,3],dm,barscale=10)
 }
 if(ptype=="LF"){
-  rqFreqPlot(1:d,da$ML,pd2,curve$c[,3],dm)
+  rqFreqPlot(1:d,da$ML,pd2,startdate,ML,curve$c[,3],dm)
 }
 }
 

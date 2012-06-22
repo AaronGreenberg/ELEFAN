@@ -14,7 +14,7 @@ rectplot <- function(ser,bins,xmin,xmax,ylim,barcol){
 
 
 #Make Rectangles of time series Length Frequency data
-rqFreqPlot <- function(time,bins,freqs,curves, dates=dates,xlim = c(min(time),max(time)), ylim = c(0, max(bins)), barscale = 1, barcol = "red",boxwex = 50,xlab1="Dates in Days" ,ylab1 = "", ylab2 = "", lty = c(2, 1, 2), ...) {
+rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(min(time),max(time)), ylim = c(0, max(bins)), barscale = 1, barcol = "red",boxwex = 50,xlab1="Dates in Days" ,ylab1 = "", ylab2 = "", lty = c(2, 1, 2),...) {
    ## This function makes the fancy graphs that seems central to the output of ELEFAN
    ## In particular it provides a way of plotting a growth curve over length frequancy data plots over time.
    ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
@@ -54,9 +54,11 @@ rqFreqPlot <- function(time,bins,freqs,curves, dates=dates,xlim = c(min(time),ma
    
 #   grid(nx = NA, ny = 42, col = "lightgray", lty = "dotted", #make grid lines sort of chart junk but 
      #lwd = par("lwd"), equilogs = TRUE)
+   print(c(sdate,sML))
+   points(sdate,sML,col="black",pch=19)
    for(i in 1:years){                   #draw all the growth curves 
    lines(X,Y[i,],type="l")
-  # lines(X,Y1[i,],type="l",lty=2,col="red")
+   # lines(X,Y1[i,],type="l",lty=2,col="red")
  }
    
 #dev.off()
