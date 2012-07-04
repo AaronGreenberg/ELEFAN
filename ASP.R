@@ -16,7 +16,6 @@ ma5 <- function(x){                     #moving average function
     {
       y[i]=x[i-2]+x[i-1]+x[i]+x[i+1]+x[i+2] #compute moving average for middle part
     }
-  
   y<-y/5                                #scale things
   return(y)
 }
@@ -37,22 +36,26 @@ return(y)
 isolate <- function(x,freq){            #Identify isolated peaks
   #THIS FUNCTION HAS BUG!!! IT DOES SOMETHING FOOLISH IF THERE ARE ZEROS IN
   #FIRST LENGTH CLASS... THIS IS WRONG AND MUST BE FIXED!
-  K <- length(x)
-  count <- numeric(K)                   #initalize stuff
+  K <- length(x)                        #initalize stuff
+  count <- numeric(K)                  
   zeros <- numeric(K)
   zeros <- which(freq==0) #get vector of places where frequencies are zero
-  #count middle frequencies
-  count[zeros-1]=1+count[zeros-1]       #Count Places where Frequency is Zero
-  count[zeros-2]=1+count[zeros-2]       #This is for the middle places
-  count[zeros+2]=1+count[zeros+2]       #
-  count[zeros+1]=1+count[zeros+1]
+
   #End cases
-  count[1]=2+count[1]                   #the end cases are kinda different because they have zeros added to the edge...
+  count[1]=2+count[1]                   
   count[2]=1+count[2]
   count[K]=2+count[K]
   count[K-1]=1+count[K-1]
-  #change signs
+ 
+  #count middle frequencies     #This is for the middle places
+  if(sum(zeros)>0){                     #make sure that there are interior zeros.
+  if((zeros-1)>0){count[zeros-1]=1+count[zeros-1]} #Make sure that we don't have zeros in the smallest width classes
+  if((zeros-2)>0){count[zeros-2]=1+count[zeros-2]}  
+}
+  count[zeros+2]=1+count[zeros+2]       #
+  count[zeros+1]=1+count[zeros+1]
   count<-ifelse(x>=0,count,count*(-1))  #remember signs are important
+  print(count)
   return(count)
 }
 

@@ -6,18 +6,17 @@
 #%############################################################
 require(compiler)
 require(PBSmodelling);                  #nice software that makes making gui easier
-
 source("ASP.R")                         #load routines to compute peaks and available sum of peaks
 source("LF_plots.R")                    #load routines to make the special plots in particular rqFreqplot
 source("ESP.R")                         #load routines to compute Explained Sum of Peakz
 source("MISC.R")                        #load misc routines really mostly data proccessing
 createWin("ELEFAN.txt");                #Make gui
 buildgui <- function()
-  {
+  {                                     #This just sets initial bounds on the GUI
     setWinVal(list(Linf.min=0,Linf.max=2*max(data$ML),Linf=max(data$ML)))
-      setWinVal(list(points.min=1,points.max=length(data$ML),points=2))
+    setWinVal(list(points.min=1,points.max=length(data$ML),points=2))
   }
-buildgui()
+
 ## % Read in the data 
 ## %############################################################
 ## %############################################################
@@ -35,19 +34,5 @@ lfbin=length(data$ML)                   #get number of bins
 
 
 
-## % MAIN routines
-## %############################################################
-## %############################################################
-## %
 
-## goodfit <- NULL
-## getWinVal(scope="L")
-## growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-## lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
-## peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
-## gcurve <- curves(Linf,c,tw,K,data$ML,days,lfdata)      # compute growth curve this has index, day in growthcurve and properbin.
-## asp <- aspcompute(peaks)                      #compute asp
-## esp <- espcompute(gcurve,peaks$out,days,data$ML)               #compute esp
-## gf <- gfcompute(asp,esp)
-
-
+buildgui()
