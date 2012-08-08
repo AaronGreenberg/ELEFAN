@@ -35,35 +35,31 @@ curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
       dist <- vector(mode="numeric",length=length(1:modday))
       for(tstart in 1:modday){
         time=1
-        print("hi--zero")
-          print(tstart)
-        while((curtemp[time,3]<=.95*Linf)|(time%%modday!=0)){ #Loop over time until the growth curve reaches 95% of L infinity
+        g <- 0
+        #print(tstart)
+        while((g<=.95*Linf)|(time%%modday!=0)){ #Loop over time until the growth curve reaches 95% of L infinity
+          #print(g)
           if(time<tstart){
-            print("hi--one")
-            curtemp <- rbind(cur,c(time,time%%modday,0))
+            if(((time%%modday)==sdate)){curtemp <- rbind(curtemp,c(time,time%%modday,g))}
+
           } else
-          { print("hi--two")
-            g <- Linf*(1-exp(-K*((time))-(c*K)/(2*pi)*sin(2*pi*((time)-tw)))) #computes growth curve. I am fairly sure this is right, but...
-            
-              print(curtemp) 
-              curtemp <-rbind(cur,c(time,time%%modday,g))
-                                  print("hi--didn't crash-00")
-            print("hi--didn't crash")
-          }
-          print(time)
+          { 
+            g <- Linf*(1-exp(-K*((time-tstart))-(c*K)/(2*pi)*sin(2*pi*((time)-tw)))) #computes growth curve. I am fairly sure this is right, but...
+            if(((time%%modday)==sdate)){curtemp <- rbind(curtemp,c(time,time%%modday,g))}
+ 
+            }
           time=time+1
         }
-        print(tstart)
+
         dist[tstart] <- min((curtemp[,3]-sML)^2)
         
       }
+
       to <- which.min(dist)
       return(to)
     }
-
-  modto <- sweep(sdate,sML,modday,K,Linf,c,tw)
-  print("hi modto")
-  print(modto)
+  csweep <- cmpfun(sweep)
+  modto <- csweep(sdate,sML,modday,K,Linf,c,tw)
     ## Initalize things.
   time=1
   
