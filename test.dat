@@ -1,4 +1,4 @@
-#mean length Remember d2[0] =0 but that cause problems in isolate!
+#
 # Day Month Year 
 ML    d1	d2	   d3	    d4
 15    1		0	   3	     1		    

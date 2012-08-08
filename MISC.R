@@ -20,7 +20,6 @@ curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
   K <- K/365                            #converts growth parameter from years to days
   tw <- tw/365                          #converts winter point from years to days I think winter point has dimenstion t/year ?
   cur <- matrix(0,nrow=1,ncol=4)        #initalize growth curve data structure
-  
   bin <- function(ML,x,lf=lfdata,z=z){  #figure out which width class the growth curve goes through
     if(sum(lf[,time%%modday])==0){z <- z}
     else{
@@ -29,20 +28,60 @@ curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
     return(z)
   }
 
-  ## Initalize things.
- time=sdate
-  z=ML[which.min((ML-sML^2))]
-  print(sdate)
-  print(cur)
-  cur[1,] <-c(time,time%%modday,sML,z)  #
-  time=1
-  #
-  while((cur[time,3]<=.95*Linf)|(time%%modday!=0)){ #Loop over time until the growth curve reaches 95% of L infinity
-   g <- Linf*(1-exp(-K*((time+sdate)-tw)-(c*K)/(2*pi)*sin(2*pi*((time+sdate)-tw)))) #computes growth curve. I am fairly sure this is right, but...
-   cur <- rbind(cur,c(time,time%%modday,g,bin(ML,g,lfdata,cur[time,4])))
-   time=time+1
+  
+  sweep <- function(sdate,sML,modday,K,Linf,c,tw)#this function finds the best starting point for the growth curve
+    {
+      curtemp <- matrix(0,nrow=1,ncol=3)        #initalize growth curve data structure
+      dist <- vector(mode="numeric",length=length(1:modday))
+      for(tstart in 1:modday){
+        time=1
+        print("hi--zero")
+          print(tstart)
+        while((curtemp[time,3]<=.95*Linf)|(time%%modday!=0)){ #Loop over time until the growth curve reaches 95% of L infinity
+          if(time<tstart){
+            print("hi--one")
+            curtemp <- rbind(cur,c(time,time%%modday,0))
+          } else
+          { print("hi--two")
+            g <- Linf*(1-exp(-K*((time))-(c*K)/(2*pi)*sin(2*pi*((time)-tw)))) #computes growth curve. I am fairly sure this is right, but...
+            
+              print(curtemp) 
+              curtemp <-rbind(cur,c(time,time%%modday,g))
+                                  print("hi--didn't crash-00")
+            print("hi--didn't crash")
+          }
+          print(time)
+          time=time+1
+        }
+        print(tstart)
+        dist[tstart] <- min((curtemp[,3]-sML)^2)
+        
       }
-  cur[,1] <- cur[,1]+sdate
+      to <- which.min(dist)
+      return(to)
+    }
+
+  modto <- sweep(sdate,sML,modday,K,Linf,c,tw)
+  print("hi modto")
+  print(modto)
+    ## Initalize things.
+  time=1
+  
+  while((cur[time,3]<=.95*Linf)|(time%%modday!=0)){ #Loop over time until the growth curve reaches 95% of L infinity
+   if(time<floor(modto)){
+     cur <- rbind(cur,c(time,time%%modday,0,bin(ML,0,lfdata,cur[time,4])))
+   }
+   if(time>=floor(modto))
+   {
+   g <- Linf*(1-exp(-K*((time)-modto)-(c*K)/(2*pi)*sin(2*pi*((time)-tw)))) #computes growth curve. I am fairly sure this is right, but...
+   cur <- rbind(cur,c(time,time%%modday,g,bin(ML,g,lfdata,cur[time,4])))
+   } 
+   time=time+1
+   
+      }
+
+  #print(head(cur,2210))
+  #cur[,1] <- cur[,1]+sdate
 return(list(c=cur))
 }
 
@@ -178,7 +217,7 @@ movingAverage <- function(x, n=1, centered=TRUE) {
     s/count
 }
   
-  goodfit2 <- movingAverage(goodfit,smooth)
+   goodfit2 <- movingAverage(goodfit,smooth)
   print(max(goodfit))
   plot(K,goodfit2,type="l",ylim=c(0.0,max(goodfit)+.1))              #make plots
   points(K[which.max(goodfit)],max(goodfit),col="red")
@@ -212,16 +251,16 @@ gf <- gfcompute(asp,esp)
 graphics.off()
 
 if(ptype=="Peaks"){
-  rqFreqPlot(startime:d,da$ML,pd,startdate,ML,curve$c[,3],dm,barscale=10)
+  rqFreqPlot(1:d,da$ML,pd,startime,ML,curve$c[,3],dm,barscale=10)
 }
 if(ptype=="LF"){
-  rqFreqPlot(startime:d,da$ML,pd2,startdate,ML,curve$c[,3],dm)
+  rqFreqPlot(1:d,da$ML,pd2,startime,ML,curve$c[,3],dm)
 }
 }
 
 plotwetherall <- function(da=data){
   getWinVal(scope="L")
-  Linfest<- wetherall(data,points)
+  Linfest<- wetherall(data,(points-1))
   setWinVal(list(Linfest=Linfest))
 }
 

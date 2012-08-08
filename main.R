@@ -14,7 +14,7 @@ createWin("ELEFAN.txt");                #Make gui
 buildgui <- function()
   {                                     #This just sets initial bounds on the GUI
     setWinVal(list(Linf.min=0,Linf.max=2*max(data$ML),Linf=max(data$ML)))
-    setWinVal(list(points.min=1,points.max=length(data$ML),points=2))
+    setWinVal(list(points.min=3,points.max=length(data$ML),points=3))
   }
 
 ## % Read in the data 

@@ -23,12 +23,12 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
    ## In particular it would be nice to put the dates samples were taken on the
    #jpeg("test.jpeg")
    X <- time                            #store time
-   years <- length(curves)/365        #figure out how many years the growth curve has been computed for.
+   years <- length(curves)/365       #figure out how many years the growth curve has been computed for.
    xlim <- c(min(time),max(time))
    Y <-matrix(curves,nrow=years,ncol=length(time),byrow=TRUE) #form matrix with growth curves wrapped around
+   print
    print(date)
    dateaxis <-as.Date(dates$Date[1]+X)
-   
    #create axis for plots
    par(new = FALSE)
    plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,...)
@@ -54,7 +54,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
    
 #   grid(nx = NA, ny = 42, col = "lightgray", lty = "dotted", #make grid lines sort of chart junk but 
      #lwd = par("lwd"), equilogs = TRUE)
-   print(c(sdate,sML))
+   #print(c(sdate,sML))
    points(sdate,sML,col="black",pch=19)
    for(i in 1:years){                   #draw all the growth curves 
    lines(X,Y[i,],type="l")
