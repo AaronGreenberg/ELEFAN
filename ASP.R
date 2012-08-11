@@ -1,4 +1,4 @@
- ## % ~~~~THIS FILE COMPUTES AVALIABLE SUMS OF PEAKS.
+## % ~~~~THIS FILE COMPUTES AVALIABLE SUMS OF PEAKS.
 ## %############################################################
 ## %############################################################
 ## % 
@@ -55,7 +55,7 @@ isolate <- function(x,freq){            #Identify isolated peaks
   count[zeros+2]=1+count[zeros+2]       #
   count[zeros+1]=1+count[zeros+1]
   count<-ifelse(x>=0,count,count*(-1))  #remember signs are important
-  print(count)
+  #print(count)
   return(count)
 }
 

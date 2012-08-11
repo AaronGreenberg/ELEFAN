@@ -27,11 +27,11 @@ ESP <- function(data2=peaks,asp=datafreq$asp,ML=data$ML,dm=date){ #this needs re
    
    if(data2[ke,imod] < 0){
      #print(c("i","imod","years","ke","data","ML"))
-     print(c(i,imod,years,ke,data2[ke,imod],ML[ke]))
+     #print(c(i,imod,years,ke,data2[ke,imod],ML[ke]))
      countesp=countesp+data2[ke,imod]
     }else if(data2[ke,imod] > 0){
       #print(c("i","imod","years","ke","data","ML"))
-      print(c(i,imod,years,ke,data2[ke,imod],ML[ke]))
+      #print(c(i,imod,years,ke,data2[ke,imod],ML[ke]))
      countesp=countesp+data2[ke,imod]
      
      j=0
@@ -99,7 +99,7 @@ ESPplot <- function(data2=peaks,asp=datafreq$asp,ML=data$ML,dm=date){ #this need
    }
  }}}
   gf <- 10^(countesp/sum(asp[2:length(asp)]))/10
-  print(c("GoodFit::",gf))
+  #print(c("GoodFit::",gf))
   return(gf=gf)
 }
   

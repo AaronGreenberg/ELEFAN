@@ -120,7 +120,7 @@ wetherall <- function(da=data,points=3){
   data2 <- data
   data2$ML <- data$ML*0
   z <- rowSums(data2)
-  print(z)
+  #print(z)
   Li=Liprime=z*0
   for(i in 1:length(data2$ML)){
     Li[i]=data$ML[i]
@@ -226,16 +226,16 @@ ckscan <- cmpfun(kscan)
 plotpeak <- function(d=days,dm=date,da=data,pd2=lfdata,pd=peaks$out,curve=gcurve){
 goodfit <- NULL
 getWinVal(scope="L")
-print("date")
-print(Date)
+#print("date")
+#print(Date)
 startdate <- as.Date(Date)
 startime <- as.numeric(startdate-dm[1,1])
-print("stime")
-print(startime)
-print(startdate)
-print("ML")
+#print("stime")
+#print(startime)
+#print(startdate)
+#print("ML")
 ML <- as.numeric(ML)
-print(ML)
+#print(ML)
 #need to convert start date to dime.
 growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
 lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
@@ -245,7 +245,8 @@ asp <- aspcompute(peaks)                      #compute asp
 esp <- espcompute(gcurve,peaks$out,days,data$ML)               #compute esp
 gf <- gfcompute(asp,esp)
 graphics.off()
-
+print("goodfit")
+print(gf)
 if(ptype=="Peaks"){
   rqFreqPlot(1:d,da$ML,pd,startime,ML,curve$c[,3],dm,barscale=10)
 }

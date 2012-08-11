@@ -1,4 +1,4 @@
-notebook tabs="GrowthCurve Kscan  Weatherall CatchCurve" name=nbfres #width=380 height=150
+notebook tabs="'L/F & Growth' 'K-scan'  'Weatherall plot' 'Catch curves'" name=nbfres #width=380 height=150
 
 grid 1 1  padx=60 pady=60# Simulation tab in notebook
        grid 7 1 #padx=20 pady=20
@@ -22,12 +22,12 @@ grid 1 1  padx=60 pady=60# Simulation tab in notebook
 		  label text="Starting conditions" #font=bold  
 		  vector length=2 names="Date ML"\
 		  labels=" 'DateYMD' 'ML'"\
-		  values="1970/01/01 20" mode=character
-        button text="plot Growth Curve" func=plotpeak
+		  values="1970/01/15 20" mode=character
+        button text="Growth Curves Plot" func=plotpeak
 
 
       grid 3 1 #padx=20 pady=20
-         	label text=Kscan: font=bold
+         	label text=K-scan: font=bold
         	button text="kscan " func=plotkscan
         	vector length=4 names="smooth Kmin Kmax sweep"\ 
           	labels="'smooth' 'Kmin' 'Kmax' 'sweep'"\
@@ -38,9 +38,9 @@ grid 1 1  padx=60 pady=60# Simulation tab in notebook
              	 label text="Points to Use"
              	 slideplus name=points from=3 to=30 by=1 value=2 
              vector length=1 names="Linfest" \
-             labels="'Linfest'" \
+             labels="'Estimated Linf'" \
              values="0" vertical=T width=12
-             button text="plot Wetherall " func=plotwetherall
+             button text="Wetherall Plot " func=plotwetherall
 
 
        grid 3 1 #padx=20 pady=20
@@ -50,4 +50,4 @@ grid 1 1  padx=60 pady=60# Simulation tab in notebook
              vector length=1 names="blah" \
              labels="'blah'" \
              values="0" vertical=T width=12
-             button text="plot Catch Curve " 
+             button text="plot Catch Curves " 

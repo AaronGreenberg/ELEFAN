@@ -26,8 +26,8 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
    years <- length(curves)/365       #figure out how many years the growth curve has been computed for.
    xlim <- c(min(time),max(time))
    Y <-matrix(curves,nrow=years,ncol=length(time),byrow=TRUE) #form matrix with growth curves wrapped around
-   print
-   print(date)
+   #print
+   #print(date)
    dateaxis <-as.Date(dates$Date[1]+X)
    #create axis for plots
    par(new = FALSE)
