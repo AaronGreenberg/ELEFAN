@@ -31,7 +31,7 @@ curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
   
   sweep <- function(sdate,sML,modday,K,Linf,c,tw)#this function finds the best starting point for the growth curve
     {
-      curtemp <- matrix(0,nrow=1,ncol=3)        #initalize growth curve data structure
+       curtemp <- matrix(0,nrow=1,ncol=3)        #initalize growth curve data structure
       dist <- vector(mode="numeric",length=length(1:modday))
       for(tstart in 1:modday){
         time=1
@@ -76,8 +76,7 @@ curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
    
       }
 
-  #print(head(cur,2210))
-  #cur[,1] <- cur[,1]+sdate
+
 return(list(c=cur))
 }
 
@@ -141,49 +140,47 @@ wetherall <- function(da=data,points=3){
 }
 
 
-
-kscan <- function(Linf,c,tw,smooth,Kmin,Kmax,sweep,dat=data,d=days,growthdata,lfdata,peaks)
-{
-  K <- seq(Kmin,Kmax,length.out=sweep)
-  #print(lfdata)
-  print(peaks)
-  for(loopday in 1:d){
-    #print(loopday)
-   if(sum(lfdata[,loopday])>0){
-    for(loopML in 1:length(dat$ML)){
-      if(peaks$out[loopML,loopday]>0)
-        print(peaks$out[loopML,loopday])
-      for(Kind in K){
-        
-
-     }
-    }
-  }
-    
-  
-  ## for(j in 1:length(K)){
-  ##   gcurve <- curves(Linf,c,tw,K[j],dat$ML,days,lfdata) #compute growth curve this has index, day in growthcurve and properbin.
-  ##   asp <- caspcompute(peaks)                             #compute asp
-  ##   esp <- cespcompute(gcurve,peaks$out,d,dat$ML)     #compute esp
-  ##   gf <- cgfcompute(asp,esp)                             #compute goodness of fit
-  ##   goodfit[j] <- gf
-    
-  ## }
+## kscan <- function(Linf,c,tw,dat=data,d=days,growthdata,lfdata,peaks)
+## {  #compute growth curve
 
 
 
-  
-  ##  goodfit2 <- movingAverage(goodfit,smooth)
-  ## print(max(goodfit))
-  ## plot(K,goodfit2,type="l",ylim=c(0.0,max(goodfit)+.1))              #make plots
-  ## points(K[which.max(goodfit)],max(goodfit),col="red")
-}
-ckscan <- cmpfun(kscan)
+## Ksweep <-function(K,Linf,c,tw,asp,startime,ML,dat=data,d=days,growthdata,lfdata,peaks)
+##   {
+##     # it allows for the use of lapply
+##     gcurve <- ccurves(Linf,c,tw,K,data$ML,days,lfdata,startime,ML)      # compute growth curve this has index, day in growthcurve and properbin.      
+##     esp <- cespcompute(gcurve,peaks$out,days,data$ML)               #compute esp
+##     gf <- gfcompute(asp,esp)
+##     return(gf)
+##   }
+##  cKsweep <- cmpfun(Ksweep)
+##   asp <- caspcompute(peaks)                      #compute asp
+##   print(days)
+##  print(head(lfdata))
+##   for(i in 1:days)
+##     { 
+##       for(j in 1:length(dat$ML)){
+##          #gf <- vector()
+##          #for(k in 1:100){
+##          K <- seq(.1,10,.2)
+##           if(sum(lfdata[,i])>=1){
+##           gf <- vapply(K,Ksweep,Linf,c,tw,asp,i,dat$ML[j],dat,d,growthdata,lfdata,peaks)
+##            print(gf)
+##        }
+##    #}
+##   }
+## }
+## }
+
+## ckscan <- cmpfun(kscan)
 
   # x: the vector
 # n: the number of samples
 # centered: if FALSE, then average current sample and previous (n-1) samples
 #           if TRUE, then average symmetrically in past and future. (If n is even, use one more sample from future.)
+
+
+
 movingAverage <- function(x, n=1, centered=TRUE) {
 
     if (centered) {
@@ -237,68 +234,3 @@ movingAverage <- function(x, n=1, centered=TRUE) {
 }
 
 
-
-
-
-
-###THE FUNCTIONS THAT INTERACT WITH THE GUI ARE BELOW!!!
-##
-plotpeak <- function(d=days,dm=date,da=data,pd2=lfdata,pd=peaks$out,curve=gcurve){
-goodfit <- NULL
-getWinVal(scope="L")
-#print("date")
-#print(Date)
-startdate <- as.Date(Date)
-startime <- as.numeric(startdate-dm[1,1])
-#print("stime")
-#print(startime)
-#print(startdate)
-#print("ML")
-ML <- as.numeric(ML)
-#print(ML)
-#need to convert start date to dime.
-
-growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
-peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
-gcurve <- curves(Linf,c,tw,K,data$ML,days,lfdata,startime,ML)      # compute growth curve this has index, day in growthcurve and properbin.
-asp <- aspcompute(peaks)                      #compute asp
-esp <- espcompute(gcurve,peaks$out,days,data$ML)               #compute esp
-gf <- gfcompute(asp,esp)
-graphics.off()
-print("goodfit")
-print(gf)
-if(ptype=="Peaks"){
-  rqFreqPlot(1:d,da$ML,pd,startime,ML,curve$c[,3],dm,barscale=10)
-}
-if(ptype=="LF"){
-  rqFreqPlot(1:d,da$ML,pd2,startime,ML,curve$c[,3],dm)
-}
-}
-
-plotwetherall <- function(da=data){
-  getWinVal(scope="L")
-  Linfest<- wetherall(data,(points-1))
-  setWinVal(list(Linfest=Linfest))
-}
-
-
-plotkscan <- function(d=days,dm=date,da=data,pd2=lfdata,pd=peaks$out,curve=gcurve)
-  {
-    growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-    lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
-    peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
-    print(date)
-    print(days)
-    getWinVal(scope="L")
-    ckscan(Linf,c,tw,smooth,Kmin,Kmax,sweep,dat=data,d=days,growthdata,lfdata,peaks)
-  }
-
-
-plotnonseacatchcurve <- function(da=data,K,Linf){
-  
-  #this function computes the non seasonal growth curve
-  getWinVal(scope="L")
-  #first create single sample.
-  
-}
