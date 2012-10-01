@@ -1,0 +1,5 @@
+
+       grid 3 1 #padx=20 pady=20
+             button text="plot Non-Seasonally adjusted Catch Curves " func=plotnonseacatchcurve
+	     button text="plot Seasonally adjusted Catch Curves " func=plotseacatchcurve
+             button text="Return to Main"  func=return2main

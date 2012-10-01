@@ -1,53 +1,11 @@
-notebook tabs="'L/F & Growth' 'K-scan'  'Weatherall plot' 'Catch curves'" name=nbfres #width=380 height=150
+#This makes the main gui.
+#It is responsible for reading in the two files and 
 
-grid 1 1  padx=60 pady=60# Simulation tab in notebook func=plotpeak
-       grid 7 1 #padx=20 pady=20
-              	grid 1 3 
-		     label text="Graph Type": #font=bold
-        	     radio name=ptype  text="Peaks" value="Peaks"  mode=character 
-        	     radio name=ptype  text="LF" value="LF" mode=character
-		grid 2 1                 
-		     label text=Linf #font=bold
-		     slideplus  name=Linf from=0.6 by=.001 to=1000 value=41 
-       		grid 2 1                      
-        	  label text=K #font=bold
-        	  slideplus  name=K from=.1 to=10 by=.002 value=.2
-		grid 2 1                   
-        	  label text=tw #font=bold
-        	  slideplus  name=tw from=.1 to=1 by=.002 value=.1  
-		grid 2 1                 
-        	  label text=c #font=bold
-        	  slideplus  name=c from=.1 to=1 by=.002 value=.9
-		grid 2 1                 
-		  label text="Starting conditions" #font=bold  
-		  vector length=2 names="Date ML"\
-		  labels=" 'DateYMD' 'ML'"\
-		  values="1970/01/15 20" mode=character
-        button text="Growth Curves Plot" func=plotpeak
-
-
-      grid 3 1 #padx=20 pady=20
-         	label text=K-scan: font=bold
-        	button text="kscan " func=plotkscan
-        	vector length=4 names="smooth Kmin Kmax sweep"\ 
-          	labels="'smooth' 'Kmin' 'Kmax' 'sweep'"\
- 	   	values="1 0.1 10 100"
-    
-       grid 3 1 #padx=20 pady=20
-       	     grid 2 1 padx=2 pady=20
-             	 label text="Points to Use"
-             	 slideplus name=points from=3 to=30 by=1 value=2 #func=plotwetherall
-             vector length=1 names="Linfest" \
-             labels="'Estimated Linf'" \
-             values="0" vertical=T width=12
-             button text="Wetherall Plot " func=plotwetherall
-
-
-       grid 3 1 #padx=20 pady=20
-       	     grid 2 1 padx=0 pady=20
-             	 label text="Points to Use"
-             	 slideplus name=blah  from=2 to=30 by=1 value=2 
-             vector length=1 names="blah" \
-             labels="'blah'" \
-             values="0" vertical=T width=12
-             button text="plot Non-Seasonally adjusted Catch Curves "  func=plotnonseacatchcurve
+	grid 3 2 #padx=20 pady=20
+        	button text="Read Date File " func=datefilein 
+		button text="Read LF File " func=lffilein     
+        	button text="LF plots"  func=lfgui	
+        	button text="K Scan"  func=Kscangui	
+		button text="Weatherall Plot"  func=Weatherallgui	
+    		button text="Catch Curve Plots"  func=Catchcurvegui	
+		
