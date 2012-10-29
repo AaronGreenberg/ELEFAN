@@ -15,6 +15,7 @@ fillgrowthdata <- function(date,data,growthdata){
 }
 
 #%############################################################
+#%############################################################
 
 curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
   K <- K/365                            #converts growth parameter from years to days
@@ -31,7 +32,7 @@ curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
   
   sweep <- function(sdate,sML,modday,K,Linf,c,tw)#this function finds the best starting point for the growth curve
     {
-       curtemp <- matrix(0,nrow=1,ncol=3)        #initalize growth curve data structure
+      curtemp <- matrix(0,nrow=1,ncol=3)        #initalize growth curve data structure
       dist <- vector(mode="numeric",length=length(1:modday))
       for(tstart in 1:modday){
         time=1
@@ -44,7 +45,7 @@ curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
 
           } else
           { 
-            g <- Linf*(1-exp(-K*((time-tstart))-(c*K)/(2*pi)*(sin(2*pi*((time)-tw)))-sin(2*pi*(tstart-tw)))) #computes growth curve. I am fairly sure this is right, but...
+            g <- Linf*(1-exp(-K*((time-tstart))-(c*K)/(2*pi)*(sin(2*pi*((time)-tw)))-sin(2*pi*(tstart-tw)))) #computes growth curve. 
             if(((time%%modday)==sdate)){curtemp <- rbind(curtemp,c(time,time%%modday,g))}
  
             }
@@ -69,7 +70,7 @@ curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
    }
    if(time>=floor(modto))
    {
-   g <- Linf*(1-exp(-K*((time)-modto)-(c*K)/(2*pi)*(sin(2*pi*((time)-tw)))-sin(2*pi*(modto-tw)))) #computes growth curve. I am fairly sure this is right, but...
+   g <- Linf*(1-exp(-K*((time)-modto)-(c*K)/(2*pi)*(sin(2*pi*((time)-tw)))-sin(2*pi*(modto-tw)))) #computes growth curve. 
    cur <- rbind(cur,c(time,time%%modday,g,bin(ML,g,lfdata,cur[time,4])))
    } 
    time=time+1
@@ -140,39 +141,69 @@ wetherall <- function(da=data,points=3){
 }
 
 
-## kscan <- function(Linf,c,tw,dat=data,d=days,growthdata,lfdata,peaks)
-## {  #compute growth curve
+kscan <- function(Linf,c,tw,dat=data,d=days,growthdata,lfdata,peaks)
+{  #compute growth curve
+
+  Ksweep <-function(K,Linf,c,tw,asp,stime,MLi,dat=data,d=days,growthdata,lfdata,peaks)
+   {
+    # it allows for the use of lapply
+    gcurve <- ccurves(Linf,c,tw,K,data$ML,d,lfdata,stime,MLi)      # compute growth curve this has index, day in growthcurve and properbin.      
+    esp <- cespcompute(gcurve,peaks$out,days,data$ML)               #compute esp
+    gf <- gfcompute(asp,esp)
+    return(gf)
+    }
+  
+ cKsweep <- cmpfun(Ksweep)
+ asp <- caspcompute(peaks)                      #compute asp
+ # print(head(peaks$out))
+   out<- matrix(0,nrow=days*length(dat$ML),ncol=4)
+  index <- 1
+  for(i in 1:days)
+    { 
+      for(j in 1:length(dat$ML)){
+         K <- seq(.2,10,.2)
+           if(sum(lfdata[,i])>=1){
+             if(peaks$out[j,i]>=0){
+               gf <- K*0
+               for(ki in 1:length(K)){
+               gf[ki] <- Ksweep(K[ki],Linf,c,tw,asp,i,dat$ML[j],dat,d,growthdata,lfdata,peaks)
+            }
+
+               out[index,] <- c(max(gf),K[which.max(gf)],i,dat$ML[j])
+               print(out[index,])
+               index <- index+1
+
+           }
+  
+       }
+  }
+}
+  return(out)
+}
+
+ckscan <- cmpfun(kscan)
 
 
 
-## Ksweep <-function(K,Linf,c,tw,asp,startime,ML,dat=data,d=days,growthdata,lfdata,peaks)
-##   {
-##     # it allows for the use of lapply
-##     gcurve <- ccurves(Linf,c,tw,K,data$ML,days,lfdata,startime,ML)      # compute growth curve this has index, day in growthcurve and properbin.      
-##     esp <- cespcompute(gcurve,peaks$out,days,data$ML)               #compute esp
-##     gf <- gfcompute(asp,esp)
-##     return(gf)
-##   }
-##  cKsweep <- cmpfun(Ksweep)
-##   asp <- caspcompute(peaks)                      #compute asp
-##   print(days)
-##  print(head(lfdata))
-##   for(i in 1:days)
-##     { 
-##       for(j in 1:length(dat$ML)){
-##          #gf <- vector()
-##          #for(k in 1:100){
-##          K <- seq(.1,10,.2)
-##           if(sum(lfdata[,i])>=1){
-##           gf <- vapply(K,Ksweep,Linf,c,tw,asp,i,dat$ML[j],dat,d,growthdata,lfdata,peaks)
-##            print(gf)
-##        }
-##    #}
-##   }
-## }
-## }
 
-## ckscan <- cmpfun(kscan)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   # x: the vector
 # n: the number of samples
