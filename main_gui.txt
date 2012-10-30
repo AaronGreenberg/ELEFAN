@@ -1,9 +1,8 @@
 #This makes the main gui.
 #It is responsible for reading in the two files and 
-
 	grid 3 2 #padx=20 pady=20
-        	button text="Read Date File " func=datefilein 
-		button text="Read LF File " func=lffilein     
+	        button text="Read Date File " func=datefilein 
+		button text="Read LF File " func=lffilein
         	button text="LF plots"  func=lfgui	
         	button text="K Scan"  func=Kscangui	
 		button text="Weatherall Plot"  func=Weatherallgui	

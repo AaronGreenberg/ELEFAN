@@ -31,7 +31,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
    dateaxis <-as.Date(dates$Date[1]+X)
    #create axis for plots
    par(new = FALSE)
-   plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,...)
+   plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,las=1,...)
    #plot Rectangles
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="month"))
    count=0

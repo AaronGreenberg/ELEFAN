@@ -66,7 +66,7 @@ curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
   
   while((cur[time,3]<=.95*Linf)|(time%%modday!=0)){ #Loop over time until the growth curve reaches 95% of L infinity
    if(time<floor(modto)){
-     cur <- rbind(cur,c(time,time%%modday,0,bin(ML,0,lfdata,cur[time,4])))
+     cur <- rbind(cur,c(time,time%%modday,NA,bin(ML,0,lfdata,cur[time,4])))
    }
    if(time>=floor(modto))
    {
