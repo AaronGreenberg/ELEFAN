@@ -110,6 +110,7 @@ espcompute <- function(gcurve,p=peaks$out,modday,ML)
     }
   }
   return(list(esp=esp,peaks2=p))
+  print(peaks2)
 }
 cespcompute <- cmpfun(espcompute)
 gfcompute <- function(asp,esp){10^(esp$esp/asp)/10}
@@ -132,12 +133,15 @@ wetherall <- function(da=data,points=3){
   inter=as.vector(z$coefficients)
   Linfest=-1*inter[1]/inter[2]
   graphics.off()
+  png("weatherall.png")
   par(1,las=1)
-  plot(Li,Liprime,xlim=c(Li[1],Linfest+3))
-  
+  plot(Li,Liprime,xlim=c(Li[1],Linfest+3),xlab="Cutoff Length", ylab="L(mean)-L'(cm)",ylim=c(0,max(Liprime)+10))
   points(Lip,Lipoints,pch=19,col="red")
   abline(z)
+  text(Li,Liprime,sort(1:length(Li),decreasing=TRUE),cex=0.7, pos=4, col="black")
+    dev.off()
   return(Linfest)
+
 }
 
 
@@ -152,21 +156,23 @@ kscan <- function(Linf,c,tw,dat=data,d=days,growthdata,lfdata,peaks)
     gf <- gfcompute(asp,esp)
     return(gf)
     }
-  
  cKsweep <- cmpfun(Ksweep)
- asp <- caspcompute(peaks)                      #compute asp
- # print(head(peaks$out))
-   out<- matrix(0,nrow=days*length(dat$ML),ncol=4)
+  asp <- caspcompute(peaks)                      #compute as
+  out<- matrix(0,nrow=days*length(dat$ML),ncol=4)
   index <- 1
   for(i in 1:days)
     { 
       for(j in 1:length(dat$ML)){
-         K <- seq(.2,10,.2)
+         K  <- seq(.1,3,length=10)
            if(sum(lfdata[,i])>=1){
              if(peaks$out[j,i]>=0){
                gf <- K*0
+               #for(ki in 1:length(K)){
+               #gf <- sapply(K,Ksweep,Linf,c,tw,asp,i,dat$ML[j],dat,d,growthdata,lfdata,peaks)
+                                        #}
                for(ki in 1:length(K)){
-               gf[ki] <- Ksweep(K[ki],Linf,c,tw,asp,i,dat$ML[j],dat,d,growthdata,lfdata,peaks)
+
+               gf[ki] <- cKsweep(K[ki],Linf,c,tw,asp,i,dat$ML[j],dat,d,growthdata,lfdata,peaks)
             }
 
                out[index,] <- c(max(gf),K[which.max(gf)],i,dat$ML[j])
