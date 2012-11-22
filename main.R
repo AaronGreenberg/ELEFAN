@@ -30,14 +30,17 @@ days= as.numeric(julian(date$Date[datelength])-julian(date$Date[1])) #set defaul
 moddays=(365-days%%365)+days                                         #compute width of plot window in years... 
 assign("date", date, envir = .GlobalEnv)
 assign("days", moddays, envir = .GlobalEnv)
+
 }
 
 
 lffilein <- function(){
 fname2 <- selectFile()
 data<-read.table(fname2,head=TRUE,as.is=TRUE)  #read in date key for the length frequency data This should probably be documented
+#data$ML <- data$ML+(data$ML[1]-data$ML[2])/2# convert MLs to upper lengths
 assign("data", data, envir = .GlobalEnv)
 assign("lfbin",length(data$ML),envir=.GlobalEnv)                   #get number of bins
+
 }
 
 

@@ -2,36 +2,32 @@
 #It consists of two functions. rectplot and rqFreqPlot.
 #It was written by Aaron Greenberg for the Project ELEFAN
  
-rectplot <- function(ser,bins,xmin,xmax,ylim,barcol){
+rectplot <- function(ser,bins,xmin,xmax,ylim,barcol1,barcol2){
   #This function puts the rectangles into the rqFreqPlot
   YL=bins[1:(length(bins))]-(bins[2]-bins[1])/2           #lower y limits
   YU=bins[2:(length(bins)+1)]-(bins[2]-bins[1])/2           #upper y limits
   XL=ser+xmin                         #nonzero x limits may be right or left!
   XR=ser*0+xmin                       #axis x limits
-  rect(XL,YL,XR,YU,col=barcol)
-  
+  col1 <- which(XL-xmin<=0)#switch peaks and valley colors
+  col2 <- which(XL-xmin>=0)
+  rect(XL[col1],YL[col1],XR[col1],YU[col1],col=barcol1)
+  rect(XL[col2],YL[col2],XR[col2],YU[col2],col=barcol2)
 }
 
 
 #Make Rectangles of time series Length Frequency data
-rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(min(time),max(time)), ylim = c(0, max(bins)), barscale = 1, barcol = "red",boxwex = 50,xlab1="Month" ,ylab1 = "Mean Length", ylab2 = "", lty = c(2, 1, 2),...) {
+rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(min(time),max(time)), ylim = c(0, max(bins)), barscale = 1, barcol1 = "red",barcol2="grey",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),...) {
    ## This function makes the fancy graphs that seems central to the output of ELEFAN
    ## In particular it provides a way of plotting a growth curve over length frequancy data plots over time.
    ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
-   ##
-   ## At present the xaxis needs better marking and the Y label needs to be properly written.
-   ## In particular it would be nice to put the dates samples were taken on the
-   #jpeg("test.jpeg")
-   X <- time                            #store time
+   X <- time                         #store time
    years <- length(curves)/365       #figure out how many years the growth curve has been computed for.
    xlim <- c(min(time),max(time))
    Y <-matrix(curves,nrow=years,ncol=length(time),byrow=TRUE) #form matrix with growth curves wrapped around
-   #print
-   #print(date)
    dateaxis <-as.Date(dates$Date[1]+X)
    #create axis for plots
    par(new = FALSE)
-   plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,las=1,...)
+   plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,las=2,...)
    #plot Rectangles
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="month"))
    count=0
@@ -42,25 +38,19 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
 		xmax <- xlim[2] - time[i] #got to find two points for 
 		ser <- as.vector(freqs[,i]) #putting right and left sides of rectangles
 		ser <- ser * barscale       #scaleing... sometimes it is nice make things bigger or smaller
-                
                 if(sum(ser) == 0){          #if there is no lf data at time i don't plot anything
                 }
                 else{                   #if there is lf data at time i make plot
                   count=count+1
-		rectplot(-ser,bins,xmin,xmax,ylim,barcol)
-                text(cbind(time[i]+3,(max(ylim)+1)+count%%2),label=toString(dates$Date[count+1]),cex=.6,col="red")
+		rectplot(-ser,bins,xmin,xmax,ylim,barcol1,barcol2)
+                text(cbind(time[i]+3,max(bins)+(count%%2)*1.2),label=toString(dates$Date[count+1]),cex=.75,col="black")
               }
 	}
-   
-#   grid(nx = NA, ny = 42, col = "lightgray", lty = "dotted", #make grid lines sort of chart junk but 
-     #lwd = par("lwd"), equilogs = TRUE)
-   #print(c(sdate,sML))
    points(sdate,sML,col="black",pch=19)
-   for(i in 1:years){                   #draw all the growth curves 
-   lines(X,Y[i,],type="l")
-   # lines(X,Y1[i,],type="l",lty=2,col="red")
- }
+   for(i in 1:years){                                     #draw all the growth curves
+     z <- which(Y[i,]>0)
+     lines(X[z],Y[i,z],type="l")
+   }
    
-#dev.off()
  }
 

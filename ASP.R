@@ -29,13 +29,11 @@ quotientsN_ma <- function(N,ma){      #compute the freq/moving average
 }
 
 peaksmap <- function(Q){                   #Compute Peaks
-  y <- Q/mean(Q)-1                      #scale and shift
+  y <- Q/mean(Q)-1                         #scale and shift
 return(y)
 }
 
 isolate <- function(x,freq){            #Identify isolated peaks
-  #THIS FUNCTION HAS BUG!!! IT DOES SOMETHING FOOLISH IF THERE ARE ZEROS IN
-  #FIRST LENGTH CLASS... THIS IS WRONG AND MUST BE FIXED!
   K <- length(x)                        #initalize stuff
   count <- numeric(K)                  
   zeros <- numeric(K)
@@ -93,8 +91,6 @@ availablesumpeaks <- function(x){
     ytemp[i-1] <- 0
     ytemp[i+1] <- 0
   }
-  #print(ytemp)
-  #print(sum(ytemp))
   return(sum(ytemp))
 }
 
