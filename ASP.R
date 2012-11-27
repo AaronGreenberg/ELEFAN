@@ -35,6 +35,8 @@ return(y)
 
 isolate <- function(x,freq){            #Identify isolated peaks
   K <- length(x)                        #initalize stuff
+  print(x)
+  #print(freq)
   count <- numeric(K)                  
   zeros <- numeric(K)
   zeros <- which(freq==0) #get vector of places where frequencies are zero
@@ -133,7 +135,7 @@ lfrestruc<- function(ldata){            #puts main1 and main2 together to
      count=count+1
      }
    }
-     #print(ret)
+    print(ret)
     return(ret)                         
  }
 

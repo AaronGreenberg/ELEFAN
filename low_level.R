@@ -265,3 +265,49 @@ movingAverage <- function(x, n=1, centered=TRUE) {
 }
 
 
+
+growth_rootf <- function(x,K,Linf,C,TW){
+#makes computing tstart and time when length is .95%Linf easy.
+  out <- Linf*(1-exp(-K*(0+x)))
+  return(out)
+}
+
+bisect <- function(a,b,equal,K,Linf,C,TW){
+  #This function uses bisection to compute the required values of tstart and...
+  if((growth_rootf(a,K,Linf,C,TW)-equal)*(growth_rootf(b,K,Linf,C,TW)-equal)>=0){#make sure that inputs are okay... 
+    print("f(xup) and f(xlow) are of same sign")
+    return(1)} 
+termtest <- 1#set counter to protect against errors. 
+  while(termtest<= 10000) {# limit iterations to prevent infinite loop
+    c <- (a + b)/2 #new midpoint
+    if(((growth_rootf(c,K,Linf,C,TW)-equal)==0||(b-a)/2<= 10^-(10))) { #solution found
+    return(c)
+    break
+  }
+  termtest <- termtest + 1 #increment step counter
+  if(sign(growth_rootf(c,K,Linf,C,TW)-equal) == sign(growth_rootf(a,K,Linf,C,TW)-equal)){ a <- c}
+  else{b <- c }# new interval
+}
+print("Method failed. max number of steps exceeded")#just a nice test to make sure that the first test really worked.
+}
+
+
+curves <- function(Linf,K,sML,C,TW){
+  K <- K/365
+  C <- C/365
+  #first  compute time_start
+  timestart <-  bisect(0,200*365,sML,K,Linf,C,TW)
+  print(timestart)
+  #second compute time of  95%*Linf
+  nintyfivetime <-  bisect(0,200*365,.95*Linf,K,Linf,C,TW)
+  print(nintyfivetime)
+  time <- -(floor(timestart)):ceiling(nintyfivetime)#get time vector.
+  cur <- Linf*(1-exp(-K*(time+timestart)))
+  plot(time/365,cur,type="l")
+  points(0,10)
+  #third compute growth curve and put it in the right place.
+
+  
+return(list(c=cur))
+}
+
