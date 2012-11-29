@@ -19,66 +19,65 @@ fillgrowthdata <- function(date,data,growthdata){
 #%############################################################
 
 curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
-  K <- K/365                            #converts growth parameter from years to days
-  tw <- tw/365                          #converts winter point from years to days I think winter point has dimenstion t/year ?
-  cur <- matrix(0,nrow=1,ncol=4)        #initalize growth curve data structure
-  bin <- function(ML,x,lf=lfdata,z=z){  #figure out which width class the growth curve goes through
-    if(sum(lf[,time%%modday])==0){z <- z}
-    else{
-      z <- ML[which.min(((ML)-x)^2)]
-  }
-    return(z)
-  }
+  K <- K/365
+  C <- c
+  w <- 1/365
+  TW <- tw
 
-  
-  sweep <- function(sdate,sML,modday,K,Linf,c,tw)#this function finds the best starting point for the growth curve
-    {
-      curtemp <- matrix(0,nrow=1,ncol=3)        #initalize growth curve data structure
-      dist <- vector(mode="numeric",length=length(1:modday))
-      for(tstart in 1:modday){
-        time=1
-        g <- 0
-        #print(tstart)
-        while((g<=.95*Linf)|(time%%modday!=0)){ #Loop over time until the growth curve reaches 95% of L infinity
-          #print(g)
-          if(time<tstart){
-            if(((time%%modday)==sdate)){curtemp <- rbind(curtemp,c(time,time%%modday,g))}
+     
+print(c("K","c","C","w","TW"))
+print(c(K,c,C,w,TW))  
 
-          } else
-          { 
-            g <- Linf*(1-exp(-K*((time-tstart))-(c*K)/(2*pi)*(sin(2*pi*((time)-tw)))-sin(2*pi*(tstart-tw)))) #computes growth curve. 
-            if(((time%%modday)==sdate)){curtemp <- rbind(curtemp,c(time,time%%modday,g))}
  
-            }
-          time=time+1
-        }
+growth_rootf <- function(x,K,Linf,C,TW){
+#makes computing tstart and time when length is .95%Linf easy.
+  w <- 1/365
+  period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(0-TW)-sin(2*pi*w*(TW+x))))
+  out <- Linf*(1-exp(-K*(0+x)+period))
+  return(out)
+}
 
-        dist[tstart] <- min((curtemp[,3]-sML)^2)
-        
-      }
+bisect <- function(a,b,equal,K,Linf,C,TW){
+  #This function uses bisection to compute the required values of tstart and...
+  if((growth_rootf(a,K,Linf,C,TW)-equal)*(growth_rootf(b,K,Linf,C,TW)-equal)>=0){#make sure that inputs are okay... 
+    print("f(xup) and f(xlow) are of same sign")
+    return(1)} 
+termtest <- 1#set counter to protect against errors. 
+  while(termtest<= 10000) {# limit iterations to prevent infinite loop
+    d <- (a + b)/2 #new midpoint
+    if(((growth_rootf(d,K,Linf,C,TW)-equal)==0||(b-a)/2<= 10^-(10))) { #solution found
+    return(d)
+    break
+  }
+  termtest <- termtest + 1 #increment step counter
+  if(sign(growth_rootf(d,K,Linf,C,TW)-equal) == sign(growth_rootf(a,K,Linf,C,TW)-equal)){ a <- d}
+  else{b <- d }# new interval
+}
+print("Method failed. max number of steps exceeded")#just a nice test to make sure that the first test really worked.
+}
 
-      to <- which.min(dist)
-      return(to)
-    }
-  csweep <- cmpfun(sweep)
-  modto <- csweep(sdate,sML,modday,K,Linf,c,tw)
-    ## Initalize things.
-  time=1
   
-  while((cur[time,3]<=.95*Linf)|(time%%modday!=0)){ #Loop over time until the growth curve reaches 95% of L infinity
-   if(time<floor(modto)){
-     cur <- rbind(cur,c(time,time%%modday,0,bin(ML,0,lfdata,cur[time,4])))
-   }
-   if(time>=floor(modto))
-   {
-   g <- Linf*(1-exp(-K*((time)-modto)-(c*K)/(2*pi)*(sin(2*pi*((time)-tw)))-sin(2*pi*(modto-tw)))) #computes growth curve. 
-   cur <- rbind(cur,c(time,time%%modday,g,bin(ML,g,lfdata,cur[time,4])))
-   } 
-   time=time+1
-   
-      }
+  
+  #first  compute time_start
+  timestart <-  bisect(0,200*365,sML,K,Linf,C,TW)
+  print(timestart)
+  #second compute time of  95%*Linf
+  nintyfivetime <-  bisect(0,200*365,.95*Linf,K,Linf,C,TW)
+  cur <- matrix(0,nrow=ceiling(nintyfivetime)+floor(timestart)+1,ncol=4)        #initalize growth curve data structure
+  time <- -(floor(timestart)):ceiling(nintyfivetime)#get time vector.
+  period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(time-TW)-sin(2*pi*w*(TW+timestart))))
+  cur[,1] <-(time)
+  cur[,2] <-(time)%%modday
+  cur[,3] <- Linf*(1-exp(-K*((time+timestart))+period))
+  cur[,4] <- 0#*ML[which.min(((ML)-cur[,3])^2)]
+  x11()
+  plot(time,cur[,3],type="l")
+  points(0,sML)
+  
+  #third compute growth curve and put it in the right place.
 
-
+  
+print(head(cur))
 return(list(c=cur))
 }
 
@@ -265,49 +264,4 @@ movingAverage <- function(x, n=1, centered=TRUE) {
 }
 
 
-
-growth_rootf <- function(x,K,Linf,C,TW){
-#makes computing tstart and time when length is .95%Linf easy.
-  out <- Linf*(1-exp(-K*(0+x)))
-  return(out)
-}
-
-bisect <- function(a,b,equal,K,Linf,C,TW){
-  #This function uses bisection to compute the required values of tstart and...
-  if((growth_rootf(a,K,Linf,C,TW)-equal)*(growth_rootf(b,K,Linf,C,TW)-equal)>=0){#make sure that inputs are okay... 
-    print("f(xup) and f(xlow) are of same sign")
-    return(1)} 
-termtest <- 1#set counter to protect against errors. 
-  while(termtest<= 10000) {# limit iterations to prevent infinite loop
-    c <- (a + b)/2 #new midpoint
-    if(((growth_rootf(c,K,Linf,C,TW)-equal)==0||(b-a)/2<= 10^-(10))) { #solution found
-    return(c)
-    break
-  }
-  termtest <- termtest + 1 #increment step counter
-  if(sign(growth_rootf(c,K,Linf,C,TW)-equal) == sign(growth_rootf(a,K,Linf,C,TW)-equal)){ a <- c}
-  else{b <- c }# new interval
-}
-print("Method failed. max number of steps exceeded")#just a nice test to make sure that the first test really worked.
-}
-
-
-curves <- function(Linf,K,sML,C,TW){
-  K <- K/365
-  C <- C/365
-  #first  compute time_start
-  timestart <-  bisect(0,200*365,sML,K,Linf,C,TW)
-  print(timestart)
-  #second compute time of  95%*Linf
-  nintyfivetime <-  bisect(0,200*365,.95*Linf,K,Linf,C,TW)
-  print(nintyfivetime)
-  time <- -(floor(timestart)):ceiling(nintyfivetime)#get time vector.
-  cur <- Linf*(1-exp(-K*(time+timestart)))
-  plot(time/365,cur,type="l")
-  points(0,10)
-  #third compute growth curve and put it in the right place.
-
-  
-return(list(c=cur))
-}
 
