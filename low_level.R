@@ -25,9 +25,6 @@ curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
   TW <- tw
 
      
-print(c("K","c","C","w","TW"))
-print(c(K,c,C,w,TW))  
-
  
 growth_rootf <- function(x,K,Linf,C,TW){
 #makes computing tstart and time when length is .95%Linf easy.
@@ -63,18 +60,21 @@ print("Method failed. max number of steps exceeded")#just a nice test to make su
   print(timestart)
   #second compute time of  95%*Linf
   nintyfivetime <-  bisect(0,200*365,.95*Linf,K,Linf,C,TW)
-  time <- -(floor(timestart*2.25)):ceiling(nintyfivetime*2.25)
-  cur <- matrix(0,nrow=ceiling(nintyfivetime*2.25)+floor(timestart*2.25)+1,ncol=4)        #initalize growth curve data structure
+upwind <- (ceiling(nintyfivetime))#+(365-ceiling(nintyfivetime)%%365))
+downwind <- -(floor(timestart))#+(365-floor(timestart)%%365))
+time <- downwind:upwind
+  cur <- matrix(0,(nrow=upwind+(-1)*downwind+1),ncol=4)        #initalize growth curve data structure
   period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(time-TW))-sin(2*pi*w*(TW+timestart)))
   cur[,1] <-(time+sdate)
   cur[,2] <-(time+sdate)%%modday
   cur[,3] <- Linf*(1-exp(-K*((time+timestart))+period))
-  cur[,4] <- 0#*ML[which.min(((ML)-cur[,3])^2)]
-  print(cur[which(cur[,1]==sdate),])  
+  fn <- function(i){ML[which.min(((ML)-cur[i,3])^2)]}
+  print("hi")
+  print(fn(1))
+  cur[,4] <- sapply(1:length(cur[,3]),fn)
   x11()
   plot(time,cur[,3],type="l")
   points(0,sML)
-  
   #third compute growth curve and put it in the right place.
 
   
@@ -89,27 +89,18 @@ aspcompute <- function(peaks){sum(peaks$asp[2:length(peaks$asp)])} #compute sum 
 caspcompute <- cmpfun(aspcompute)
 espcompute <- function(gcurve,p=peaks$out,modday,ML)
 {                                       #compute ESP
-  esp=0
-  for(time in 1:(length(gcurve$c[,1]))){
-    if(sum(p[,time%%modday])==0) {esp=esp}
-    else{
-      if(gcurve$c[time,4]>0){   
-        jim <- which(ML==gcurve$c[time,4])
-        esp=esp+p[jim,time%%modday]
-        j=0
-        while(p[jim+j,time%%modday]>0 ){
-          p[jim+j,time%%modday]=0
-          j=j+1
-        }
-        indexk=1
-        
-        while(jim-indexk>0&&p[jim-indexk,time%%modday]>0 ){
-          p[jim-indexk,time%%modday]=0
-          indexk=indexk+1
-        }
-      }
-    }
-  }
+ peaks2 <- p #need a structure to turn to zero to prevent counting a peak more than once.
+ for(timesweep in 1:length(gcurve$c[,1])){
+   for(lengthsweep in 1:length(ML)){
+     if(peaks2[timesweep,lengthsweep]>=0){esp <- esp+peaks2[timesweep,lengthsweep]}
+     if(peaks2[timesweep,lengthsweep]>=){esp <- esp+peaks2[timesweep,lengthsweep]}
+     print(c(timesweep,lengthsweep,ML[lengthsweep]))
+   }
+ }
+
+ 
+   print(ML)
+   esp=0
   return(list(esp=esp,peaks2=p))
 }
 cespcompute <- cmpfun(espcompute)

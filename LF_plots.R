@@ -21,15 +21,8 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
    ## In particular it provides a way of plotting a growth curve over length frequancy data plots over time.
    ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
    X <- time                         #store time
-   print("curves")
-   print(head(curves$c))
    
-   years <- ceiling(length(curves$c[,3])/365)       #figure out how many years the growth curve has been computed for.
-   print(years)
    xlim <- c(min(time),max(time))
-   Ygrowth <-matrix(curves$c[,3],nrow=years,ncol=length(time),byrow=TRUE) #form matrix with growth curves wrapped around
-   Xgrowth <-matrix(curves$c[,2],nrow=years,ncol=length(time),byrow=TRUE) #form matrix with growth curves wrapped around
- 
    dateaxis <-as.Date(dates$Date[1]+X)
    #create axis for plots
    par(new = FALSE)
@@ -54,12 +47,12 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
               }
 	}
    points(sdate,sML,col="black",pch=19)
-#   lines(curves$c[,2],curves$c[,3])
-   for(i in 1:years){
-     print(i)
-     z <- which(Ygrowth[i,]>0)
-     lines(Xgrowth[i,z],Ygrowth[i,z],type="l",col="black")
-
+ 
+   breaksu <- which(curves$c[,2]==(length(time)-1))
+   breaksd <- which(curves$c[,2]==1)
+   for(index in 1:length(breaksd)){
+     plotvec <- breaksd[index]:breaksu[index]
+     lines(curves$c[plotvec,2],curves$c[plotvec,3])
    }
    
  }
