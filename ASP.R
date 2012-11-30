@@ -48,7 +48,10 @@ isolate <- function(x,freq){            #Identify isolated peaks
   count[K-1]=1+count[K-1]
  
   #count middle frequencies     #This is for the middle places
-  if(sum(zeros)>0){                     #make sure that there are interior zeros.
+  if(sum(zeros)>0){ #make sure that there are interior zeros.
+    print("zeros")
+    print(zeros-1)
+    print(zeros-2)
   if((zeros-1)>0){count[zeros-1]=1+count[zeros-1]} #Make sure that we don't have zeros in the smallest width classes
   if((zeros-2)>0){count[zeros-2]=1+count[zeros-2]}  
 }

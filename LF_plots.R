@@ -21,9 +21,15 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
    ## In particular it provides a way of plotting a growth curve over length frequancy data plots over time.
    ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
    X <- time                         #store time
-   years <- length(curves)/365       #figure out how many years the growth curve has been computed for.
+   print("curves")
+   print(head(curves$c))
+   
+   years <- ceiling(length(curves$c[,3])/365)       #figure out how many years the growth curve has been computed for.
+   print(years)
    xlim <- c(min(time),max(time))
-   Y <-matrix(curves,nrow=years,ncol=length(time),byrow=TRUE) #form matrix with growth curves wrapped around
+   Ygrowth <-matrix(curves$c[,3],nrow=years,ncol=length(time),byrow=TRUE) #form matrix with growth curves wrapped around
+   Xgrowth <-matrix(curves$c[,2],nrow=years,ncol=length(time),byrow=TRUE) #form matrix with growth curves wrapped around
+ 
    dateaxis <-as.Date(dates$Date[1]+X)
    #create axis for plots
    par(new = FALSE)
@@ -48,9 +54,12 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
               }
 	}
    points(sdate,sML,col="black",pch=19)
-   for(i in 1:years){                                     #draw all the growth curves
-     z <- which(Y[i,]>0)
-     lines(X[z],Y[i,z],type="l")
+#   lines(curves$c[,2],curves$c[,3])
+   for(i in 1:years){
+     print(i)
+     z <- which(Ygrowth[i,]>0)
+     lines(Xgrowth[i,z],Ygrowth[i,z],type="l",col="black")
+
    }
    
  }

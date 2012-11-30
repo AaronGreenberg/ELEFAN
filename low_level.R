@@ -32,7 +32,7 @@ print(c(K,c,C,w,TW))
 growth_rootf <- function(x,K,Linf,C,TW){
 #makes computing tstart and time when length is .95%Linf easy.
   w <- 1/365
-  period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(0-TW)-sin(2*pi*w*(TW+x))))
+  period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(0-TW))-sin(2*pi*w*(TW+x)))
   out <- Linf*(1-exp(-K*(0+x)+period))
   return(out)
 }
@@ -63,13 +63,14 @@ print("Method failed. max number of steps exceeded")#just a nice test to make su
   print(timestart)
   #second compute time of  95%*Linf
   nintyfivetime <-  bisect(0,200*365,.95*Linf,K,Linf,C,TW)
-  cur <- matrix(0,nrow=ceiling(nintyfivetime)+floor(timestart)+1,ncol=4)        #initalize growth curve data structure
-  time <- -(floor(timestart)):ceiling(nintyfivetime)#get time vector.
-  period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(time-TW)-sin(2*pi*w*(TW+timestart))))
-  cur[,1] <-(time)
-  cur[,2] <-(time)%%modday
+  time <- -(floor(timestart*2.25)):ceiling(nintyfivetime*2.25)
+  cur <- matrix(0,nrow=ceiling(nintyfivetime*2.25)+floor(timestart*2.25)+1,ncol=4)        #initalize growth curve data structure
+  period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(time-TW))-sin(2*pi*w*(TW+timestart)))
+  cur[,1] <-(time+sdate)
+  cur[,2] <-(time+sdate)%%modday
   cur[,3] <- Linf*(1-exp(-K*((time+timestart))+period))
   cur[,4] <- 0#*ML[which.min(((ML)-cur[,3])^2)]
+  print(cur[which(cur[,1]==sdate),])  
   x11()
   plot(time,cur[,3],type="l")
   points(0,sML)
@@ -77,7 +78,7 @@ print("Method failed. max number of steps exceeded")#just a nice test to make su
   #third compute growth curve and put it in the right place.
 
   
-print(head(cur))
+#print(head(cur))
 return(list(c=cur))
 }
 
