@@ -90,13 +90,13 @@ caspcompute <- cmpfun(aspcompute)
 espcompute <- function(gcurve,p=peaks$out,modday,ML)
 {                                       #compute ESP
  peaks2 <- p #need a structure to turn to zero to prevent counting a peak more than once.
- for(timesweep in 1:length(gcurve$c[,1])){
-   for(lengthsweep in 1:length(ML)){
-     if(peaks2[timesweep,lengthsweep]>=0){esp <- esp+peaks2[timesweep,lengthsweep]}
-     if(peaks2[timesweep,lengthsweep]>=){esp <- esp+peaks2[timesweep,lengthsweep]}
-     print(c(timesweep,lengthsweep,ML[lengthsweep]))
-   }
- }
+ ## for(timesweep in 1:length(gcurve$c[,1])){
+ ##   for(lengthsweep in 1:length(ML)){
+ ##     if(peaks2[timesweep,lengthsweep]>=0){esp <- esp+peaks2[timesweep,lengthsweep]}
+ ##     if(peaks2[timesweep,lengthsweep]>=){esp <- esp+peaks2[timesweep,lengthsweep]}
+ ##     print(c(timesweep,lengthsweep,ML[lengthsweep]))
+ ##   }
+ ## }
 
  
    print(ML)
