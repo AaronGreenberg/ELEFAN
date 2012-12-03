@@ -53,15 +53,46 @@ termtest <- 1#set counter to protect against errors.
 print("Method failed. max number of steps exceeded")#just a nice test to make sure that the first test really worked.
 }
 
+   
+growth_rootf2 <- function(x,K,Linf,C,TW,ts){
+#makes computing tstart and time when length is .95%Linf easy.
+  w <- 1/365
+  period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(x-TW))-sin(2*pi*w*(TW+ts)))
+  out <- Linf*(1-exp(-K*(x+ts)+period))
+  return(out)
+}
+
+bisect2 <- function(a,b,equal,K,Linf,C,TW,ts){
+  #This function uses bisection to compute the required values of tstart and...
+  if((growth_rootf2(a,K,Linf,C,TW,ts)-equal)*(growth_rootf2(b,K,Linf,C,TW,ts)-equal)>=0){#make sure that inputs are okay... 
+    print("f(xup) and f(xlow) are of same sign")
+    return(1)} 
+termtest <- 1#set counter to protect against errors. 
+  while(termtest<= 10000) {# limit iterations to prevent infinite loop
+    d <- (a + b)/2 #new midpoint
+    if(((growth_rootf2(d,K,Linf,C,TW,ts)-equal)==0||(b-a)/2<= 10^-(10))) { #solution found
+    return(d)
+    break
+  }
+  termtest <- termtest + 1 #increment step counter
+  if(sign(growth_rootf2(d,K,Linf,C,TW,ts)-equal) == sign(growth_rootf2(a,K,Linf,C,TW,ts)-equal)){ a <- d}
+  else{b <- d }# new interval
+}
+print("Method failed. max number of steps exceeded")#just a nice test to make sure that the first test really worked.
+}
+
   
   
   #first  compute time_start
   timestart <-  bisect(0,200*365,sML,K,Linf,C,TW)
   print(timestart)
   #second compute time of  95%*Linf
-  nintyfivetime <-  bisect(0,200*365,.95*Linf,K,Linf,C,TW)
-upwind <- (ceiling(nintyfivetime))#+(365-ceiling(nintyfivetime)%%365))
-downwind <- -(floor(timestart))#+(365-floor(timestart)%%365))
+  nintyfivetime <-  bisect2(0,200*365,.95*Linf,K,Linf,C,TW,timestart)
+  print(nintyfivetime)
+  zerotime <-  bisect2(-200*365,200*365,0,K,Linf,C,TW,timestart)
+  print(zerotime)
+upwind <- (ceiling(nintyfivetime))
+downwind <- (floor(zerotime))
 time <- downwind:upwind
   cur <- matrix(0,(nrow=upwind+(-1)*downwind+1),ncol=4)        #initalize growth curve data structure
   period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(time-TW))-sin(2*pi*w*(TW+timestart)))

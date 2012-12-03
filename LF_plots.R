@@ -46,14 +46,12 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
                 text(cbind(time[i]+3,max(bins)+(count%%2)*1.2),label=toString(dates$Date[count+1]),cex=.75,col="black")
               }
 	}
-   points(sdate,sML,col="black",pch=19)
+   points(sdate,sML,col="black",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
+##   lines(curves$c[,2],curves$c[,3],col="red")
+   points(curves$c[,2],curves$c[,3],cex=.05,col="black")
+   
  
-   breaksu <- which(curves$c[,2]==(length(time)-1))
-   breaksd <- which(curves$c[,2]==1)
-   for(index in 1:length(breaksd)){
-     plotvec <- breaksd[index]:breaksu[index]
-     lines(curves$c[plotvec,2],curves$c[plotvec,3])
-   }
+   
    
  }
 
