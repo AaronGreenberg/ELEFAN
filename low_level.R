@@ -158,7 +158,7 @@ wetherall <- function(da=data,points=3){
   par(1,las=1)
   plot(Li,Liprime,xlim=c(Li[1],Linfest+3),ylim=c(0,max(Liprime)+6),xlab="Cutoff Length (L' cm)",ylab="Mean Cutoff Length")
   points(Lip,Lipoints,pch=19,col="red")
-  text(Li,Liprime+4,as.character(sort(1:length(Liprime),decreasing=TRUE)))
+  text(Li,Liprime+1,as.character(sort(1:length(Liprime),decreasing=TRUE)))
   abline(z)
   return(Linfest)
 }
