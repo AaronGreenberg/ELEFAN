@@ -8,13 +8,13 @@
 		     slideplus  name=Linf from=0.6 by=.001 to=1000 value=41 
        		grid 2 1                      
         	  label text=K #font=bold
-        	  slideplus  name=K from=.1 to=10 by=.002 value=.2
+        	  slideplus  name=K from=.1 to=10 by=.0002 value=.2
 		grid 2 1                   
         	  label text=tw #font=bold
-        	  slideplus  name=tw from=.1 to=1 by=.002 value=.1  
+        	  slideplus  name=tw from=.1 to=1 by=.0002 value=.5  
 		grid 2 1                 
         	  label text=c #font=bold
-        	  slideplus  name=c from=.1 to=1 by=.002 value=.9
+        	  slideplus  name=c from=0 to=1 by=.0002 value=0
 		grid 2 1                 
 		  label text="Starting conditions" #font=bold  
 		  vector length=2 names="Date ML"\

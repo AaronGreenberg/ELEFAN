@@ -124,13 +124,17 @@ espcompute <- function(gcurve,p=peaks$out,modday,ML)
   x11()
   rqFreqPlot(1:365,ML,peaks2,14,13,gcurve,date,barscale=10,xlab="test")
   for(timesweep in 1:length(gcurve$c[,1])){#sweep over time
-    gclocation <- which(ML==gcurve$c[timesweep,4])-1#figure out what ML index we are on!
+    gclocation <- ifelse(gcurve$c[timesweep,3]>=min(ML),which(ML==gcurve$c[timesweep,4]),0)#figure out what ML index we are on!
+    print("glocation")
     print(gclocation)
-     print(timesweep%%modday)
-    if(peaks2[gclocation,timesweep%%modday]>0){
+    print(ML[gclocation])
+    tsweep <- timesweep%%modday
+    print("tsweep")
+     print(tsweep)
+    if(peaks2[gclocation,tsweep]>0){
       
-    print(peaks2[gclocation,timesweep%%modday])
-    esp <- peaks2[gclocation,timesweep%%modday]+esp
+    print(peaks2[gclocation,tsweep])
+    esp <- peaks2[gclocation,tsweep]+esp
     print(esp)
   }
   }
