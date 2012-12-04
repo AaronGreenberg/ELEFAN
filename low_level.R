@@ -7,9 +7,8 @@ fillgrowthdata <- function(date,data,growthdata){
   interval <- vector()
   for(i in 1:(length(date$Date)-1)){    # compute intervals between dates so that dates are stored correctly. 
     interval[i]=date$Date[i+1]-date$Date[1]
-
   }
-  for(i in 1:(length(date$Date)-1)){#assign length frequency data to big array of date length frequency data
+  for(i in 1:(length(date$Date)-1)){    #assign length frequency data to big array of date length frequency data
     growthdata[,interval[i]]=data[,i+1]
   }
   return(growthdata)# return data structure with either zeros or length frequency data by day
@@ -53,9 +52,10 @@ termtest <- 1#set counter to protect against errors.
 print("Method failed. max number of steps exceeded")#just a nice test to make sure that the first test really worked.
 }
 
+  #I should talk to Laura about making things polymorphic... Cause this is ugly and has code redundancy. 
    
 growth_rootf2 <- function(x,K,Linf,C,TW,ts){
-#makes computing tstart and time when length is .95%Linf easy.
+#makes computing to and time when length is .95%Linf easy. 
   w <- 1/365
   period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(x-TW))-sin(2*pi*w*(TW+ts)))
   out <- Linf*(1-exp(-K*(x+ts)+period))
@@ -63,7 +63,7 @@ growth_rootf2 <- function(x,K,Linf,C,TW,ts){
 }
 
 bisect2 <- function(a,b,equal,K,Linf,C,TW,ts){
-  #This function uses bisection to compute the required values of tstart and...
+  #This function uses bisection to compute the required end time values
   if((growth_rootf2(a,K,Linf,C,TW,ts)-equal)*(growth_rootf2(b,K,Linf,C,TW,ts)-equal)>=0){#make sure that inputs are okay... 
     print("f(xup) and f(xlow) are of same sign")
     return(1)} 
@@ -81,34 +81,32 @@ termtest <- 1#set counter to protect against errors.
 print("Method failed. max number of steps exceeded")#just a nice test to make sure that the first test really worked.
 }
 
-  
-  
+
   #first  compute time_start
   timestart <-  bisect(0,200*365,sML,K,Linf,C,TW)
   print(timestart)
   #second compute time of  95%*Linf
   nintyfivetime <-  bisect2(0,200*365,.95*Linf,K,Linf,C,TW,timestart)
   print(nintyfivetime)
+  #compute tzero
+  #really only important when C!=0 because it should be about -timestart  but ...
   zerotime <-  bisect2(-200*365,200*365,0,K,Linf,C,TW,timestart)
   print(zerotime)
+  #get vector of times!
 upwind <- (ceiling(nintyfivetime))
 downwind <- (floor(zerotime))
 time <- downwind:upwind
+ #third compute growth curve and put it in the right place.
   cur <- matrix(0,(nrow=upwind+(-1)*downwind+1),ncol=4)        #initalize growth curve data structure
   period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(time-TW))-sin(2*pi*w*(TW+timestart)))
-  cur[,1] <-(time+sdate)
-  cur[,2] <-(time+sdate)%%modday
-  cur[,3] <- Linf*(1-exp(-K*((time+timestart))+period))
-  fn <- function(i){ML[which.min(((ML)-cur[i,3])^2)]}
-  print("hi")
-  print(fn(1))
-  cur[,4] <- sapply(1:length(cur[,3]),fn)
-  x11()
-  plot(time,cur[,3],type="l")
+  cur[,1] <-(time+sdate)#keep real time
+  cur[,2] <-(time+sdate)%%modday #wrap time so mapping the time to the plot is easy
+  cur[,3] <- Linf*(1-exp(-K*((time+timestart))+period))#put in the growth curve
+  fn <- function(i){ML[which.min(((ML)-cur[i,3])^2)]} #snazzy function that allows use of sapply  to find the right bins!
+  cur[,4] <- sapply(1:length(cur[,3]),fn)             #get a version of the growth curve that makes computing esp and asp easy
+  x11()#This plot will probably not be in the final version however debugging plots make me feel warm and fuzzy!
+  plot(time,cur[,3],type="l",xlab="time", ylab="Length",main="Debug growth curve plot")
   points(0,sML)
-  #third compute growth curve and put it in the right place.
-
-  
 #print(head(cur))
 return(list(c=cur))
 }
@@ -120,19 +118,24 @@ aspcompute <- function(peaks){sum(peaks$asp[2:length(peaks$asp)])} #compute sum 
 caspcompute <- cmpfun(aspcompute)
 espcompute <- function(gcurve,p=peaks$out,modday,ML)
 {                                       #compute ESP
- peaks2 <- p #need a structure to turn to zero to prevent counting a peak more than once.
- ## for(timesweep in 1:length(gcurve$c[,1])){
- ##   for(lengthsweep in 1:length(ML)){
- ##     if(peaks2[timesweep,lengthsweep]>=0){esp <- esp+peaks2[timesweep,lengthsweep]}
- ##     if(peaks2[timesweep,lengthsweep]>=){esp <- esp+peaks2[timesweep,lengthsweep]}
- ##     print(c(timesweep,lengthsweep,ML[lengthsweep]))
- ##   }
- ## }
-
- 
-   print(ML)
-   esp=0
-  return(list(esp=esp,peaks2=p))
+  peaks2 <- p #need a structure to turn to zero to prevent counting a peak more than once.
+  print(head(peaks2))
+  esp <- as.numeric(0)
+  x11()
+  rqFreqPlot(1:365,ML,peaks2,14,13,gcurve,date,barscale=10,xlab="test")
+  for(timesweep in 1:length(gcurve$c[,1])){#sweep over time
+    gclocation <- which(ML==gcurve$c[timesweep,4])-1#figure out what ML index we are on!
+    print(gclocation)
+     print(timesweep%%modday)
+    if(peaks2[gclocation,timesweep%%modday]>0){
+      
+    print(peaks2[gclocation,timesweep%%modday])
+    esp <- peaks2[gclocation,timesweep%%modday]+esp
+    print(esp)
+  }
+  }
+    
+  return(list(esp=esp,peaks2=peaks2))
 }
 cespcompute <- cmpfun(espcompute)
 gfcompute <- function(asp,esp){10^(esp$esp/asp)/10}
