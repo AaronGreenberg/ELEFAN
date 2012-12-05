@@ -120,26 +120,26 @@ espcompute <- function(gcurve,p=peaks$out,modday,ML)
 {                                       #compute ESP
   peaks2 <- p #need a structure to turn to zero to prevent counting a peak more than once.
   print(head(peaks2))
-  esp <- as.numeric(0)
+  esp <- vector()
   x11()
   rqFreqPlot(1:365,ML,peaks2,14,13,gcurve,date,barscale=10,xlab="test")
-  for(timesweep in 1:length(gcurve$c[,1])){#sweep over time
+  for(timesweep in 1:10){#length(gcurve$c[,1])){#sweep over time
     gclocation <- ifelse(gcurve$c[timesweep,3]>=min(ML),which(ML==gcurve$c[timesweep,4]),0)#figure out what ML index we are on!
     print("glocation")
     print(gclocation)
     print(ML[gclocation])
-    tsweep <- timesweep%%modday
+    tsweep <- timesweep%%modday+1
     print("tsweep")
      print(tsweep)
-    if(peaks2[gclocation,tsweep]>0){
-      
+#    if(peaks2[gclocation,tsweep]>0){
+    print("peaks")  
     print(peaks2[gclocation,tsweep])
-    esp <- peaks2[gclocation,tsweep]+esp
-    print(esp)
+    esp[timesweep] <- peaks2[gclocation,tsweep]
+#    print(sum(esp))
+  #}
   }
-  }
-    
-  return(list(esp=esp,peaks2=peaks2))
+   ESP=sum(esp) 
+  return(list(esp=ESP,peaks2=peaks2))
 }
 cespcompute <- cmpfun(espcompute)
 gfcompute <- function(asp,esp){10^(esp$esp/asp)/10}
