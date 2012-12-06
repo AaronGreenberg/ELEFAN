@@ -1,0 +1,6 @@
+
+
+      grid 3 1 #padx=20 pady=20
+         	label text=K-scan: font=bold
+        	button text="kscan " func=plotkscan
+    		button text="Return to main" func=return2main
