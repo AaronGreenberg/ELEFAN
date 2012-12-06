@@ -50,6 +50,7 @@ plotkscan <- function(d=days,dm=date,da=data,pd2=lfdata,pd=peaks$out,curve=gcurv
     print(days)
     getWinVal(scope="L")
     z <- ckscan(Linf,c,tw,dat=data,d=days,growthdata,lfdata,peaks)
+    print(z)
     plot(z[,2],z[,1]) 
   }
 

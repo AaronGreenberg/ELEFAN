@@ -84,14 +84,14 @@ print("Method failed. max number of steps exceeded")#just a nice test to make su
 
   #first  compute time_start
   timestart <-  bisect(0,200*365,sML,K,Linf,C,TW)
-  print(timestart)
+ # print(timestart)
   #second compute time of  95%*Linf
   nintyfivetime <-  bisect2(0,200*365,.95*Linf,K,Linf,C,TW,timestart)
-  print(nintyfivetime)
+ # print(nintyfivetime)
   #compute tzero
   #really only important when C!=0 because it should be about -timestart  but ...
   zerotime <-  bisect2(-200*365,200*365,0,K,Linf,C,TW,timestart)
-  print(zerotime)
+#  print(zerotime)
   #get vector of times!
 upwind <- (ceiling(nintyfivetime))
 downwind <- (floor(zerotime))
@@ -104,9 +104,9 @@ time <- downwind:upwind
   cur[,3] <- Linf*(1-exp(-K*((time+timestart))+period))#put in the growth curve
   fn <- function(i){ML[which.min(((ML)-cur[i,3])^2)]} #snazzy function that allows use of sapply  to find the right bins!
   cur[,4] <- sapply(1:length(cur[,3]),fn)             #get a version of the growth curve that makes computing esp and asp easy
-  x11()#This plot will probably not be in the final version however debugging plots make me feel warm and fuzzy!
-  plot(time,cur[,3],type="l",xlab="time", ylab="Length",main="Debug growth curve plot")
-  points(0,sML)
+#  x11()#This plot will probably not be in the final version however debugging plots make me feel warm and fuzzy!
+ # plot(time,cur[,3],type="l",xlab="time", ylab="Length",main="Debug growth curve plot")
+ # points(0,sML)
 #print(head(cur))
 return(list(c=cur))
 }
@@ -119,26 +119,34 @@ caspcompute <- cmpfun(aspcompute)
 espcompute <- function(gcurve,p=peaks$out,modday,ML)
 {                                       #compute ESP
   peaks2 <- p #need a structure to turn to zero to prevent counting a peak more than once.
-  print(head(peaks2))
+#  print(head(peaks2))
   esp <- vector()
-  x11()
-  rqFreqPlot(1:365,ML,peaks2,14,13,gcurve,date,barscale=10,xlab="test")
-  for(timesweep in 1:10){#length(gcurve$c[,1])){#sweep over time
+  #x11()
+#   graphics.off()
+ # rqFreqPlot(1:365,ML,peaks2,sdate,13,gcurve,date,barscale=10,xlab="test")
+  for(timesweep in 1:length(gcurve$c[,1])){#sweep over time
     gclocation <- ifelse(gcurve$c[timesweep,3]>=min(ML),which(ML==gcurve$c[timesweep,4]),0)#figure out what ML index we are on!
-    print("glocation")
-    print(gclocation)
-    print(ML[gclocation])
+    if(gclocation>0){
+    # print("glocation")
+    #print(gclocation)
+    #print(ML[gclocation])
     tsweep <- timesweep%%modday+1
-    print("tsweep")
-     print(tsweep)
-#    if(peaks2[gclocation,tsweep]>0){
-    print("peaks")  
-    print(peaks2[gclocation,tsweep])
+    #print("tsweep")
+    #print(tsweep)
+    #print("peaks")  
+    #print(peaks2[gclocation,tsweep])
+    if(peaks2[gclocation,tsweep]>0){
     esp[timesweep] <- peaks2[gclocation,tsweep]
-#    print(sum(esp))
-  #}
+    peaks2[gclocation,tsweep] <- 0
+    }else{ esp[timesweep] <- peaks2[gclocation,tsweep]}
+  }else{esp[timesweep] <- 0}
   }
-   ESP=sum(esp) 
+#   print(head(sort(esp,decreasing=TRUE),30))
+#   print(head(sort(esp,decreasing=FALSE),30))
+#  print(esp[which(esp!=0)])
+  ESP=sum(esp)
+ # print("ESP==")
+ # print(ESP)
   return(list(esp=ESP,peaks2=peaks2))
 }
 cespcompute <- cmpfun(espcompute)
@@ -173,7 +181,6 @@ wetherall <- function(da=data,points=3){
 
 kscan <- function(Linf,c,tw,dat=data,d=days,growthdata,lfdata,peaks)
 {  #compute growth curve
-
   Ksweep <-function(K,Linf,c,tw,asp,stime,MLi,dat=data,d=days,growthdata,lfdata,peaks)
    {
     # it allows for the use of lapply
@@ -182,31 +189,14 @@ kscan <- function(Linf,c,tw,dat=data,d=days,growthdata,lfdata,peaks)
     gf <- gfcompute(asp,esp)
     return(gf)
     }
-  
- cKsweep <- cmpfun(Ksweep)
+ 
  asp <- caspcompute(peaks)                      #compute asp
  out<- matrix(0,nrow=days*length(dat$ML),ncol=4)
- index <- 1
-  for(i in 1:days)
-    { 
-      for(j in 1:length(dat$ML)){
-         K <- seq(.1,3,.1)
-           if(sum(lfdata[,i])>=1){
-             if(peaks$out[j,i]>=0){
-               gf <- K*0
-               for(ki in 1:length(K)){
-               gf[ki] <- Ksweep(K[ki],Linf,c,tw,asp,i,dat$ML[j],dat,d,growthdata,lfdata,peaks)
-            }
-
-               out[index,] <- c(max(gf),K[which.max(gf)],i,dat$ML[j])
-               print(out[index,])
-               index <- index+1
-
-           }
+ #loop over all days
+ #loop over all peaks
+ #try lots of values of K
+ #return value of K that gives biggest goodness of fit. 
   
-       }
-  }
-}
   return(out)
 }
 
