@@ -22,7 +22,6 @@ curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
   C <- c
   w <- 1/365
   TW <- tw
-
      
  
 growth_rootf <- function(x,K,Linf,C,TW){
@@ -179,55 +178,8 @@ wetherall <- function(da=data,points=3){
 }
 
 
-kscan <- function(Linf,c,tw,dat=data,d=days,growthdata,lfdata,peaks)
-{  #compute growth curve
-  Ksweep <-function(K,Linf,c,tw,asp,stime,MLi,dat=data,d=days,growthdata,lfdata,peaks)
-   {
-    # it allows for the use of lapply
-    gcurve <- ccurves(Linf,c,tw,K,data$ML,d,lfdata,stime,MLi)      # compute growth curve this has index, day in growthcurve and properbin.      
-    esp <- cespcompute(gcurve,peaks$out,days,data$ML)               #compute esp
-    gf <- gfcompute(asp,esp)
-    return(gf)
-    }
- 
- asp <- caspcompute(peaks)                      #compute asp
- out<- matrix(0,nrow=days*length(dat$ML),ncol=4)
- #loop over all days
- #loop over all peaks
- #try lots of values of K
- #return value of K that gives biggest goodness of fit. 
-  
-  return(out)
-}
-
-ckscan <- cmpfun(kscan)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  # x: the vector
-# n: the number of samples
-# centered: if FALSE, then average current sample and previous (n-1) samples
-#           if TRUE, then average symmetrically in past and future. (If n is even, use one more sample from future.)
 
 
 
