@@ -179,23 +179,25 @@ wetherall <- function(da=data,points=3){
 
 
 
-kscan <- function(Linf,c,tw,dat=data,d=days,growthdata,lfdata,peaks){
+kscan <- function(Linf,c,tw,dat=data,d=days,growthdata,lfdata,pd=peaks){
   print("hi My name is Kscan")
   out <- matrix(2,nrow=2,ncol=2)
   #startdate <- as.Date(Date)
   #startime <- as.numeric(startdate-dm[1,1])
   K <- .2
   c <- 0
-  tw <- 0
+  tw <- .1
   ML <- 27#as.numeric(ML)
+  startime <- 14
+  Linf <- 35
                                         #need to convert start date to dime.
   growthdata <- matrix(0,ncol=d,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-  lfdata<- fillgrowthdata(dm,da,growthdata) #make data structure with length frequency data
-  peaks <- lfrestruc(pd2)                    #create restructure lfdata into peaks and valleys.
-  gcurve <- curves(Linf,c,tw,K,da$ML,days,pd2,startime,ML)      # compute growth curve this has index, day in growthcurve and properbin.
-  asp <- aspcompute(peaks)                      #compute asp
-  print(peaks$out)
-  esp <- espcompute(gcurve,peaks$out,days,da$ML)               #compute esp
+  lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
+  peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
+  gcurve <- curves(Linf,c,tw,K,dat$ML,days,pd,startime,ML)      # compute growth curve this has index, day in growthcurve and properbin.
+  asp <- aspcompute(pd)                      #compute asp
+  #print(peaks$out)
+  esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
   gf <- gfcompute(asp,esp)
   out <- matrix(gf,2,2)
   return(out)
