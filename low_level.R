@@ -194,12 +194,30 @@ kscan <- function(Linf,c,tw,dat=data,d=days,growthdata,lfdata,pd=peaks){
   growthdata <- matrix(0,ncol=d,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
   lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
   peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
-  gcurve <- curves(Linf,c,tw,K,dat$ML,days,pd,startime,ML)      # compute growth curve this has index, day in growthcurve and properbin.
-  asp <- aspcompute(pd)                      #compute asp
-  #print(peaks$out)
-  esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
-  gf <- gfcompute(asp,esp)
-  out <- matrix(gf,2,2)
+  index <- 1
+  K <- seq(.1,10,.1)
+  out <- matrix(0,nrow=length(K)*length(dat$ML)*d,ncol=4)
+  for(i in 1:length(K)){
+    for(j in 1:length(dat$ML)){
+      for(sdate in 1:d){
+       # print(c("sdate","j","i"))
+       # print(c(sdate,j,i))
+        if(peaks$out[j,sdate]>0 & lfdata[j,sdate]>0){
+        gcurve <- curves(Linf,c,tw,K[i],dat$ML,days,peaks,sdate,dat$ML[j])      # compute growth curve this has index, day in growthcurve and properbin.
+        asp <- aspcompute(pd)                      #compute asp
+        esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
+        gf <- gfcompute(asp,esp)
+      } else{gf <- 0}
+        if(gf>0){
+        print(c(gf,K[i],dat$ML[j],sdate))
+      }
+        out[index,] <- c(gf,K[i],dat$ML[j],sdate)
+#        print(head(out))
+        index <- index+1
+    }
+  }
+  }
+ 
   return(out)
 }
 ckscan <- cmpfun(kscan)
