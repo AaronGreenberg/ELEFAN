@@ -35,7 +35,7 @@ return(y)
 
 isolate <- function(x,freq){            #Identify isolated peaks
   K <- length(x)                        #initalize stuff
-  print(x)
+  #print(x)
   #print(freq)
   count <- numeric(K)                  
   zeros <- numeric(K)
@@ -49,9 +49,9 @@ isolate <- function(x,freq){            #Identify isolated peaks
  
   #count middle frequencies     #This is for the middle places
   if(sum(zeros)>0){ #make sure that there are interior zeros.
-    print("zeros")
-    print(zeros-1)
-    print(zeros-2)
+   # print("zeros")
+   # print(zeros-1)
+   # print(zeros-2)
   if((zeros-1)>0){count[zeros-1]=1+count[zeros-1]} #Make sure that we don't have zeros in the smallest width classes
   if((zeros-2)>0){count[zeros-2]=1+count[zeros-2]}  
 }
@@ -138,7 +138,7 @@ lfrestruc<- function(ldata){            #puts main1 and main2 together to
      count=count+1
      }
    }
-    print(ret)
+  #  print(ret)
     return(ret)                         
  }
 

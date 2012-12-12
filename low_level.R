@@ -189,30 +189,34 @@ wetherall <- function(da=data,points=3){
 kscan <- function(Linf,c,tw,dat=data,d=days){
   print("hi My name is Kscan")
   growthdata <- matrix(0,ncol=d,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+  print(date)
+  print(dat)
   lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
   peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
   asp <- aspcompute(peaks)                      #compute asp
-  print(peaks)
+  print("d")
+  print(d)
   index <- 1
-  K <- seq(.1,10,6)
+  K <- seq(.1,10,.1)
   out <- matrix(0,nrow=length(K)*length(dat$ML)*d,ncol=4)
   C <- 1
   tw <- .2
   Linf <- 1.5
- # oopt = ani.options()
- # saveMovie({
- #         opar = par(mar = c(3, 3, 1, 0.5), mgp = c(2, .5, 0), tcl = -0.3,
- #           cex.axis = 0.8, cex.lab = 0.8, cex.main = 1)
+ oopt = ani.options()
+ saveMovie({
+         opar = par(mar = c(3, 3, 1, 0.5), mgp = c(2, .5, 0), tcl = -0.3,
+           cex.axis = 0.8, cex.lab = 0.8, cex.main = 1)
   for(i in 1:length(K)){
     for(j in 1:length(dat$ML)){
       for(sdate in 1:d){
         if(peaks$out[j,sdate]>0 & lfdata[j,sdate]>0){
+
         gcurve <- curves(Linf,c,tw,K[i],dat$ML,days,peaks,sdate,dat$ML[j])      # compute growth curve this has index, day in growthcurve and properbin.
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
         gf <- gfcompute(asp,esp)
-        x11()
-       rqFreqPlot(1:days,dat$ML,peaks$out,sdate,dat$ML[j],gcurve,dates=date,title=paste("GF::>",gf,"K::>",K[i],"sdate::>",sdate,"ML::>",dat$ML[j]))
-        dev.off()
+   #     x11()
+        rqFreqPlot(1:d,dat$ML,peaks$out,sdate,dat$ML[j],gcurve,dates=date,title=paste("GF::>",gf,"K::>",K[i],"sdate::>",sdate,"ML::>",dat$ML[j]),barscale=10)
+    #    dev.off()
       } else{gf <- 0}
         if(gf>0){
         print(c(gf,K[i],dat$ML[j],sdate))
@@ -223,12 +227,12 @@ kscan <- function(Linf,c,tw,dat=data,d=days){
     }
   }
   }
-  print(head(out))
-#  }, interval = 0.95, nmax = 100, ani.width = 800, ani.height = 800)
+
+  }, interval = 0.95, ani.width = 800, ani.height = 800)
 
 # ani.options(oopt)
   out[,1] <- movingAverage(out[,1],3)
-  print(head(out))
+
   return(out)
 }
 ckscan <- cmpfun(kscan)

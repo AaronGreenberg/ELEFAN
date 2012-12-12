@@ -13,7 +13,7 @@ lfdata<- fillgrowthdata(dm,da,growthdata) #make data structure with length frequ
 peaks <- lfrestruc(pd2)                    #create restructure lfdata into peaks and valleys.
 gcurve <- curves(Linf,c,tw,K,da$ML,days,pd2,startime,ML)      # compute growth curve this has index, day in growthcurve and properbin.
 asp <- aspcompute(peaks)                      #compute asp
-print(peaks)
+
 esp <- espcompute(gcurve,peaks$out,days,da$ML)               #compute esp
 gf <- gfcompute(asp,esp)
 #graphics.off()
@@ -49,7 +49,7 @@ plotkscan <- function(d=days,dm=date,da=data,pd2=lfdata,pd=peaks$out,curve=gcurv
     print(date)
     print(days)
     getWinVal(scope="L")
-    z <- ckscan(Linf,c,tw,dat=data,d=days,growthdata,lfdata,peaks)
+    z <- ckscan(Linf,c,tw,dat=data,d=days)
 #    print(z)
     nzero <- which(z[,1]>0)
     plot(z[nzero,2],z[nzero,1],type="l",xlab="K",ylab="Goodness of Fit",log="x")
