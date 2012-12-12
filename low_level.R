@@ -33,9 +33,12 @@ growth_rootf <- function(x,K,Linf,C,TW){
 }
 
 bisect <- function(a,b,equal,K,Linf,C,TW){
+  if((growth_rootf(a,K,Linf,C,TW)-equal)^2<10^(-10)){return(a)}
+  if((growth_rootf(b,K,Linf,C,TW)-equal)^2<10^(-10)){return(b)}
   #This function uses bisection to compute the required values of tstart and...
-  if((growth_rootf(a,K,Linf,C,TW)-equal)*(growth_rootf(b,K,Linf,C,TW)-equal)>=0){#make sure that inputs are okay... 
-    print("f(xup) and f(xlow) are of same sign")
+  if((growth_rootf(a,K,Linf,C,TW)-equal)*(growth_rootf(b,K,Linf,C,TW)-equal)>0){#make sure that inputs are okay... 
+    print("f(xup) and f(xlow) are of same sign 1")
+    print(paste("fxup::",(growth_rootf(a,K,Linf,C,TW)-equal),"fxlow::",(growth_rootf(b,K,Linf,C,TW)-equal)))
     return(1)} 
 termtest <- 1#set counter to protect against errors. 
   while(termtest<= 10000) {# limit iterations to prevent infinite loop
@@ -62,9 +65,13 @@ growth_rootf2 <- function(x,K,Linf,C,TW,ts){
 }
 
 bisect2 <- function(a,b,equal,K,Linf,C,TW,ts){
+  if(((growth_rootf2(a,K,Linf,C,TW,ts)-equal)^2)<10^(-10)){return(a)}
+  if(((growth_rootf2(b,K,Linf,C,TW,ts)-equal)^2)<10^(-10)){return(b)}
   #This function uses bisection to compute the required end time values
-  if((growth_rootf2(a,K,Linf,C,TW,ts)-equal)*(growth_rootf2(b,K,Linf,C,TW,ts)-equal)>=0){#make sure that inputs are okay... 
-    print("f(xup) and f(xlow) are of same sign")
+  if((growth_rootf2(a,K,Linf,C,TW,ts)-equal)*(growth_rootf2(b,K,Linf,C,TW,ts)-equal)>0){#make sure that inputs are okay... 
+    print("f(xup) and f(xlow) are of same sign 2")
+    print(paste("fxup::",(growth_rootf2(a,K,Linf,C,TW,ts)-equal),"fxlow::",(growth_rootf2(b,K,Linf,C,TW,ts)-equal)))
+    print(paste("a::",a,"b::",b))
     return(1)} 
 termtest <- 1#set counter to protect against errors. 
   while(termtest<= 10000) {# limit iterations to prevent infinite loop
@@ -85,7 +92,7 @@ print("Method failed. max number of steps exceeded")#just a nice test to make su
   timestart <-  bisect(0,200*365,sML,K,Linf,C,TW)
  # print(timestart)
   #second compute time of  95%*Linf
-  nintyfivetime <-  bisect2(0,200*365,.95*Linf,K,Linf,C,TW,timestart)
+  nintyfivetime <-  bisect2(-200*365,200*365,.95*Linf,K,Linf,C,TW,timestart)
  # print(nintyfivetime)
   #compute tzero
   #really only important when C!=0 because it should be about -timestart  but ...
@@ -179,34 +186,33 @@ wetherall <- function(da=data,points=3){
 
 
 
-kscan <- function(Linf,c,tw,dat=data,d=days,growthdata,lfdata,pd=peaks){
+kscan <- function(Linf,c,tw,dat=data,d=days){
   print("hi My name is Kscan")
-  out <- matrix(2,nrow=2,ncol=2)
-  #startdate <- as.Date(Date)
-  #startime <- as.numeric(startdate-dm[1,1])
-  K <- .2
-  c <- 0
-  tw <- .1
-  ML <- 27#as.numeric(ML)
-  startime <- 14
-  Linf <- 35
-                                        #need to convert start date to dime.
   growthdata <- matrix(0,ncol=d,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
   lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
   peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
+  asp <- aspcompute(peaks)                      #compute asp
+  print(peaks)
   index <- 1
-  K <- seq(.1,10,.1)
+  K <- seq(.1,10,6)
   out <- matrix(0,nrow=length(K)*length(dat$ML)*d,ncol=4)
+  C <- 1
+  tw <- .2
+  Linf <- 1.5
+ # oopt = ani.options()
+ # saveMovie({
+ #         opar = par(mar = c(3, 3, 1, 0.5), mgp = c(2, .5, 0), tcl = -0.3,
+ #           cex.axis = 0.8, cex.lab = 0.8, cex.main = 1)
   for(i in 1:length(K)){
     for(j in 1:length(dat$ML)){
       for(sdate in 1:d){
-       # print(c("sdate","j","i"))
-       # print(c(sdate,j,i))
         if(peaks$out[j,sdate]>0 & lfdata[j,sdate]>0){
         gcurve <- curves(Linf,c,tw,K[i],dat$ML,days,peaks,sdate,dat$ML[j])      # compute growth curve this has index, day in growthcurve and properbin.
-        asp <- aspcompute(pd)                      #compute asp
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
         gf <- gfcompute(asp,esp)
+        x11()
+       rqFreqPlot(1:days,dat$ML,peaks$out,sdate,dat$ML[j],gcurve,dates=date,title=paste("GF::>",gf,"K::>",K[i],"sdate::>",sdate,"ML::>",dat$ML[j]))
+        dev.off()
       } else{gf <- 0}
         if(gf>0){
         print(c(gf,K[i],dat$ML[j],sdate))
@@ -217,7 +223,12 @@ kscan <- function(Linf,c,tw,dat=data,d=days,growthdata,lfdata,pd=peaks){
     }
   }
   }
- 
+  print(head(out))
+#  }, interval = 0.95, nmax = 100, ani.width = 800, ani.height = 800)
+
+# ani.options(oopt)
+  out[,1] <- movingAverage(out[,1],3)
+  print(head(out))
   return(out)
 }
 ckscan <- cmpfun(kscan)

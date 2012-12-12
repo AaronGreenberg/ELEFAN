@@ -6,6 +6,7 @@
 #%############################################################
 require(compiler)
 require(PBSmodelling);                  #nice software that makes making gui easier
+library(animation)
 source("ASP.R")                         #load routines to compute peaks and available sum of peaks
 source("ESP.R")                         #load routines to compute Explained Sum of Peakz
 source("catchcurves.R")

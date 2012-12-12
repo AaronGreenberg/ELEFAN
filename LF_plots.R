@@ -18,37 +18,40 @@ rectplot <- function(ser,bins,xmin,xmax,ylim,barcol1,barcol2){
 
 
 
-rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(min(time),max(time)), ylim = c(0, max(bins)), barscale = 1, barcol1 = "red",barcol2="grey",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),...) {
+rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(min(time),max(time)), ylim = c(0, max(bins)), barscale = 1, barcol1 = "red",barcol2="grey",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),title="hi",...) {
    ## This function makes the fancy graphs that seems central to the output of ELEFAN
    ## In particular it provides a way of plotting a growth curve over length frequancy data plots over time.
    ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
    X <- time                         #store time
-   xlim <- c(min(time),max(time))
+   xlim <- c(min(time+as.numeric(dates$Date[1])),max(time+as.numeric(dates$Date[1])))
    dateaxis <-as.Date(dates$Date[1]+X)#place things right location
-   x11()
    #create axis for plots
    par(new = FALSE)
-
    plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,las=2,...)
+   title(main=title, col.main="red", font.main=1)
    #plot Rectangles
-   axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
+
+
+
    count=0
    lengthtime=length(time)
 	for (i in 1:lengthtime){    #figure out how to make the rectangles
 		par(new = TRUE)
-		xmin <- time[i]         #at time i
-		xmax <- xlim[2] - time[i] #got to find two points for 
+		xmin <- (time[i]+as.numeric(dates$Date[1]))         #at time i
+		xmax <- xlim[2] - (time[i]+as.numeric(dates$Date[1]))       #got to find two points for 
 		ser <- as.vector(freqs[,i]) #putting right and left sides of rectangles
 		ser <- ser * barscale       #scaleing... sometimes it is nice make things bigger or smaller
                 if(sum(ser) != 0){          #if there is lf data at time i make plot
                 count=count+1
 		rectplot(-ser,bins,xmin,xmax,ylim,barcol1,barcol2)#make bar plot
-                text(cbind(time[i]+3,max(bins)+(count%%2)*1.2),label=toString(dates$Date[count+1]),cex=.75,col="black")#add dates to things
+                text(cbind((time[i]+as.numeric(dates$Date[1])+3),max(bins)+(count%%2)*min(c((bins[1]-bins[2])/2,1))),label=toString(dates$Date[count+1]),cex=.75,col="black")#add dates to things
               }
 	}
-   points(sdate,sML,col="black",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
-   points(curves$c[,2],curves$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
-   points(curves$c[,2],curves$c[,4],cex=.01,col="pink")#show pink bined growth curve
+   points(sdate+as.numeric(dates$Date[1]),sML,col="black",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
+   points(curves$c[,2]+as.numeric(dates$Date[1]),curves$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
+   points(curves$c[,2]+as.numeric(dates$Date[1]),curves$c[,4],pch=1 ,cex=.2,col="pink")# make real growth curve!
+   
 #      lines(curves$c[,2],curves$c[,3],col="red")
+   axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
  }
 
