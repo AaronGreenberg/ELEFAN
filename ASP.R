@@ -138,7 +138,7 @@ lfrestruc<- function(ldata){            #puts main1 and main2 together to
      count=count+1
      }
    }
-  #  print(ret)
+    print(ret)
     return(ret)                         
  }
 

@@ -13,7 +13,6 @@ lfdata<- fillgrowthdata(dm,da,growthdata) #make data structure with length frequ
 peaks <- lfrestruc(pd2)                    #create restructure lfdata into peaks and valleys.
 gcurve <- curves(Linf,c,tw,K,da$ML,days,pd2,startime,ML)      # compute growth curve this has index, day in growthcurve and properbin.
 asp <- aspcompute(peaks)                      #compute asp
-
 esp <- espcompute(gcurve,peaks$out,days,da$ML)               #compute esp
 gf <- gfcompute(asp,esp)
 #graphics.off()

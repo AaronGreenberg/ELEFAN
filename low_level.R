@@ -125,34 +125,19 @@ caspcompute <- cmpfun(aspcompute)
 espcompute <- function(gcurve,p=peaks$out,modday,ML)
 {                                       #compute ESP
   peaks2 <- p #need a structure to turn to zero to prevent counting a peak more than once.
-#  print(head(peaks2))
   esp <- vector()
-  #x11()
-#   graphics.off()
- # rqFreqPlot(1:365,ML,peaks2,sdate,13,gcurve,date,barscale=10,xlab="test")
   for(timesweep in 1:length(gcurve$c[,1])){#sweep over time
     gclocation <- ifelse(gcurve$c[timesweep,3]>=min(ML),which(ML==gcurve$c[timesweep,4]),0)#figure out what ML index we are on!
     if(gclocation>0){
-    # print("glocation")
-    #print(gclocation)
-    #print(ML[gclocation])
     tsweep <- timesweep%%modday+1
-    #print("tsweep")
-    #print(tsweep)
-    #print("peaks")  
-    #print(peaks2[gclocation,tsweep])
     if(peaks2[gclocation,tsweep]>0){
     esp[timesweep] <- peaks2[gclocation,tsweep]
     peaks2[gclocation,tsweep] <- 0
+    
     }else{ esp[timesweep] <- peaks2[gclocation,tsweep]}
   }else{esp[timesweep] <- 0}
   }
-#   print(head(sort(esp,decreasing=TRUE),30))
-#   print(head(sort(esp,decreasing=FALSE),30))
-#  print(esp[which(esp!=0)])
   ESP=sum(esp)
- # print("ESP==")
- # print(ESP)
   return(list(esp=ESP,peaks2=peaks2))
 }
 cespcompute <- cmpfun(espcompute)
@@ -197,26 +182,23 @@ kscan <- function(Linf,c,tw,dat=data,d=days){
   print("d")
   print(d)
   index <- 1
-  K <- seq(.1,10,.1)
+  K <- seq(.1,10,.3)
   out <- matrix(0,nrow=length(K)*length(dat$ML)*d,ncol=4)
-  C <- 1
+  c <- 1
   tw <- .2
   Linf <- 1.5
  oopt = ani.options()
- saveMovie({
+ saveHTML({
          opar = par(mar = c(3, 3, 1, 0.5), mgp = c(2, .5, 0), tcl = -0.3,
            cex.axis = 0.8, cex.lab = 0.8, cex.main = 1)
   for(i in 1:length(K)){
-    for(j in 1:length(dat$ML)){
+    for(j in 1:(length(dat$ML)-1)){
       for(sdate in 1:d){
         if(peaks$out[j,sdate]>0 & lfdata[j,sdate]>0){
-
         gcurve <- curves(Linf,c,tw,K[i],dat$ML,days,peaks,sdate,dat$ML[j])      # compute growth curve this has index, day in growthcurve and properbin.
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
         gf <- gfcompute(asp,esp)
-   #     x11()
         rqFreqPlot(1:d,dat$ML,peaks$out,sdate,dat$ML[j],gcurve,dates=date,title=paste("GF::>",gf,"K::>",K[i],"sdate::>",sdate,"ML::>",dat$ML[j]),barscale=10)
-    #    dev.off()
       } else{gf <- 0}
         if(gf>0){
         print(c(gf,K[i],dat$ML[j],sdate))
