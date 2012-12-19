@@ -133,11 +133,12 @@ espcompute <- function(gcurve,p=peaks$out,modday,ML)
     if(peaks2[gclocation,tsweep]>0){
     esp[timesweep] <- peaks2[gclocation,tsweep]
     peaks2[gclocation,tsweep] <- 0
-    
     }else{ esp[timesweep] <- peaks2[gclocation,tsweep]}
   }else{esp[timesweep] <- 0}
   }
   ESP=sum(esp)
+  print("ESP::==")
+  print(ESP)
   return(list(esp=ESP,peaks2=peaks2))
 }
 cespcompute <- cmpfun(espcompute)
@@ -182,15 +183,15 @@ kscan <- function(Linf,c,tw,dat=data,d=days){
   print("d")
   print(d)
   index <- 1
-  K <- seq(.1,10,.3)
+  K <- seq(.1,10,length.out=100)
   out <- matrix(0,nrow=length(K)*length(dat$ML)*d,ncol=4)
-  c <- 1
+  c <- 0
   tw <- .2
-  Linf <- 1.5
- oopt = ani.options()
- saveHTML({
-         opar = par(mar = c(3, 3, 1, 0.5), mgp = c(2, .5, 0), tcl = -0.3,
-           cex.axis = 0.8, cex.lab = 0.8, cex.main = 1)
+  Linf <- 65
+oopt = ani.options()
+saveHTML({
+        opar = par(mar = c(3, 3, 1, 0.5), mgp = c(2, .5, 0), tcl = -0.3,
+          cex.axis = 0.8, cex.lab = 0.8, cex.main = 1)
   for(i in 1:length(K)){
     for(j in 1:(length(dat$ML)-1)){
       for(sdate in 1:d){
@@ -198,13 +199,12 @@ kscan <- function(Linf,c,tw,dat=data,d=days){
         gcurve <- curves(Linf,c,tw,K[i],dat$ML,days,peaks,sdate,dat$ML[j])      # compute growth curve this has index, day in growthcurve and properbin.
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
         gf <- gfcompute(asp,esp)
-        rqFreqPlot(1:d,dat$ML,peaks$out,sdate,dat$ML[j],gcurve,dates=date,title=paste("GF::>",gf,"K::>",K[i],"sdate::>",sdate,"ML::>",dat$ML[j]),barscale=10)
+        rqFreqPlot(1:d,dat$ML,peaks$out,sdate,dat$ML[j],gcurve,dates=date,title=paste("GF::>",gf,"esp::>",esp,"K::>",K[i],"sdate::>",sdate,"ML::>",dat$ML[j]),barscale=10)
       } else{gf <- 0}
         if(gf>0){
         print(c(gf,K[i],dat$ML[j],sdate))
       }
         out[index,] <- c(gf,K[i],dat$ML[j],sdate)
-#        print(head(out))
         index <- index+1
     }
   }
@@ -212,8 +212,9 @@ kscan <- function(Linf,c,tw,dat=data,d=days){
 
   }, interval = 0.95, ani.width = 800, ani.height = 800)
 
-# ani.options(oopt)
-  out[,1] <- movingAverage(out[,1],3)
+ani.options(oopt)
+  out <- out[order(out[,2],out[,1])]
+  out2[,1] <- movingAverage(out2[,1],3)
 
   return(out)
 }

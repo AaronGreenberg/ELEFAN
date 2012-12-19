@@ -19,15 +19,15 @@ gf <- gfcompute(asp,esp)
 print("goodfit")
 print(gf)
 
-
+print(dm)
 if(ptype=="Peaks"){
 #  png("lfplot1.png",width=1000,height=1000)
-  rqFreqPlot(1:d,da$ML,peaks$out,startime,ML,gcurve,dm,barscale=10)
+  rqFreqPlot(1:d,da$ML,peaks$out,startime,ML,gcurve,dm,barscale=days*(1-exp(-days))/(2*length(dm[,2])))
 #  dev.off()
 }
 if(ptype=="LF"){
 #  png("lfplot2.png",width=1000,height=1000)
-  rqFreqPlot(1:d,da$ML,pd2,startime,ML,gcurve,dm)
+  rqFreqPlot(1:d,da$ML,pd2,startime,ML,gcurve,dm,barscale=days*(1-exp(-days))/(50*length(dm[,2])))
 #  dev.off()
 }
 
