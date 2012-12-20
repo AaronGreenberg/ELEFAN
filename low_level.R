@@ -18,11 +18,15 @@ fillgrowthdata <- function(date,data,growthdata){
 #%############################################################
 
 curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
+  print("k prior")
+  print(K)   
   K <- K/365
+
   C <- c
   w <- 1/365
   TW <- tw
-     
+  print("k post")
+  print(K)   
  
 growth_rootf <- function(x,K,Linf,C,TW){
 #makes computing tstart and time when length is .95%Linf easy.
@@ -90,14 +94,17 @@ print("Method failed. max number of steps exceeded")#just a nice test to make su
 
   #first  compute time_start
   timestart <-  bisect(0,200*365,sML,K,Linf,C,TW)
- # print(timestart)
+  print("time start")
+  print(timestart)
   #second compute time of  95%*Linf
   nintyfivetime <-  bisect2(-200*365,200*365,.95*Linf,K,Linf,C,TW,timestart)
- # print(nintyfivetime)
+  print("time when length is .95Linf")
+  print(nintyfivetime)
   #compute tzero
   #really only important when C!=0 because it should be about -timestart  but ...
   zerotime <-  bisect2(-200*365,200*365,0,K,Linf,C,TW,timestart)
-#  print(zerotime)
+  print("time when length is zero")
+  print(zerotime)
   #get vector of times!
 upwind <- (ceiling(nintyfivetime))
 downwind <- (floor(zerotime))
@@ -120,21 +127,39 @@ return(list(c=cur))
 ccurves<- cmpfun(curves)
 
 
-aspcompute <- function(peaks){sum(peaks$asp[2:length(peaks$asp)])} #compute sum of asp. 
+aspcompute <- function(peaks){sum(peaks$asp[1:length(peaks$asp)])} #compute sum of asp. 
 caspcompute <- cmpfun(aspcompute)
-espcompute <- function(gcurve,p=peaks$out,modday,ML)
+espcompute <- function(gcurve,p=peaks$out,modday,ML,dates2=date)
 {                                       #compute ESP
   peaks2 <- p #need a structure to turn to zero to prevent counting a peak more than once.
   esp <- vector()
+  print(dates2)
   for(timesweep in 1:length(gcurve$c[,1])){#sweep over time
     gclocation <- ifelse(gcurve$c[timesweep,3]>=min(ML),which(ML==gcurve$c[timesweep,4]),0)#figure out what ML index we are on!
     if(gclocation>0){
-    tsweep <- timesweep%%modday+1
-    if(peaks2[gclocation,tsweep]>0){
-    esp[timesweep] <- peaks2[gclocation,tsweep]
-    peaks2[gclocation,tsweep] <- 0
-    }else{ esp[timesweep] <- peaks2[gclocation,tsweep]}
-  }else{esp[timesweep] <- 0}
+      
+#    tsweep <- (timesweep)%%modday+1
+    tsweep <- (gcurve$c[timesweep,2])
+    if(peaks2val>0){
+       print("pos peaks")
+       print(modday)
+       print(tsweep)
+       print(peaks2val)
+       print(gcurve$c[tsweep,])
+    esp[timesweep] <- peaks2val
+    peaks2val <- 0
+    }else{
+      if(peaks2val<0){
+        
+         print("neg peak")
+         print(modday)
+         print(tsweep)
+         print(peaks2val)
+         print(gcurve$c[timesweep,])
+          }
+      esp[timesweep] <- peaks2val}
+    
+    }else{esp[timesweep] <- 0}
   }
   ESP=sum(esp)
   print("ESP::==")
@@ -142,7 +167,15 @@ espcompute <- function(gcurve,p=peaks$out,modday,ML)
   return(list(esp=ESP,peaks2=peaks2))
 }
 cespcompute <- cmpfun(espcompute)
-gfcompute <- function(asp,esp){10^(esp$esp/asp)/10}
+gfcompute <- function(asp,esp){
+  print("ESP check")
+  print("esp")
+  print(esp$esp)
+  print("asp")
+  print(asp)
+  print("ratio")
+  print(esp$esp/asp)
+  10^(esp$esp/asp)/10}
 cgfcompute <- cmpfun(gfcompute)
 
 
@@ -188,10 +221,10 @@ kscan <- function(Linf,c,tw,dat=data,d=days){
   c <- 0
   tw <- .2
   Linf <- 65
-oopt = ani.options()
-saveHTML({
-        opar = par(mar = c(3, 3, 1, 0.5), mgp = c(2, .5, 0), tcl = -0.3,
-          cex.axis = 0.8, cex.lab = 0.8, cex.main = 1)
+## #oopt = ani.options()
+## saveHTML({
+##         opar = par(mar = c(3, 3, 1, 0.5), mgp = c(2, .5, 0), tcl = -0.3,
+##           cex.axis = 0.8, cex.lab = 0.8, cex.main = 1)
   for(i in 1:length(K)){
     for(j in 1:(length(dat$ML)-1)){
       for(sdate in 1:d){
@@ -199,7 +232,8 @@ saveHTML({
         gcurve <- curves(Linf,c,tw,K[i],dat$ML,days,peaks,sdate,dat$ML[j])      # compute growth curve this has index, day in growthcurve and properbin.
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
         gf <- gfcompute(asp,esp)
-        rqFreqPlot(1:d,dat$ML,peaks$out,sdate,dat$ML[j],gcurve,dates=date,title=paste("GF::>",gf,"esp::>",esp,"K::>",K[i],"sdate::>",sdate,"ML::>",dat$ML[j]),barscale=10)
+        rqFreqPlot(1:d,dat$ML,peaks$out,sdate,dat$ML[j],gcurve,dates=date,title=paste("GF::>",gf,"esp::>",esp$esp,"K::>",K[i],"sdate::>",sdate,"ML::>",dat$ML[j]),barscale=days*(1-exp(-d))/(2*length(date[,2])))
+        readline(prompt = "Pause. Press <Enter> to continue...")
       } else{gf <- 0}
         if(gf>0){
         print(c(gf,K[i],dat$ML[j],sdate))
@@ -210,11 +244,11 @@ saveHTML({
   }
   }
 
-  }, interval = 0.95, ani.width = 800, ani.height = 800)
+##   }, interval = 0.95, ani.width = 800, ani.height = 800)
 
-ani.options(oopt)
-  out <- out[order(out[,2],out[,1])]
-  out2[,1] <- movingAverage(out2[,1],3)
+## ani.options(oopt)
+#  out <- out[order(out[,2],out[,1])]
+#  out2[,1] <- movingAverage(out2[,1],3)
 
   return(out)
 }

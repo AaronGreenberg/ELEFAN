@@ -7,7 +7,7 @@
 rectplot <- function(ser,bins,xmin,xmax,ylim,barcol1,barcol2){
   #This function puts the rectangles into the rqFreqPlot
   YL=bins[1:(length(bins))]-(bins[2]-bins[1])/2           #lower y limits
-  YU=bins[2:(length(bins)+1)]-(bins[2]-bins[1])/2           #upper y limits
+  YU=bins[1:(length(bins))]+(bins[2]-bins[1])/2           #upper y limits
   XL=ser+xmin                         #nonzero x limits may be right or left!
   XR=ser*0+xmin                       #axis x limits
   col1 <- which(XL-xmin<=0)#switch peaks and valley colors
@@ -27,7 +27,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
    dateaxis <-as.Date(dates$Date[1]+X)#place things right location
    #create axis for plots
    par(new = FALSE)
-   plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,las=2,...)
+   plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n", xlim = xlim, ylim = ylim+5, xlab=xlab1,ylab = ylab1, axes=TRUE,las=2,...)
    title(main=title, col.main="red", font.main=1)
    #plot Rectangles
 
@@ -44,9 +44,10 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
                 if(sum(ser) != 0){          #if there is lf data at time i make plot
                 count=count+1
 		rectplot(-ser,bins,xmin,xmax,ylim,barcol1,barcol2)#make bar plot
-                text(cbind((time[i]+as.numeric(dates$Date[1])+3),max(bins)+(count%%2)*min(c((bins[1]-bins[2])/2,1))),label=toString(dates$Date[count+1]),cex=.75,col="black")#add dates to things
+                text(cbind((time[i]+as.numeric(dates$Date[1])+3),ceiling(max(curves$c[,3]))+5+(count%%2)+min(c((bins[1]-bins[2])/2,1))),label=toString(dates$Date[count+1]),cex=.75,col="black")#add dates to things
               }
 	}
+   points(as.numeric(dates$Date[1]),15,col="purple",pch=19) 
    points(sdate+as.numeric(dates$Date[1]),sML,col="black",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
    points(curves$c[,2]+as.numeric(dates$Date[1]),curves$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
    points(curves$c[,2]+as.numeric(dates$Date[1]),curves$c[,4],pch=1 ,cex=.2,col="pink")# make real growth curve!

@@ -76,6 +76,8 @@ spv <- function(unw){           #rescale according to Routine F in Manual page 6
   psum <- sum(unw[posi])
   nsum <- sum(unw[negi])
   y <- ifelse(y<0,y*psum/(-nsum),y)
+  print("spv")
+  print(psum/(-nsum))
   return(y)
 }
 
@@ -112,13 +114,19 @@ datatmp$A <- ma5(datatmp$OBS)           #first moving average
 datatmp$B <- quotientsN_ma(datatmp$OBS,datatmp$A) #quotient rescale
 datatmp$C <- peaksmap(datatmp$B)                     #make peaks
 datatmp$D <- isolate(datatmp$C,datatmp$OBS)       #isolate peaks
+print("results of isolate")
+print(datatmp$D)
 datatmp$E <- deemph(datatmp$C,datatmp$D)          #deemph according to manual (SERIOUSLY see manual...)
 datatmp$F <- spv(datatmp$E)                       #final rescale
+print("data restructure")
+print(datatmp)
 return(as.vector(datatmp$F))
 }
 
 main2 <-function(peaks) {               #this computes the available sum of peaks for each data set
 ASP <- availablesumpeaks(peaks)
+print("ASP")
+print(ASP)
 return(ASP)
 }
 
@@ -128,17 +136,20 @@ lfrestruc<- function(ldata){            #puts main1 and main2 together to
    ret$asp <- vector()
    count=1
    for(j in 2:(length(ldata[1,]))){          #looping over the different sets of lf data
-
      if(sum(ldata[,j])==0){
        ldata[,j]=ldata[,j]}
      else{
-       
+     print("lf restructure counter")
+     print(j)
+     print(count)
      ret$out[,j] <- main1(ldata[,j])     #applying main1
      ret$asp[count] <-  main2(ret$out[,j])  #applying main2
+     print("partial asp")
+     print(sum(ret$asp))
      count=count+1
      }
    }
-    print(ret)
+#    print(ret)
     return(ret)                         
  }
 
