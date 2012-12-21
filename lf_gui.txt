@@ -11,10 +11,10 @@
         	  slideplus  name=K from=.1 to=10 by=.0002 value=.2
 		grid 2 1                   
         	  label text=tw #font=bold
-        	  slideplus  name=tw from=.1 to=1 by=.0002 value=.5  
+        	  slideplus  name=tw from=0 to=1.5 by=.0002 value=.5  
 		grid 2 1                 
         	  label text=c #font=bold
-        	  slideplus  name=c from=0 to=1 by=.0002 value=0
+        	  slideplus  name=c from=0 to=2 by=.0002 value=0
 		grid 2 1                 
 		  label text="Starting conditions" #font=bold  
 		  vector length=2 names="Date ML"\

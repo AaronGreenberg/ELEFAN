@@ -22,7 +22,7 @@ print(gf)
 print(dm)
 if(ptype=="Peaks"){
 #  png("lfplot1.png",width=1000,height=1000)
-  rqFreqPlot(1:d,da$ML,peaks$out,startime,ML,gcurve,dm,barscale=days*(1-exp(-days))/(2*length(dm[,2])))
+  rqFreqPlot(1:d,da$ML,peaks$out,startime,ML,gcurve,dm,barscale=days*(1-exp(-days))/(5*length(dm[,2])))
 #  dev.off()
 }
 if(ptype=="LF"){
@@ -51,13 +51,70 @@ plotkscan <- function(d=days,dm=date,da=data,pd2=lfdata,pd=peaks$out,curve=gcurv
     z <- ckscan(Linf,c,tw,dat=data,d=days)
 #    print(z)
     nzero <- which(z[,1]>0)
-    plot(z[nzero,2],z[nzero,1],type="l",xlab="K",ylab="Goodness of Fit",log="x")
-    points(z[nzero,2],z[nzero,1],col="blue",cex=.1,pch=19)
+    plot(z[nzero,2],movingAverage(z[nzero,1],5),type="l",xlab="K",ylab="Goodness of Fit",log="x",ylim=c(0,max(z[,1])+.2))
+    points(z[nzero,2],z[nzero,1],col="blue",cex=.2,pch=19)
     points(z[which.max(z[,1]),2],z[which.max(z[,1]),1],col="red",cex=.8,pch=19)
+    
     print(max(z[nzero,1]))
     print(z[which.max(z[,1]),2])
     print(z[which.max(z[,1]),3])
     print(z[which.max(z[,1]),4])
   }
+
+
+movingAverage <- function(x, n=1, centered=TRUE) {
+
+    if (centered) {
+        before <- floor  ((n-1)/2)
+        after  <- ceiling((n-1)/2)
+    } else {
+        before <- n-1
+        after  <- 0
+    }
+
+    # Track the sum and count of number of non-NA items
+    s     <- rep(0, length(x))
+    count <- rep(0, length(x))
+
+    # Add the centered data 
+    new <- x
+    # Add to count list wherever there isn't a 
+    count <- count + !is.na(new)
+    # Now replace NA_s with 0_s and add to total
+    new[is.na(new)] <- 0
+    s <- s + new
+
+    # Add the data from before
+    i <- 1
+    while (i <= before) {
+        # This is the vector with offset values to add
+        new   <- c(rep(NA, i), x[1:(length(x)-i)])
+
+        count <- count + !is.na(new)
+        new[is.na(new)] <- 0
+        s <- s + new
+
+        i <- i+1
+    }
+
+    # Add the data from after
+    i <- 1
+    while (i <= after) {
+        # This is the vector with offset values to add
+        new   <- c(x[(i+1):length(x)], rep(NA, i))
+
+        count <- count + !is.na(new)
+        new[is.na(new)] <- 0
+        s <- s + new
+
+        i <- i+1
+    }
+
+    # return sum divided by count
+    s/count
+}
+
+
+
 
 

@@ -35,29 +35,25 @@ return(y)
 
 isolate <- function(x,freq){            #Identify isolated peaks
   K <- length(x)                        #initalize stuff
-  #print(x)
-  #print(freq)
   count <- numeric(K)                  
   zeros <- numeric(K)
-  zeros <- which(freq==0) #get vector of places where frequencies are zero
+  
+  zeros[which(freq==0)]<-TRUE
+  zeros[which(freq!=0)]<-FALSE
+  #take care of left
+  countf <- function(nz,K,zeros){
+    #this function takes in an index and returns the number of zeros next to it
+    if(nz==1){count=2+zeros[nz+1]+zeros[nz+2]}
+    if(nz==2){count=1+zeros[nz+1]+zeros[nz+2] +zeros[nz-1]}
+    if(nz==K){count=2+zeros[nz-1]+zeros[nz-2]}
+    if(nz==(K-1)){count=1+zeros[nz-1]+zeros[nz-2]+zeros[nz+1]}
+    if(nz>2&nz<(K-1)){count=zeros[nz-1]+zeros[nz-2]+zeros[nz+1]+zeros[nz+2]}
+    return(count)
+    }
 
-  #End cases
-  count[1]=2+count[1]                   
-  count[2]=1+count[2]
-  count[K]=2+count[K]
-  count[K-1]=1+count[K-1]
- 
-  #count middle frequencies     #This is for the middle places
-  if(sum(zeros)>0){ #make sure that there are interior zeros.
-   # print("zeros")
-   # print(zeros-1)
-   # print(zeros-2)
-  if((zeros-1)>0){count[zeros-1]=1+count[zeros-1]} #Make sure that we don't have zeros in the smallest width classes
-  if((zeros-2)>0){count[zeros-2]=1+count[zeros-2]}  
-}
-  count[zeros+2]=1+count[zeros+2]       #
-  count[zeros+1]=1+count[zeros+1]
-  count<-ifelse(x>=0,count,count*(-1))  #remember signs are important
+  #take care of right
+  count<-sapply(1:K,countf,K,zeros)
+  count<-ifelse(x>=0,count,count*(-1))  #remember signs are importan
   #print(count)
   return(count)
 }
@@ -65,21 +61,31 @@ isolate <- function(x,freq){            #Identify isolated peaks
 
 deemph <- function(q,nz){
   y <- ifelse(nz>0,q*.5^(nz),q)         #soften up the peaks
+  print("check deemph")
+  print(q*.5^nz)
+  print(q)
+  print(y) 
   return(y)
 }
 
 
 spv <- function(unw){           #rescale according to Routine F in Manual page 63
+  #print("SPV TEST")
+  #print(unw)
   y <- ifelse(unw==(-1),0,unw)
-  negi <- which(unw<0)
-  posi <- which(unw>0)
-  psum <- sum(unw[posi])
-  nsum <- sum(unw[negi])
+  print(y)
+  negi <- which(y<0)
+  posi <- which(y>0)
+  psum <- sum(y[posi])
+  nsum <- sum(y[negi])
   y <- ifelse(y<0,y*psum/(-nsum),y)
   print("spv")
+  print(psum)
+  print(nsum)
   print(psum/(-nsum))
   return(y)
 }
+
 
 
 availablesumpeaks <- function(x){
@@ -114,8 +120,6 @@ datatmp$A <- ma5(datatmp$OBS)           #first moving average
 datatmp$B <- quotientsN_ma(datatmp$OBS,datatmp$A) #quotient rescale
 datatmp$C <- peaksmap(datatmp$B)                     #make peaks
 datatmp$D <- isolate(datatmp$C,datatmp$OBS)       #isolate peaks
-print("results of isolate")
-print(datatmp$D)
 datatmp$E <- deemph(datatmp$C,datatmp$D)          #deemph according to manual (SERIOUSLY see manual...)
 datatmp$F <- spv(datatmp$E)                       #final rescale
 print("data restructure")

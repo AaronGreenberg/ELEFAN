@@ -60,7 +60,7 @@ lfgui <- function()
   createWin("lf_gui.txt")
   getWinVal(scope="G")
   setWinVal(list(Linf.min=0,Linf.max=2*max(data$ML),Linf=max(data$ML)))
- 
+  setWinVal(list(Date=date[2,1],ML=min(data$ML)))
 }
 
 

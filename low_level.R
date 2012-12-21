@@ -18,21 +18,18 @@ fillgrowthdata <- function(date,data,growthdata){
 #%############################################################
 
 curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
-  print("k prior")
-  print(K)   
+  
   K <- K/365
-
   C <- c
   w <- 1/365
-  TW <- tw
-  print("k post")
-  print(K)   
+  TW <- tw/365
+  
  
 growth_rootf <- function(x,K,Linf,C,TW){
 #makes computing tstart and time when length is .95%Linf easy.
   w <- 1/365
-  period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(0-TW))-sin(2*pi*w*(TW+x)))
-  out <- Linf*(1-exp(-K*(0+x)+period))
+  period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(0-TW-.5/365))-sin(2*pi*w*(x-TW-.5/365)))
+  out <- Linf*(1-exp(-K*(0-x)+period))
   return(out)
 }
 
@@ -63,8 +60,8 @@ print("Method failed. max number of steps exceeded")#just a nice test to make su
 growth_rootf2 <- function(x,K,Linf,C,TW,ts){
 #makes computing to and time when length is .95%Linf easy. 
   w <- 1/365
-  period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(x-TW))-sin(2*pi*w*(TW+ts)))
-  out <- Linf*(1-exp(-K*(x+ts)+period))
+  period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(x-TW-.5/365))-sin(2*pi*w*(ts-TW+.5/365)))
+  out <- Linf*(1-exp(-K*(x-ts)+period))
   return(out)
 }
 
@@ -93,28 +90,28 @@ print("Method failed. max number of steps exceeded")#just a nice test to make su
 
 
   #first  compute time_start
-  timestart <-  bisect(0,200*365,sML,K,Linf,C,TW)
-  print("time start")
-  print(timestart)
+  timestart <-  bisect(-200*365,200*365,sML,K,Linf,C,TW)
+#  print("time start")
+#  print(timestart)
   #second compute time of  95%*Linf
   nintyfivetime <-  bisect2(-200*365,200*365,.95*Linf,K,Linf,C,TW,timestart)
-  print("time when length is .95Linf")
-  print(nintyfivetime)
+#  print("time when length is .95Linf")
+#  print(nintyfivetime)
   #compute tzero
   #really only important when C!=0 because it should be about -timestart  but ...
   zerotime <-  bisect2(-200*365,200*365,0,K,Linf,C,TW,timestart)
-  print("time when length is zero")
-  print(zerotime)
+#  print("time when length is zero")
+#  print(zerotime)
   #get vector of times!
 upwind <- (ceiling(nintyfivetime))
 downwind <- (floor(zerotime))
 time <- downwind:upwind
  #third compute growth curve and put it in the right place.
   cur <- matrix(0,(nrow=upwind+(-1)*downwind+1),ncol=4)        #initalize growth curve data structure
-  period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(time-TW))-sin(2*pi*w*(TW+timestart)))
+  period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(time-TW-.5))-sin(2*pi*w*(timestart-TW+.5)))
   cur[,1] <-(time+sdate)#keep real time
   cur[,2] <-(time+sdate)%%modday #wrap time so mapping the time to the plot is easy
-  cur[,3] <- Linf*(1-exp(-K*((time+timestart))+period))#put in the growth curve
+  cur[,3] <- Linf*(1-exp(-K*((time-timestart))+period))#put in the growth curve
   fn <- function(i){ML[which.min(((ML)-cur[i,3])^2)]} #snazzy function that allows use of sapply  to find the right bins!
   cur[,4] <- sapply(1:length(cur[,3]),fn)             #get a version of the growth curve that makes computing esp and asp easy
 #  x11()#This plot will probably not be in the final version however debugging plots make me feel warm and fuzzy!
@@ -127,54 +124,62 @@ return(list(c=cur))
 ccurves<- cmpfun(curves)
 
 
-aspcompute <- function(peaks){sum(peaks$asp[1:length(peaks$asp)])} #compute sum of asp. 
+aspcompute <- function(peaks){
+  print("peaks asp")
+  print(peaks$asp)
+  print(sum(peaks$asp))
+  print(sum(peaks$asp[1:length(peaks$asp)]))
+  sum(peaks$asp[1:length(peaks$asp)])
+      } #compute sum of asp. 
 caspcompute <- cmpfun(aspcompute)
 espcompute <- function(gcurve,p=peaks$out,modday,ML,dates2=date)
-{                                       #compute ESP
+ {                                       #compute ESP
+   ESP=0
   peaks2 <- p #need a structure to turn to zero to prevent counting a peak more than once.
   esp <- vector()
-  print(dates2)
+  #print(dates2t)
   for(timesweep in 1:length(gcurve$c[,1])){#sweep over time
     gclocation <- ifelse(gcurve$c[timesweep,3]>=min(ML),which(ML==gcurve$c[timesweep,4]),0)#figure out what ML index we are on!
     if(gclocation>0){
       
 #    tsweep <- (timesweep)%%modday+1
-    tsweep <- (gcurve$c[timesweep,2])
+      
+    tsweep <- gcurve$c[timesweep,2]+1
+    peaks2val <- peaks2[gclocation,tsweep]
     if(peaks2val>0){
-       print("pos peaks")
-       print(modday)
-       print(tsweep)
-       print(peaks2val)
-       print(gcurve$c[tsweep,])
+       ## print("pos peaks")
+       ## print(gclocation)
+       ## print(peaks2val)
+       ## print(gcurve$c[timesweep,])
     esp[timesweep] <- peaks2val
     peaks2val <- 0
     }else{
       if(peaks2val<0){
         
-         print("neg peak")
-         print(modday)
-         print(tsweep)
-         print(peaks2val)
-         print(gcurve$c[timesweep,])
+         ## print("neg peak")
+         ## print(gclocation)
+         ## print(peaks2val)
+         ## print(gcurve$c[timesweep,])
           }
       esp[timesweep] <- peaks2val}
-    
+      
+      #if(esp[timesweep]!=0){print("esp timesweep real");print(esp[timesweep])}
     }else{esp[timesweep] <- 0}
   }
-  ESP=sum(esp)
-  print("ESP::==")
-  print(ESP)
-  return(list(esp=ESP,peaks2=peaks2))
+   ESP=sum(esp)
+  ##  print("ESP::==")
+  ##  print(ESP)
+   return(list(esp=ESP))#,peaks2=peaks2))
 }
 cespcompute <- cmpfun(espcompute)
 gfcompute <- function(asp,esp){
-  print("ESP check")
-  print("esp")
-  print(esp$esp)
-  print("asp")
-  print(asp)
-  print("ratio")
-  print(esp$esp/asp)
+  ## print("ESP check")
+  ## print("esp")
+  ## print(esp$esp)
+  ## print("asp")
+  ## print(asp)
+  ## print("ratio")
+  ## print(esp$esp/asp)
   10^(esp$esp/asp)/10}
 cgfcompute <- cmpfun(gfcompute)
 
@@ -215,97 +220,41 @@ kscan <- function(Linf,c,tw,dat=data,d=days){
   asp <- aspcompute(peaks)                      #compute asp
   print("d")
   print(d)
-  index <- 1
-  K <- seq(.1,10,length.out=100)
-  out <- matrix(0,nrow=length(K)*length(dat$ML)*d,ncol=4)
-  c <- 0
-  tw <- .2
-  Linf <- 65
-## #oopt = ani.options()
-## saveHTML({
-##         opar = par(mar = c(3, 3, 1, 0.5), mgp = c(2, .5, 0), tcl = -0.3,
-##           cex.axis = 0.8, cex.lab = 0.8, cex.main = 1)
+
+  K <- seq(.1,5,length.out=1000)
+  out <- matrix(0,nrow=length(K),ncol=4)
+  c <- 1
+  tw <- 1.18
+  Linf <- 1.6
   for(i in 1:length(K)){
-    for(j in 1:(length(dat$ML)-1)){
+        index <- 1
+      inside <- matrix(0,nrow=length(dat$ML)*d,ncol=3)#
+    for(j in 1:(length(dat$ML))){
       for(sdate in 1:d){
         if(peaks$out[j,sdate]>0 & lfdata[j,sdate]>0){
         gcurve <- curves(Linf,c,tw,K[i],dat$ML,days,peaks,sdate,dat$ML[j])      # compute growth curve this has index, day in growthcurve and properbin.
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
         gf <- gfcompute(asp,esp)
-        rqFreqPlot(1:d,dat$ML,peaks$out,sdate,dat$ML[j],gcurve,dates=date,title=paste("GF::>",gf,"esp::>",esp$esp,"K::>",K[i],"sdate::>",sdate,"ML::>",dat$ML[j]),barscale=days*(1-exp(-d))/(2*length(date[,2])))
-        readline(prompt = "Pause. Press <Enter> to continue...")
+ #       rqFreqPlot(1:d,dat$ML,peaks$out,sdate,dat$ML[j],gcurve,dates=date,title=paste("GF::>",gf,"esp::>",esp$esp,"K::>",K[i],"sdate::>",sdate,"ML::>",dat$ML[j]),barscale=days*(1-exp(-d))/(2*length(date[,2])))
+     #   readline(prompt = "Pause. Press <Enter> to continue...")
       } else{gf <- 0}
         if(gf>0){
-        print(c(gf,K[i],dat$ML[j],sdate))
+        #print(c(gf,K[i],dat$ML[j],sdate))
       }
-        out[index,] <- c(gf,K[i],dat$ML[j],sdate)
+ #       print("inside")
+        inside[index,] <- c(gf,dat$ML[j],sdate)
         index <- index+1
     }
   }
+    #print("out[i]")
+    out[i,] <- c(max(inside[,1]),K[i],inside[which.max(inside[,1]),2],inside[which.max(inside[,1]),3])
+    print("out[i]")
+    print(out[i,])
+    print(i/5)  
   }
-
-##   }, interval = 0.95, ani.width = 800, ani.height = 800)
-
-## ani.options(oopt)
-#  out <- out[order(out[,2],out[,1])]
-#  out2[,1] <- movingAverage(out2[,1],3)
 
   return(out)
 }
 ckscan <- cmpfun(kscan)
-
-
-movingAverage <- function(x, n=1, centered=TRUE) {
-
-    if (centered) {
-        before <- floor  ((n-1)/2)
-        after  <- ceiling((n-1)/2)
-    } else {
-        before <- n-1
-        after  <- 0
-    }
-
-    # Track the sum and count of number of non-NA items
-    s     <- rep(0, length(x))
-    count <- rep(0, length(x))
-
-    # Add the centered data 
-    new <- x
-    # Add to count list wherever there isn't a 
-    count <- count + !is.na(new)
-    # Now replace NA_s with 0_s and add to total
-    new[is.na(new)] <- 0
-    s <- s + new
-
-    # Add the data from before
-    i <- 1
-    while (i <= before) {
-        # This is the vector with offset values to add
-        new   <- c(rep(NA, i), x[1:(length(x)-i)])
-
-        count <- count + !is.na(new)
-        new[is.na(new)] <- 0
-        s <- s + new
-
-        i <- i+1
-    }
-
-    # Add the data from after
-    i <- 1
-    while (i <= after) {
-        # This is the vector with offset values to add
-        new   <- c(x[(i+1):length(x)], rep(NA, i))
-
-        count <- count + !is.na(new)
-        new[is.na(new)] <- 0
-        s <- s + new
-
-        i <- i+1
-    }
-
-    # return sum divided by count
-    s/count
-}
-
 
 
