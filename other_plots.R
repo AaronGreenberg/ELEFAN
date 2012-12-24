@@ -1,5 +1,5 @@
 
-###THE FUNCTIONS THAT INTERACT WITH THE GUI ARE BELOW!!!
+###THE FUNCTIONS THAT INTERACT WITH THE UI ARE BELOW!!!
 ##
 plotpeak <- function(d=days,dm=date,da=data,pd2=lfdata){#function(d=days,dm=date,da=data,pd2=lfdata,pd=peaks$out,curve=gcurve){
 goodfit <- NULL

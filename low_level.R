@@ -91,8 +91,8 @@ print("Method failed. max number of steps exceeded")#just a nice test to make su
 
   #first  compute time_start
   timestart <-  bisect(-200*365,200*365,sML,K,Linf,C,TW)
-#  print("time start")
-#  print(timestart)
+  print("time start")
+  print(timestart)
   #second compute time of  95%*Linf
   nintyfivetime <-  bisect2(-200*365,200*365,.95*Linf,K,Linf,C,TW,timestart)
 #  print("time when length is .95Linf")
@@ -100,8 +100,8 @@ print("Method failed. max number of steps exceeded")#just a nice test to make su
   #compute tzero
   #really only important when C!=0 because it should be about -timestart  but ...
   zerotime <-  bisect2(-200*365,200*365,0,K,Linf,C,TW,timestart)
-#  print("time when length is zero")
-#  print(zerotime)
+  print("time when length is zero")
+  print(zerotime)
   #get vector of times!
 upwind <- (ceiling(nintyfivetime))
 downwind <- (floor(zerotime))
@@ -125,62 +125,47 @@ ccurves<- cmpfun(curves)
 
 
 aspcompute <- function(peaks){
-  print("peaks asp")
-  print(peaks$asp)
-  print(sum(peaks$asp))
-  print(sum(peaks$asp[1:length(peaks$asp)]))
-  sum(peaks$asp[1:length(peaks$asp)])
+  asp <- sum(peaks$asp)
       } #compute sum of asp. 
 caspcompute <- cmpfun(aspcompute)
-espcompute <- function(gcurve,p=peaks$out,modday,ML,dates2=date)
- {                                       #compute ESP
-   ESP=0
-  peaks2 <- p #need a structure to turn to zero to prevent counting a peak more than once.
-  esp <- vector()
-  #print(dates2t)
-  for(timesweep in 1:length(gcurve$c[,1])){#sweep over time
-    gclocation <- ifelse(gcurve$c[timesweep,3]>=min(ML),which(ML==gcurve$c[timesweep,4]),0)#figure out what ML index we are on!
-    if(gclocation>0){
-      
-#    tsweep <- (timesweep)%%modday+1
-      
-    tsweep <- gcurve$c[timesweep,2]+1
-    peaks2val <- peaks2[gclocation,tsweep]
-    if(peaks2val>0){
-       ## print("pos peaks")
-       ## print(gclocation)
-       ## print(peaks2val)
-       ## print(gcurve$c[timesweep,])
-    esp[timesweep] <- peaks2val
-    peaks2val <- 0
-    }else{
-      if(peaks2val<0){
-        
-         ## print("neg peak")
-         ## print(gclocation)
-         ## print(peaks2val)
-         ## print(gcurve$c[timesweep,])
-          }
-      esp[timesweep] <- peaks2val}
-      
-      #if(esp[timesweep]!=0){print("esp timesweep real");print(esp[timesweep])}
-    }else{esp[timesweep] <- 0}
-  }
-   ESP=sum(esp)
-  ##  print("ESP::==")
-  ##  print(ESP)
+espcompute <- function(gcurve,p=peaks$out,modday,ML)
+  {                                       #compute ESP
+    peaks2 <- p #need a structure to turn to zero to prevent counting a peak more than once.
+    timesweep <- 1:length(gcurve$c[,1])
+    esp <- timesweep*0
+    for(timesweeper in timesweep){
+      gclocation <- ifelse(gcurve$c[timesweeper,3]>=min(ML),which(ML==gcurve$c[timesweeper,4]),0)#figure out what ML index we are on!
+      if(gclocation>0){
+        tsweep <- gcurve$c[timesweeper,2]+1
+        peaks2val <- peaks2[gclocation,tsweep]
+        if(peaks2val>0){
+          ## print("pos peaks")
+          ## print(gclocation)
+          ## print(peaks2val)
+          ## print(gcurve$c[timesweep,])
+          esp[timesweeper] <- peaks2val
+          peaks2[gclocation,tsweep] <- 0
+        }else{
+          if(peaks2val<0){
+            ## print("neg peak")
+            ## print(gclocation)
+            ## print(peaks2val)
+            ## print(gcurve$c[timesweep,])
+             }
+          esp[timesweeper] <- peaks2val}
+      }else{esp[timesweeper] <- 0}
+    }
+    print(esp[which(esp!=0)])
+    ESP <- sum(esp)
+    print(sum(esp))
+    print(ESP)
    return(list(esp=ESP))#,peaks2=peaks2))
 }
 cespcompute <- cmpfun(espcompute)
 gfcompute <- function(asp,esp){
-  ## print("ESP check")
-  ## print("esp")
-  ## print(esp$esp)
-  ## print("asp")
-  ## print(asp)
-  ## print("ratio")
-  ## print(esp$esp/asp)
-  10^(esp$esp/asp)/10}
+  print(esp$esp)
+  print(asp)
+gf <- 10^(esp$esp/asp)/10}
 cgfcompute <- cmpfun(gfcompute)
 
 
@@ -211,16 +196,10 @@ wetherall <- function(da=data,points=3){
 
 
 kscan <- function(Linf,c,tw,dat=data,d=days){
-  print("hi My name is Kscan")
   growthdata <- matrix(0,ncol=d,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-  print(date)
-  print(dat)
   lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
   peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
   asp <- aspcompute(peaks)                      #compute asp
-  print("d")
-  print(d)
-
   K <- seq(.1,5,length.out=1000)
   out <- matrix(0,nrow=length(K),ncol=4)
   c <- 1
@@ -235,18 +214,13 @@ kscan <- function(Linf,c,tw,dat=data,d=days){
         gcurve <- curves(Linf,c,tw,K[i],dat$ML,days,peaks,sdate,dat$ML[j])      # compute growth curve this has index, day in growthcurve and properbin.
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
         gf <- gfcompute(asp,esp)
- #       rqFreqPlot(1:d,dat$ML,peaks$out,sdate,dat$ML[j],gcurve,dates=date,title=paste("GF::>",gf,"esp::>",esp$esp,"K::>",K[i],"sdate::>",sdate,"ML::>",dat$ML[j]),barscale=days*(1-exp(-d))/(2*length(date[,2])))
-     #   readline(prompt = "Pause. Press <Enter> to continue...")
       } else{gf <- 0}
         if(gf>0){
-        #print(c(gf,K[i],dat$ML[j],sdate))
       }
- #       print("inside")
         inside[index,] <- c(gf,dat$ML[j],sdate)
         index <- index+1
     }
   }
-    #print("out[i]")
     out[i,] <- c(max(inside[,1]),K[i],inside[which.max(inside[,1]),2],inside[which.max(inside[,1]),3])
     print("out[i]")
     print(out[i,])
