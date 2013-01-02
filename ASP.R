@@ -37,7 +37,6 @@ isolate <- function(x,freq){            #Identify isolated peaks
   K <- length(x)                        #initalize stuff
   count <- numeric(K)                  
   zeros <- numeric(K)
-  
   zeros[which(freq==0)]<-TRUE
   zeros[which(freq!=0)]<-FALSE
   #take care of left
@@ -50,7 +49,6 @@ isolate <- function(x,freq){            #Identify isolated peaks
     if(nz>2&nz<(K-1)){count=zeros[nz-1]+zeros[nz-2]+zeros[nz+1]+zeros[nz+2]}
     return(count)
     }
-
   #take care of right
   count<-sapply(1:K,countf,K,zeros)
   count<-ifelse(x>=0,count,count*(-1))  #remember signs are importan
@@ -61,28 +59,18 @@ isolate <- function(x,freq){            #Identify isolated peaks
 
 deemph <- function(q,nz){
   y <- ifelse(nz>0,q*.5^(nz),q)         #soften up the peaks
-  print("check deemph")
-  print(q*.5^nz)
-  print(q)
-  print(y) 
   return(y)
 }
 
 
 spv <- function(unw){           #rescale according to Routine F in Manual page 63
-  #print("SPV TEST")
-  #print(unw)
   y <- ifelse(unw==(-1),0,unw)
   print(y)
-  negi <- which(y<0)
-  posi <- which(y>0)
-  psum <- sum(y[posi])
-  nsum <- sum(y[negi])
+  negi <- which(unw<0)
+  posi <- which(unw>0)
+  psum <- sum(unw[posi])
+  nsum <- sum(unw[negi])
   y <- ifelse(y<0,y*psum/(-nsum),y)
-  print("spv")
-  print(psum)
-  print(nsum)
-  print(psum/(-nsum))
   return(y)
 }
 
@@ -91,20 +79,22 @@ spv <- function(unw){           #rescale according to Routine F in Manual page 6
 availablesumpeaks <- function(x){
   yindex <- which(x>0)
   ytemp <- ifelse(x<0,0,x)
-  #print(ytemp)
-  for(i in yindex){
-    if(i==length(x)){
-    ytemp[i] <-max(c(ytemp[i],ytemp[i-1]))
-    }
-    else if(i==1){
-    ytemp[i] <-max(c(ytemp[i],ytemp[i+1]))
-    }else{
-    ytemp[i] <-max(c(ytemp[i],ytemp[i-1]+ytemp[i+1]))
-    }
-    ytemp[i-1] <- 0
-    ytemp[i+1] <- 0
+  m <- vector()
+  partition <- which(ytemp==0 )# find the places where it is zero
+  print(partition)
+  m1 <- max(ytemp[1:partition[1]])#get lower limit
+  print(m1)
+  mend <- max(ytemp[length(partition+1):length(ytemp)])# get upper limit
+  print(mend)
+  for(i in 1:(length(partition)-1)){
+    print(ytemp[partition[i]:partition[i+1]])
+   m[i] <- max(ytemp[partition[i]:partition[i+1]])
   }
-  return(sum(ytemp))
+  ## print("m and good stuff")
+  ## print(m)
+  ## print(m1)
+  ## print(mend)
+  return(sum(m)+m1+mend)
 }
 
 
@@ -121,16 +111,17 @@ datatmp$B <- quotientsN_ma(datatmp$OBS,datatmp$A) #quotient rescale
 datatmp$C <- peaksmap(datatmp$B)                     #make peaks
 datatmp$D <- isolate(datatmp$C,datatmp$OBS)       #isolate peaks
 datatmp$E <- deemph(datatmp$C,datatmp$D)          #deemph according to manual (SERIOUSLY see manual...)
+#datatmp$F <- spv(datatmp$E/((1+2/datatmp$OBS)^.5))                       #final rescale
 datatmp$F <- spv(datatmp$E)                       #final rescale
 print("data restructure")
-print(datatmp)
+print(datatmp$F)
 return(as.vector(datatmp$F))
 }
 
 main2 <-function(peaks) {               #this computes the available sum of peaks for each data set
 ASP <- availablesumpeaks(peaks)
-print("ASP")
-print(ASP)
+#print("ASP")
+#print(ASP)
 return(ASP)
 }
 
@@ -149,11 +140,13 @@ lfrestruc<- function(ldata){            #puts main1 and main2 together to
      ret$out[,j] <- main1(ldata[,j])     #applying main1
      ret$asp[count] <-  main2(ret$out[,j])  #applying main2
      print("partial asp")
+     print(ret$asp)
      print(sum(ret$asp))
      count=count+1
      }
    }
-#    print(ret)
     return(ret)                         
  }
+
+
 

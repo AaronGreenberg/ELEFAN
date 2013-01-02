@@ -16,6 +16,8 @@ asp <- aspcompute(peaks)                      #compute asp
 esp <- espcompute(gcurve,peaks$out,days,da$ML)               #compute esp
 gf <- gfcompute(asp,esp)
 #graphics.off()
+print("esp")
+print(esp$esp)
 print("goodfit")
 print(gf)
 
@@ -48,6 +50,8 @@ plotkscan <- function(d=days,dm=date,da=data,pd2=lfdata,pd=peaks$out,curve=gcurv
     print(date)
     print(days)
     getWinVal(scope="L")
+    print(c("Linf","K"))
+    print(c(Linf,K))
     z <- ckscan(Linf,c,tw,dat=data,d=days)
 #    print(z)
     nzero <- which(z[,1]>0)
@@ -55,10 +59,10 @@ plotkscan <- function(d=days,dm=date,da=data,pd2=lfdata,pd=peaks$out,curve=gcurv
     points(z[nzero,2],z[nzero,1],col="blue",cex=.2,pch=19)
     points(z[which.max(z[,1]),2],z[which.max(z[,1]),1],col="red",cex=.8,pch=19)
     
-    print(max(z[nzero,1]))
-    print(z[which.max(z[,1]),2])
-    print(z[which.max(z[,1]),3])
-    print(z[which.max(z[,1]),4])
+    print(max(z[nzero,1]))#gf
+    print(z[which.max(z[,1]),2]) #K
+    print(z[which.max(z[,1]),3]) #ml
+    print(z[which.max(z[,1]),4])#date
   }
 
 
