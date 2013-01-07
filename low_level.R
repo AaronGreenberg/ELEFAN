@@ -32,29 +32,30 @@ growth_rootf <- function(x,K,Linf,C,TW){
   out <- Linf*(1-exp(-K*(0-x)+period))
   return(out)
 }
-
+cgrowth_rootf <- cmpfun(growth_rootf)
 bisect <- function(a,b,equal,K,Linf,C,TW){
-  if((growth_rootf(a,K,Linf,C,TW)-equal)^2<10^(-10)){return(a)}
-  if((growth_rootf(b,K,Linf,C,TW)-equal)^2<10^(-10)){return(b)}
+  if((cgrowth_rootf(a,K,Linf,C,TW)-equal)^2<10^(-10)){return(a)}
+  if((cgrowth_rootf(b,K,Linf,C,TW)-equal)^2<10^(-10)){return(b)}
   #This function uses bisection to compute the required values of tstart and...
   if((growth_rootf(a,K,Linf,C,TW)-equal)*(growth_rootf(b,K,Linf,C,TW)-equal)>0){#make sure that inputs are okay... 
     print("f(xup) and f(xlow) are of same sign 1")
-    print(paste("fxup::",(growth_rootf(a,K,Linf,C,TW)-equal),"fxlow::",(growth_rootf(b,K,Linf,C,TW)-equal)))
+    print(paste("fxup::",(cgrowth_rootf(a,K,Linf,C,TW)-equal),"fxlow::",(cgrowth_rootf(b,K,Linf,C,TW)-equal)))
     return(1)} 
 termtest <- 1#set counter to protect against errors. 
   while(termtest<= 10000) {# limit iterations to prevent infinite loop
     d <- (a + b)/2 #new midpoint
-    if(((growth_rootf(d,K,Linf,C,TW)-equal)==0||(b-a)/2<= 10^-(10))) { #solution found
+    if(((cgrowth_rootf(d,K,Linf,C,TW)-equal)==0||(b-a)/2<= 10^-(10))) { #solution found
     return(d)
     break
   }
   termtest <- termtest + 1 #increment step counter
-  if(sign(growth_rootf(d,K,Linf,C,TW)-equal) == sign(growth_rootf(a,K,Linf,C,TW)-equal)){ a <- d}
+  if(sign(cgrowth_rootf(d,K,Linf,C,TW)-equal) == sign(cgrowth_rootf(a,K,Linf,C,TW)-equal)){ a <- d}
   else{b <- d }# new interval
 }
 print("Method failed. max number of steps exceeded")#just a nice test to make sure that the first test really worked.
 }
 
+cbisect <- cmpfun(bisect)
   #I should talk to Laura about making things polymorphic... Cause this is ugly and has code redundancy. 
    
 growth_rootf2 <- function(x,K,Linf,C,TW,ts){
@@ -64,30 +65,30 @@ growth_rootf2 <- function(x,K,Linf,C,TW,ts){
   out <- Linf*(1-exp(-K*(x-ts)+period))
   return(out)
 }
-
+cgrowth_rootf2 <- cmpfun(growth_rootf2)
 bisect2 <- function(a,b,equal,K,Linf,C,TW,ts){
-  if(((growth_rootf2(a,K,Linf,C,TW,ts)-equal)^2)<10^(-10)){return(a)}
-  if(((growth_rootf2(b,K,Linf,C,TW,ts)-equal)^2)<10^(-10)){return(b)}
+  if(((cgrowth_rootf2(a,K,Linf,C,TW,ts)-equal)^2)<10^(-10)){return(a)}
+  if(((cgrowth_rootf2(b,K,Linf,C,TW,ts)-equal)^2)<10^(-10)){return(b)}
   #This function uses bisection to compute the required end time values
   if((growth_rootf2(a,K,Linf,C,TW,ts)-equal)*(growth_rootf2(b,K,Linf,C,TW,ts)-equal)>0){#make sure that inputs are okay... 
     print("f(xup) and f(xlow) are of same sign 2")
-    print(paste("fxup::",(growth_rootf2(a,K,Linf,C,TW,ts)-equal),"fxlow::",(growth_rootf2(b,K,Linf,C,TW,ts)-equal)))
+    print(paste("fxup::",(cgrowth_rootf2(a,K,Linf,C,TW,ts)-equal),"fxlow::",(cgrowth_rootf2(b,K,Linf,C,TW,ts)-equal)))
     print(paste("a::",a,"b::",b))
     return(1)} 
 termtest <- 1#set counter to protect against errors. 
   while(termtest<= 10000) {# limit iterations to prevent infinite loop
     d <- (a + b)/2 #new midpoint
-    if(((growth_rootf2(d,K,Linf,C,TW,ts)-equal)==0||(b-a)/2<= 10^-(10))) { #solution found
+    if(((cgrowth_rootf2(d,K,Linf,C,TW,ts)-equal)==0||(b-a)/2<= 10^-(10))) { #solution found
     return(d)
     break
   }
   termtest <- termtest + 1 #increment step counter
-  if(sign(growth_rootf2(d,K,Linf,C,TW,ts)-equal) == sign(growth_rootf2(a,K,Linf,C,TW,ts)-equal)){ a <- d}
+  if(sign(cgrowth_rootf2(d,K,Linf,C,TW,ts)-equal) == sign(cgrowth_rootf2(a,K,Linf,C,TW,ts)-equal)){ a <- d}
   else{b <- d }# new interval
 }
 print("Method failed. max number of steps exceeded")#just a nice test to make sure that the first test really worked.
 }
-
+cbisect2 <- cmpfun(bisect2)
 
   #first  compute time_start
   timestart <-  bisect(-200*365,200*365,sML,K,Linf,C,TW)
@@ -202,47 +203,49 @@ wetherall <- function(da=data,points=3){
 
 
 
+
 kscan <- function(Linf,c,tw,dat=data,d=days){
+  
   growthdata <- matrix(0,ncol=d,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
   lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
   peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
-  asp <-6.47# aspcompute(peaks)                      #compute asp
+  asp <- aspcompute(peaks)                      #compute asp
   print("asp")
   print(asp)
-  K <- seq(.12,3,length.out=500)
+  K <- seq(.1,10,length.out=100)
   out <- matrix(0,nrow=length(K),ncol=4)
   c <- 1.18
-  tw <- .18
+  tw <- 0.18
   Linf <- 1.5
+
   
- gfsweep<- function(j,sdate,Linf,c,tw,K,ML,peaks,days){
-        gcurve <- curves(Linf,c,tw,K,ML,days,peaks,sdate,ML[j])      # compute growth curve this has index, day in growthcurve and properbin.
+ for(i in 1:length(K)){
+        index <- 1
+        inside <- matrix(0,nrow=length(dat$ML)*d,ncol=3)#
+   for(j in 1:(length(dat$ML))){
+      for(sdate in 1:d){
+        if(peaks$out[j,sdate]>0 & lfdata[j,sdate]>0){
+        gcurve <- curves(Linf,c,tw,K[i],dat$ML,days,peaks,sdate,dat$ML[j])      # compute growth curve this has index, day in growthcurve and properbin.
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
         gf <- gfcompute(asp,esp)
-        print("gfsweep")
-        print(gf)
-        return(gf)
-       }
- vgfsweep <- Vectorize(gfsweep)
-  
-for(i in 1:length(K)){
-  j <- 1:length(dat$ML)
-  date <- 1:d
-  days  <- which(sum(lfdata[,date])>0)# get days where things are greater than zero
-  gf <- outer(1:2,days,vgfsweep,Linf,c,tw,K[i],dat$ML,peaks,d)
-  print(gf)
- }
+      } else{gf <- 0}
+        if(gf>0){
+      }
+        inside[index,] <- c(gf,dat$ML[j],sdate)
+        index <- index+1
+    }
+  }
+    out[i,] <- c(max(inside[,1]),K[i],inside[which.max(inside[,1]),2],inside[which.max(inside[,1]),3])
+    print(i/length(K))  
+  }
 
-out <- c(1,10)
-return(out)
-  
-}
- 
-
+  return(out)
+}                                      
 
 
   
-  
+
+
 ##   for(i in 1:length(K)){
 ##         index <- 1
 ##         inside <- matrix(0,nrow=length(dat$ML)*d,ncol=3)#
