@@ -42,31 +42,27 @@ plotwetherall <- function(da=data){
 }
 
 
-plotkscan <- function(d=days,dm=date,da=data,pd2=lfdata,pd=peaks$out,curve=gcurve)
-  {
-    growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-    lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
-    peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
-    print(date)
-    print(days)
-    getWinVal(scope="L")
-    print(c("Linf","K"))
-    print(c(Linf,K))
-    library(profr)
 
-    z <- ckscan(Linf,c,tw,dat=data,d=days)
+kscanplot <- function(z=zkscan){
+    getWinVal(scope="L")
+    print("window")
+    print(window)
     nzero <- which(z[,1]>0)
-    plot(z[nzero,2],movingAverage(z[nzero,1],10),type="l",xlab="K",ylab="Goodness of Fit",log="x",ylim=c(0,max(z[,1])*1.1))
-    points(z[nzero,2],z[nzero,1],col="blue",cex=.3,pch=19)
-    lines(z[nzero,2],z[nzero,1],col="grey",cex=.2)
+    par(las=1)
+    ma <- movingAverage(z[nzero,1],window)
+    plot(z[nzero,2],z[nzero,1],type="l",xlab="K",ylab="Goodness of Fit",log="x",ylim=c(0,max(z[,1])*1.1),col="grey")
+    points(z[nzero,2],z[nzero,1],col="grey",cex=.4,pch=19)
+    lines(z[nzero,2],ma,col="black",cex=.6)
     points(z[which.max(z[,1]),2],z[which.max(z[,1]),1],col="red",cex=.8,pch=19)
+    text(z[which.max(z[,1]),2],z[which.max(z[,1]),1]+0.01,as.character(signif(z[which.max(z[,1]),2],2)))
+    points(z[which.max(ma),2],ma[which.max(ma)],col="blue",cex=.8,pch=19)     
+    text(z[which.max(ma),2],ma[which.max(ma)]+0.01,as.character(signif(z[which.max(ma),2],2)))     
     print(max(z[nzero,1]))#gf
     print(z[which.max(z[,1]),2]) #K
     print(z[which.max(z[,1]),3]) #ml
     print(z[which.max(z[,1]),4])#date
+
   }
-
-
 movingAverage <- function(x, n=1, centered=TRUE) {
 
     if (centered) {

@@ -1,6 +1,8 @@
 
 
-      grid 3 1 #padx=20 pady=20
+      grid 5 1 #padx=20 pady=20
          	label text=K-scan: font=bold
-        	button text="kscan " func=plotkscan
+        	button text="kscan " func=ckscan
+		button text="kscan2 " func=kscanplot
+		slideplus name=window from=1 to=10 by=1 value=2 
     		button text="Return to main" func=return2main

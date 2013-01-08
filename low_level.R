@@ -194,29 +194,29 @@ wetherall <- function(da=data,points=3){
   Linfest=-1*inter[1]/inter[2]
   graphics.off()
   par(1,las=1)
-  plot(Li,Liprime,xlim=c(Li[1],Linfest+3),ylim=c(0,max(Liprime)+6),xlab="Cutoff Length (L' cm)",ylab="Mean Cutoff Length")
+  plot(Li,Liprime,xlim=c(Li[1],Linfest+3),ylim=c(0,max(Liprime)+6),xlab="Cutoff Length (L' cm)",ylab="Mean Cutoff Length", main=paste("Z/K=",signif(inter[2],4),"Linf=",signif(Linfest,4)))
   points(Lip,Lipoints,pch=19,col="red")
-  text(Li,Liprime+1,as.character(sort(1:length(Liprime),decreasing=TRUE)))
-  abline(z)
+  text(Li,Liprime+min(3,(3*-inter[2])),as.character(sort(1:length(Liprime),decreasing=TRUE)))
+  lines(Lip,inter[1]+inter[2]*Lip)
   return(Linfest)
 }
 
 
 
 
-kscan <- function(Linf,c,tw,dat=data,d=days){
-  
+kscan <- function(dat=data,d=days){
+  getWinVal(scope="L")
+  print(paste("Linf","K","c","tw"))
+  temp <- c(Linf,K,c,tw)
+  print(temp)
   growthdata <- matrix(0,ncol=d,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
   lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
   peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
   asp <- aspcompute(peaks)                      #compute asp
   print("asp")
   print(asp)
-  K <- seq(.1,10,length.out=100)
-  out <- matrix(0,nrow=length(K),ncol=4)
-  c <- 1.18
-  tw <- 0.18
-  Linf <- 1.5
+  K <- exp(seq(log(.1),log(10),length.out=100))
+  zkscan <- matrix(0,nrow=length(K),ncol=4)
 
   
  for(i in 1:length(K)){
@@ -235,39 +235,13 @@ kscan <- function(Linf,c,tw,dat=data,d=days){
         index <- index+1
     }
   }
-    out[i,] <- c(max(inside[,1]),K[i],inside[which.max(inside[,1]),2],inside[which.max(inside[,1]),3])
+    zkscan[i,] <- c(max(inside[,1]),K[i],inside[which.max(inside[,1]),2],inside[which.max(inside[,1]),3])
     print(i/length(K))  
   }
-
-  return(out)
+  zkscan<<-zkscan
+  return(zkscan)
 }                                      
 
-
-  
-
-
-##   for(i in 1:length(K)){
-##         index <- 1
-##         inside <- matrix(0,nrow=length(dat$ML)*d,ncol=3)#
-##     for(j in 1:(length(dat$ML))){
-##       for(sdate in 1:d){
-##         if(peaks$out[j,sdate]>0 & lfdata[j,sdate]>0){
-##         gcurve <- curves(Linf,c,tw,K[i],dat$ML,days,peaks,sdate,dat$ML[j])      # compute growth curve this has index, day in growthcurve and properbin.
-##         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
-##         gf <- gfcompute(asp,esp)
-##       } else{gf <- 0}
-##         if(gf>0){
-##       }
-##         inside[index,] <- c(gf,dat$ML[j],sdate)
-##         index <- index+1
-##     }
-##   }
-##     out[i,] <- c(max(inside[,1]),K[i],inside[which.max(inside[,1]),2],inside[which.max(inside[,1]),3])
-##     print(i/length(K))  
-##   }
-##  out <- c(1,10)
-##   return(out)
-## }                                      
 ckscan <- cmpfun(kscan)
 
 
