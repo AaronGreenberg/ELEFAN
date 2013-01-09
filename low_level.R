@@ -180,24 +180,33 @@ cgfcompute <- cmpfun(gfcompute)
 wetherall <- function(da=data,points=3){
   data2 <- data
   data2$ML <- data$ML*0
-  z <- rowSums(data2)
-  #print(z)
+  z <- rowSums(data2)#sum up all the frequencies
   Li=Liprime=z*0
   for(i in 1:length(data2$ML)){
-    Li[i]=data$ML[i]
-    Liprime[i]=mean(z[i:length(z)])
+    Li[i]=data$ML[i]-(data$ML[2]-data$ML[1])/2    #get list of cut off values
+    Liprime[i]=sum(data$ML[i:length(data$ML)]*z[i:length(data$ML)])/sum(z[i:length(data$ML)])  #get list scaled mean lengths
   }
+#  points=8
   Lipoints=Liprime[(length(Liprime)-points):length(Liprime)]
   Lip=Li[(length(Liprime)-points):length(Liprime)]
+  
+  par(las=1)
   z=lm(Lipoints~Lip)
-  inter=as.vector(z$coefficients)
-  Linfest=-1*inter[1]/inter[2]
-  graphics.off()
-  par(1,las=1)
-  plot(Li,Liprime,xlim=c(Li[1],Linfest+3),ylim=c(0,max(Liprime)+6),xlab="Cutoff Length (L' cm)",ylab="Mean Cutoff Length", main=paste("Z/K=",signif(inter[2],4),"Linf=",signif(Linfest,4)))
-  points(Lip,Lipoints,pch=19,col="red")
-  text(Li,Liprime+min(3,(3*-inter[2])),as.character(sort(1:length(Liprime),decreasing=TRUE)))
-  lines(Lip,inter[1]+inter[2]*Lip)
+  print(z)
+  print(z$coefficients)
+  Linfest <- -z$coefficients[1]/(z$coefficients[2]-1)#compute Linf 
+  plot(Li,Liprime,xlim=c(0,max(Li,Linfest)+2),ylim=c(0,max(Liprime,Linfest)+2),xlab="Cutoff Length L'",ylab=expression(paste("Mean Length above cutoff  ", bar(L) )))
+  points(Lip,Lipoints,col="black",pch=19)
+  points(Linfest,z$coefficients[1]+z$coefficients[2]*Linfest,col="purple",pch=19,cex=.5)
+  abline(a=0,b=1,col="red")
+  abline(z,col="blue")
+  abline(v=Linfest,col="grey")
+  abline(h=0,col="grey")
+  temp=signif(Linfest,6)
+  text(Linfest,1,expression(paste("L",infinity)))
+  l1 <- c((expression(paste("L",infinity,"="))),temp)
+  legend(x="topleft",c(l1))
+  
   return(Linfest)
 }
 

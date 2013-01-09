@@ -35,57 +35,80 @@ size=1000
 window = gwindow("New ELEFAN",height=size,width=1.618*size)
 biggroup <- ggroup(container=window,expand=TRUE,horizontal=FALSE,visible=TRUE)
 
+#make big note book!
 nb <- gnotebook(container=biggroup,expand=TRUE,horizontal=TRUE,visible=TRUE)
-LF <- ggroup(container = nb,label="LF", expand=TRUE,horizontal=TRUE,visible=TRUE)
-lflittle <- ggroup(container=LF,expand=TRUE,horizontal=FALSE,visible=TRUE)
-gimage("ubc.gif", dirname=getwd(), size=c(.01,.01), container=lflittle)
-Line <- ggroup(container = nb,label="Line", expand=TRUE,horizontal=TRUE,visible=TRUE)
-linelittle <- ggroup(container=Line,expand=TRUE,horizontal=FALSE,visible=TRUE)
-gimage("ubc.gif", dirname=getwd(), size=c(.01,.01), container=linelittle)
-Linepic<- gnotebook(container=Line,expand=TRUE,visible=FALSE)
-LFpic<- gnotebook(container=LF,expand=TRUE,visible=FALSE)
 
-histgraphic<- ggraphics(container = LFpic,width=500,height=500,label="LF")
-linegraphic<- ggraphics(container = Linepic,width=500,height=500,label="Line Pic")
-graphHandler1 <- addHandlerChanged(nb,function(h,...){
-  print("linegraphic")
-#  visible(linegraphic) <- TRUE #make correct picture
-#  updatePlot2()
-  })
+#Make the Entry page!
 
-graphHandler2 <- addHandlerChanged(nb,function(h,...){
-  print("histgraphic")
-#  visible(histgraphic) <- TRUE #make correct picture 
-#  updatePlot()
-  })
+Entry <- ggroup(container = nb,label="LF", expand=TRUE,horizontal=TRUE,visible=TRUE)#make entry group
+Entrylittle <- ggroup(container=Entry,expand=TRUE,horizontal=FALSE,visible=TRUE)# make little entry group
+Entrypic<- gnotebook(container=Entry,expand=TRUE,visible=FALSE)
+Entrygraphic<- ggraphics(container = Entrypic,width=500,height=500,label="Main Page")
+graphHandlerEntry <- addHandlerChanged(nb,function(h,...){
+  print("Entrygraphic")
 
-#gimage("ubc.gif", dirname="/home/daft/ELEFAN", size=c(.1,.1), container=LFpic)
+})
 
-tmp = gframe("Sample size", container = lflittle)
-add(tmp, sampleSize,expand=TRUE)
+EntryPlot = function(h, ...) {#make the first plot
+  visible(histgraphic) <- TRUE #make correct picture 
+}
 
-tmp = gframe("Mean", container = lflittle)
-add(tmp, mean,expand=TRUE)
-
-tmp = gframe("Var", container = lflittle)
-add(tmp, var,expand=TRUE)
+gimage("ubc.gif", dirname=getwd(), size=c(.01,.01), container=histgraphic)
 
 
-tmp = gframe("Bandwidth adjust", container = lflittle)
-add(tmp, bandwidthAdjust, expand = TRUE)
-tmp = gframe("Numbin", container = lflittle)
-add(tmp, numbin, expand = TRUE)
-tmp = gframe("Plot LF", container = lflittle,handler=graphHandler1)
-add(tmp, plot1, expand = TRUE)
+
+## LF <- ggroup(container = nb,label="LF", expand=TRUE,horizontal=TRUE,visible=TRUE)
+## lflittle <- ggroup(container=LF,expand=TRUE,horizontal=FALSE,visible=TRUE)
 
 
-tmp = gframe("intecept", container = linelittle)
-add(tmp, intercept,expand=TRUE)
+## gimage("ubc.gif", dirname=getwd(), size=c(.01,.01), container=lflittle)
+## Line <- ggroup(container = nb,label="Line", expand=TRUE,horizontal=TRUE,visible=TRUE)
+## linelittle <- ggroup(container=Line,expand=TRUE,horizontal=FALSE,visible=TRUE)
+## gimage("ubc.gif", dirname=getwd(), size=c(.01,.01), container=linelittle)
+## Linepic<- gnotebook(container=Line,expand=TRUE,visible=FALSE)
+## LFpic<- gnotebook(container=LF,expand=TRUE,visible=FALSE)
 
-tmp = gframe("slope", container = linelittle)
-add(tmp, slope,expand=TRUE)
+## histgraphic<- ggraphics(container = LFpic,width=500,height=500,label="LF")
+## linegraphic<- ggraphics(container = Linepic,width=500,height=500,label="Line Pic")
+## graphHandler1 <- addHandlerChanged(nb,function(h,...){
+##   print("linegraphic")
+## #  visible(linegraphic) <- TRUE #make correct picture
+## #  updatePlot2()
+##   })
 
-tmp = gframe("Plot Lm", container = linelittle,handler=graphHandler2)
-add(tmp,plot2, expand = TRUE)
+## graphHandler2 <- addHandlerChanged(nb,function(h,...){
+##   print("histgraphic")
+## #  visible(histgraphic) <- TRUE #make correct picture 
+## #  updatePlot()
+##   })
+
+## #gimage("ubc.gif", dirname="/home/daft/ELEFAN", size=c(.1,.1), container=LFpic)
+
+## tmp = gframe("Sample size", container = lflittle)
+## add(tmp, sampleSize,expand=TRUE)
+
+## tmp = gframe("Mean", container = lflittle)
+## add(tmp, mean,expand=TRUE)
+
+## tmp = gframe("Var", container = lflittle)
+## add(tmp, var,expand=TRUE)
+
+
+## tmp = gframe("Bandwidth adjust", container = lflittle)
+## add(tmp, bandwidthAdjust, expand = TRUE)
+## tmp = gframe("Numbin", container = lflittle)
+## add(tmp, numbin, expand = TRUE)
+## tmp = gframe("Plot LF", container = lflittle,handler=graphHandler1)
+## add(tmp, plot1, expand = TRUE)
+
+
+## tmp = gframe("intecept", container = linelittle)
+## add(tmp, intercept,expand=TRUE)
+
+## tmp = gframe("slope", container = linelittle)
+## add(tmp, slope,expand=TRUE)
+
+## tmp = gframe("Plot Lm", container = linelittle,handler=graphHandler2)
+## add(tmp,plot2, expand = TRUE)
 
 
