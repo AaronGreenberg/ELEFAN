@@ -13,7 +13,7 @@ source("catchcurves.R")
 source("LF_plots.R")                    #load routines to make the special plots in particular rqFreqplot
 source("other_plots.R")                 #load routines that make other plots
 source("low_level.R")                   #load misc routines really mostly data proccessing     
-createWin("main_gui.txt")
+#createWin("main_gui.txt")
 
 
 

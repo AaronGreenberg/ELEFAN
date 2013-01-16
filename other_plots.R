@@ -1,19 +1,19 @@
 
 ###THE FUNCTIONS THAT INTERACT WITH THE UI ARE BELOW!!!
 ##
-plotpeak <- function(d=days,dm=date,da=data,pd2=lfdata){#function(d=days,dm=date,da=data,pd2=lfdata,pd=peaks$out,curve=gcurve){
+plotpeak <- function(d=days,dm=date,da=data,pd2=lfdata,Linf,K,C,tw,ptype,sdate,ML){#function(d=days,dm=date,da=data,pd2=lfdata,pd=peaks$out,curve=gcurve){
 goodfit <- NULL
-getWinVal(scope="L")
-startdate <- as.Date(Date)
+#getWinVal(scope="L")
+startdate <- as.Date(date[sdate,1])
 startime <- as.numeric(startdate-dm[1,1])
 ML <- as.numeric(ML)
 #need to convert start date to dime.
 growthdata <- matrix(0,ncol=d,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-lfdata<- fillgrowthdata(dm,da,growthdata) #make data structure with length frequency data
-peaks <- lfrestruc(pd2)                    #create restructure lfdata into peaks and valleys.
-gcurve <- curves(Linf,c,tw,K,da$ML,days,pd2,startime,ML)      # compute growth curve this has index, day in growthcurve and properbin.
+lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
+peaks <- lfrestruc(pd2)                  #create restructure lfdata into peaks and valleys.
+gcurve <- curves(Linf,c,tw,K,da$ML,d,pd2,startime,ML)      # compute growth curve this has index, day in growthcurve and properbin.
 asp <- aspcompute(peaks)                      #compute asp
-esp <- espcompute(gcurve,peaks$out,days,da$ML)               #compute esp
+esp <- espcompute(gcurve,peaks$out,d,da$ML)               #compute esp
 gf <- gfcompute(asp,esp)
 #graphics.off()
 print("esp")

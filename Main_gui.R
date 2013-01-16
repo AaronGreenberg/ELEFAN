@@ -1,114 +1,105 @@
 library(gWidgetsRGtk2)
 options("guiToolkit"="RGtk2")
+source("main.R")
 
+#create the Main window.
 
-updatePlot = function(h, ...) {#make the first plot
-  x = do.call("rnorm", list(svalue(sampleSize),svalue(mean),svalue(var)))
-  visible(histgraphic) <- TRUE #make correct picture 
-  par(mar=c(2.0,2.0,2.0,2.0))
-  hist(x,freq=FALSE,main="density test",svalue(numbin))
-  lines(density(x, adjust = svalue(bandwidthAdjust)),col="blue")
-  rug(x)
-}
-
-updatePlot2 = function(h, ...) {#make second sort of plot
-  x <- 1:100
-  visible(linegraphic) <- TRUE #make correct picture 
-  y <- svalue(intercept)+svalue(slope)*x+rnorm(length(x),0,10)
-  par(mar=c(2.1,2.1,2.1,2.1))
-  plot(x,y,type="p",col="red")
-  abline(lm(y~x),col="blue")
-}
-
-mean = gslider(from = 0, to = 20, by = 0.01, value = 1)
-var = gslider(from=1,to=10,by=1,value=5)
-
-slope = gslider(from = 0, to = 20, by = 0.01, value = 1)
-intercept = gslider(from=1,to=10,by=1,value=5)
-
-sampleSize = gslider(from=1,to=10^4,by=1,value=250)
-bandwidthAdjust = gslider(from=1,to=10,by=.1,value=2)
-numbin=gradio(c(10,100,1000,2000))
-plot1=gbutton("Plot hist",handler=updatePlot)
-plot2=gbutton("Plot lm",handler=updatePlot2)
 size=1000
 window = gwindow("New ELEFAN",height=size,width=1.618*size)
 biggroup <- ggroup(container=window,expand=TRUE,horizontal=FALSE,visible=TRUE)
 
 #make big note book!
 nb <- gnotebook(container=biggroup,expand=TRUE,horizontal=TRUE,visible=TRUE)
+#Make Catch curve window 
+Catchcurveplot <- ggroup(container = nb,label="Catch Curve", expand=TRUE,horizontal=TRUE,visible=TRUE)#make entry group
+Catchcurvelittle <- ggroup(container=Catchcurveplot,expand=TRUE,horizontal=FALSE,visible=TRUE)# make little entry group
+Catchcurvepic<- gnotebook(container=Catchcurveplot,expand=TRUE,visible=FALSE)#create the Entry pic.
+Catchcurvegraphic<- ggraphics(container = Catchcurvepic,width=500,height=500,label="Catch Curve Plot Non Seasonal")
+# Make Kscan Window
 
+Kscanplot <- ggroup(container = nb,label="K scan", expand=TRUE,horizontal=TRUE,visible=TRUE)#make entry group
+Kscanplotlittle <- ggroup(container=Kscanplot,expand=TRUE,horizontal=FALSE,visible=TRUE)# make little entry group
+Kscanplotpic<- gnotebook(container=Kscanplot,expand=TRUE,visible=FALSE)#create the Entry pic.
+Kscangraphic<- ggraphics(container = Kscanplotpic,width=500,height=500,label="K Scan")
+#Load Data
+
+#Make Wetherall plot Window
+Wetherallplot <- ggroup(container = nb,label="Wetherall Plot", expand=TRUE,horizontal=TRUE,visible=TRUE)#make entry group
+Wetherallplotlittle <- ggroup(container=Wetherallplot,expand=TRUE,horizontal=FALSE,visible=TRUE)# make little entry group
+Wetherallpic<- gnotebook(container=Wetherallplot,expand=TRUE,visible=FALSE)#create the Entry pic.
+Wetheralgraphic<- ggraphics(container = Wetherallpic,width=500,height=500,label="Wetherall Plot")
+
+
+#Make Length Frequency plot window.
+
+LFplot <- ggroup(container = nb,label="Length Frequency Plots", expand=TRUE,horizontal=TRUE,visible=TRUE)#make entry group
+LFplotlittle <- ggroup(container=LFplot,expand=TRUE,horizontal=FALSE,visible=TRUE)# make little entry group  
+LFpic<- gnotebook(container=LFplot,expand=TRUE,visible=FALSE)#create the Entry pic.
+
+histgraphic<- ggraphics(container = LFpic,width=500,height=500,label="LF Plot")
+refactorgraphic<- ggraphics(container = LFpic,width=500,height=500,label="Peaks Plot")
+
+  Linfslide = gslider(from=1,to=10,length.out=100,value=2)
+  tmp = gframe("Linf", container = LFplotlittle)
+  add(tmp, Linfslide, expand = TRUE)
+
+  Kslide = gslider(from=1,to=100,by=1,value=.2)
+  tmp = gframe("K", container = LFplotlittle)
+  add(tmp, Kslide, expand = TRUE)
+
+  Cslide= gslider(from=0,to=2,by=.01,value=0)
+  tmp = gframe("C", container = LFplotlittle)
+  add(tmp, Cslide, expand = TRUE)
+
+  twslide=gslider(from=0,to=1,by=.01,value=0)
+  tmp = gframe("Tw", container = LFplotlittle)
+  add(tmp, twslide, expand = TRUE)
+
+plotlf <- function(h,...){
+ plot(hist(rnorm(10^4)))
+ plotpeak(d=days,dm=date,da=data,pd2=lfdata,svalue(Linfslide),svalue(Kslide),svalue(Cslide),svalue(twslide),ptype="peaks",sdate=2,ML=1.05)
+ }
+ plot=gbutton("Date file",handler=plotlf)
+ tmp=gframe("Plot",container=LFplotlittle)
+ add(tmp, plot, expand = TRUE)
+
+
+
+
+
+#%############################################################
 #Make the Entry page!
+datetmp <- NA
+data <- NA
+Entry <- ggroup(container = nb,label="Data Display", expand=TRUE,horizontal=TRUE,visible=TRUE)#make entry group
+Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE,visible=TRUE,width=200)# make little entry group
+Entrypic<- gnotebook(container=Entry,expand=TRUE,visible=FALSE)#create the Entry pic.
+Datetable<- gtable(datetmp,container=Entrypic,label="Date")
+Datatable<- gtable(data,container=Entrypic,label="Data")
 
-Entry <- ggroup(container = nb,label="LF", expand=TRUE,horizontal=TRUE,visible=TRUE)#make entry group
-Entrylittle <- ggroup(container=Entry,expand=TRUE,horizontal=FALSE,visible=TRUE)# make little entry group
-Entrypic<- gnotebook(container=Entry,expand=TRUE,visible=FALSE)
-Entrygraphic<- ggraphics(container = Entrypic,width=500,height=500,label="Main Page")
-graphHandlerEntry <- addHandlerChanged(nb,function(h,...){
-  print("Entrygraphic")
-
-})
-
-EntryPlot = function(h, ...) {#make the first plot
-  visible(histgraphic) <- TRUE #make correct picture 
-}
-
-gimage("ubc.gif", dirname=getwd(), size=c(.01,.01), container=histgraphic)
-
-
-
-## LF <- ggroup(container = nb,label="LF", expand=TRUE,horizontal=TRUE,visible=TRUE)
-## lflittle <- ggroup(container=LF,expand=TRUE,horizontal=FALSE,visible=TRUE)
-
-
-## gimage("ubc.gif", dirname=getwd(), size=c(.01,.01), container=lflittle)
-## Line <- ggroup(container = nb,label="Line", expand=TRUE,horizontal=TRUE,visible=TRUE)
-## linelittle <- ggroup(container=Line,expand=TRUE,horizontal=FALSE,visible=TRUE)
-## gimage("ubc.gif", dirname=getwd(), size=c(.01,.01), container=linelittle)
-## Linepic<- gnotebook(container=Line,expand=TRUE,visible=FALSE)
-## LFpic<- gnotebook(container=LF,expand=TRUE,visible=FALSE)
-
-## histgraphic<- ggraphics(container = LFpic,width=500,height=500,label="LF")
-## linegraphic<- ggraphics(container = Linepic,width=500,height=500,label="Line Pic")
-## graphHandler1 <- addHandlerChanged(nb,function(h,...){
-##   print("linegraphic")
-## #  visible(linegraphic) <- TRUE #make correct picture
-## #  updatePlot2()
-##   })
-
-## graphHandler2 <- addHandlerChanged(nb,function(h,...){
-##   print("histgraphic")
-## #  visible(histgraphic) <- TRUE #make correct picture 
-## #  updatePlot()
-##   })
-
-## #gimage("ubc.gif", dirname="/home/daft/ELEFAN", size=c(.1,.1), container=LFpic)
-
-## tmp = gframe("Sample size", container = lflittle)
-## add(tmp, sampleSize,expand=TRUE)
-
-## tmp = gframe("Mean", container = lflittle)
-## add(tmp, mean,expand=TRUE)
-
-## tmp = gframe("Var", container = lflittle)
-## add(tmp, var,expand=TRUE)
+#Load Data
+#I need handlers.
+datefileinh <- function(h,...){
+  datefilein()
+  datetmp <- date
+  datetmp[,1] <- as.character(date[,1])
+  datetmp[,1] <- as.character(date[,1])
+  Datetable[] <- datetmp
+  }
+lffileinh <- function(h,...){
+  lffilein()
+  Datatable[] <- data
+  Linfslide[] <- seq(0,2*max(data$ML),length.out=100)
+  }
 
 
-## tmp = gframe("Bandwidth adjust", container = lflittle)
-## add(tmp, bandwidthAdjust, expand = TRUE)
-## tmp = gframe("Numbin", container = lflittle)
-## add(tmp, numbin, expand = TRUE)
-## tmp = gframe("Plot LF", container = lflittle,handler=graphHandler1)
-## add(tmp, plot1, expand = TRUE)
+#adding buttons
+readdatefile=gbutton("Date file",handler=datefileinh)
+readlengthfile=gbutton("Length file",handler=lffileinh)
+tmp = gframe("Read in date file", container = Entrylittle)
+add(tmp, readdatefile, expand = TRUE)
+tmp = gframe("Read in length file", container = Entrylittle)
+add(tmp, readlengthfile, expand = TRUE)
 
-
-## tmp = gframe("intecept", container = linelittle)
-## add(tmp, intercept,expand=TRUE)
-
-## tmp = gframe("slope", container = linelittle)
-## add(tmp, slope,expand=TRUE)
-
-## tmp = gframe("Plot Lm", container = linelittle,handler=graphHandler2)
-## add(tmp,plot2, expand = TRUE)
 
 
