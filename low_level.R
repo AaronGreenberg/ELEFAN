@@ -17,39 +17,37 @@ fillgrowthdata <- function(date,data,growthdata){
 #%############################################################
 #%############################################################
 
-curves <- function(Linf,c,tw,K,ML,modday,lfdata,sdate,sML){
+curves <- function(Linf,Cseasonal,tw,K,ML,modday,lfdata,sdate,sML){
   
   K <- K/365
-  C <- c
   w <- 1/365
   TW <- tw/365
-  
  
-growth_rootf <- function(x,K,Linf,C,TW){
+growth_rootf <- function(x,K,Linf,Cseasonal,TW){
 #makes computing tstart and time when length is .95%Linf easy.
-  w <- 1/365
-  period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(0-TW-.5/365))-sin(2*pi*w*(x-TW-.5/365)))
+  Tw <- 1/365
+  period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(0-TW-.5/365))-sin(2*pi*w*(x-TW-.5/365)))
   out <- Linf*(1-exp(-K*(0-x)+period))
   return(out)
 }
 cgrowth_rootf <- cmpfun(growth_rootf)
-bisect <- function(a,b,equal,K,Linf,C,TW){
-  if((cgrowth_rootf(a,K,Linf,C,TW)-equal)^2<10^(-10)){return(a)}
-  if((cgrowth_rootf(b,K,Linf,C,TW)-equal)^2<10^(-10)){return(b)}
+bisect <- function(a,b,equal,K,Linf,Cseasonal,TW){
+  if((cgrowth_rootf(a,K,Linf,Cseasonal,TW)-equal)^2<10^(-10)){return(a)}
+  if((cgrowth_rootf(b,K,Linf,Cseasonal,TW)-equal)^2<10^(-10)){return(b)}
   #This function uses bisection to compute the required values of tstart and...
-  if((growth_rootf(a,K,Linf,C,TW)-equal)*(growth_rootf(b,K,Linf,C,TW)-equal)>0){#make sure that inputs are okay... 
+  if((growth_rootf(a,K,Linf,Cseasonal,TW)-equal)*(growth_rootf(b,K,Linf,Cseasonal,TW)-equal)>0){#make sure that inputs are okay... 
     print("f(xup) and f(xlow) are of same sign 1")
-    print(paste("fxup::",(cgrowth_rootf(a,K,Linf,C,TW)-equal),"fxlow::",(cgrowth_rootf(b,K,Linf,C,TW)-equal)))
+    print(paste("fxup::",(cgrowth_rootf(a,K,Linf,Cseasonal,TW)-equal),"fxlow::",(cgrowth_rootf(b,K,Linf,Cseasonal,TW)-equal)))
     return(1)} 
 termtest <- 1#set counter to protect against errors. 
   while(termtest<= 10000) {# limit iterations to prevent infinite loop
     d <- (a + b)/2 #new midpoint
-    if(((cgrowth_rootf(d,K,Linf,C,TW)-equal)==0||(b-a)/2<= 10^-(10))) { #solution found
+    if(((cgrowth_rootf(d,K,Linf,Cseasonal,TW)-equal)==0||(b-a)/2<= 10^-(10))) { #solution found
     return(d)
     break
   }
   termtest <- termtest + 1 #increment step counter
-  if(sign(cgrowth_rootf(d,K,Linf,C,TW)-equal) == sign(cgrowth_rootf(a,K,Linf,C,TW)-equal)){ a <- d}
+  if(sign(cgrowth_rootf(d,K,Linf,Cseasonal,TW)-equal) == sign(cgrowth_rootf(a,K,Linf,Cseasonal,TW)-equal)){ a <- d}
   else{b <- d }# new interval
 }
 print("Method failed. max number of steps exceeded")#just a nice test to make sure that the first test really worked.
@@ -58,32 +56,32 @@ print("Method failed. max number of steps exceeded")#just a nice test to make su
 cbisect <- cmpfun(bisect)
   #I should talk to Laura about making things polymorphic... Cause this is ugly and has code redundancy. 
    
-growth_rootf2 <- function(x,K,Linf,C,TW,ts){
+growth_rootf2 <- function(x,K,Linf,Cseasonal,TW,ts){
 #makes computing to and time when length is .95%Linf easy. 
   w <- 1/365
-  period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(x-TW-.5/365))-sin(2*pi*w*(ts-TW+.5/365)))
+  period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(x-TW-.5/365))-sin(2*pi*w*(ts-TW+.5/365)))
   out <- Linf*(1-exp(-K*(x-ts)+period))
   return(out)
 }
 cgrowth_rootf2 <- cmpfun(growth_rootf2)
-bisect2 <- function(a,b,equal,K,Linf,C,TW,ts){
-  if(((cgrowth_rootf2(a,K,Linf,C,TW,ts)-equal)^2)<10^(-10)){return(a)}
-  if(((cgrowth_rootf2(b,K,Linf,C,TW,ts)-equal)^2)<10^(-10)){return(b)}
+bisect2 <- function(a,b,equal,K,Linf,Cseasonal,TW,ts){
+  if(((cgrowth_rootf2(a,K,Linf,Cseasonal,TW,ts)-equal)^2)<10^(-10)){return(a)}
+  if(((cgrowth_rootf2(b,K,Linf,Cseasonal,TW,ts)-equal)^2)<10^(-10)){return(b)}
   #This function uses bisection to compute the required end time values
-  if((growth_rootf2(a,K,Linf,C,TW,ts)-equal)*(growth_rootf2(b,K,Linf,C,TW,ts)-equal)>0){#make sure that inputs are okay... 
+  if((growth_rootf2(a,K,Linf,Cseasonal,TW,ts)-equal)*(growth_rootf2(b,K,Linf,Cseasonal,TW,ts)-equal)>0){#make sure that inputs are okay... 
     print("f(xup) and f(xlow) are of same sign 2")
-    print(paste("fxup::",(cgrowth_rootf2(a,K,Linf,C,TW,ts)-equal),"fxlow::",(cgrowth_rootf2(b,K,Linf,C,TW,ts)-equal)))
+    print(paste("fxup::",(cgrowth_rootf2(a,K,Linf,Cseasonal,TW,ts)-equal),"fxlow::",(cgrowth_rootf2(b,K,Linf,Cseasonal,TW,ts)-equal)))
     print(paste("a::",a,"b::",b))
     return(1)} 
 termtest <- 1#set counter to protect against errors. 
   while(termtest<= 10000) {# limit iterations to prevent infinite loop
     d <- (a + b)/2 #new midpoint
-    if(((cgrowth_rootf2(d,K,Linf,C,TW,ts)-equal)==0||(b-a)/2<= 10^-(10))) { #solution found
+    if(((cgrowth_rootf2(d,K,Linf,Cseasonal,TW,ts)-equal)==0||(b-a)/2<= 10^-(10))) { #solution found
     return(d)
     break
   }
   termtest <- termtest + 1 #increment step counter
-  if(sign(cgrowth_rootf2(d,K,Linf,C,TW,ts)-equal) == sign(cgrowth_rootf2(a,K,Linf,C,TW,ts)-equal)){ a <- d}
+  if(sign(cgrowth_rootf2(d,K,Linf,Cseasonal,TW,ts)-equal) == sign(cgrowth_rootf2(a,K,Linf,Cseasonal,TW,ts)-equal)){ a <- d}
   else{b <- d }# new interval
 }
 print("Method failed. max number of steps exceeded")#just a nice test to make sure that the first test really worked.
@@ -91,16 +89,16 @@ print("Method failed. max number of steps exceeded")#just a nice test to make su
 cbisect2 <- cmpfun(bisect2)
 
   #first  compute time_start
-  timestart <-  bisect(-200*365,200*365,sML,K,Linf,C,TW)
+  timestart <-  bisect(-200*365,200*365,sML,K,Linf,Cseasonal,TW)
   #print("time start")
   #print(timestart)
   #second compute time of  95%*Linf
-  nintyfivetime <-  bisect2(-200*365,200*365,.95*Linf,K,Linf,C,TW,timestart)
+  nintyfivetime <-  bisect2(-200*365,200*365,.95*Linf,K,Linf,Cseasonal,TW,timestart)
 #  print("time when length is .95Linf")
 #  print(nintyfivetime)
   #compute tzero
-  #really only important when C!=0 because it should be about -timestart  but ...
-  zerotime <- bisect2(-200*365,200*365,0,K,Linf,C,TW,timestart)
+  #really only important when Cseasonal!=0 because it should be about -timestart  but ...
+  zerotime <- bisect2(-200*365,200*365,0,K,Linf,Cseasonal,TW,timestart)
   #print("time when length is zero")
   #print(zerotime)
   #get vector of times!
@@ -109,7 +107,7 @@ downwind <- (floor(zerotime))
 time <- downwind:upwind
  #third compute growth curve and put it in the right place.
   cur <- matrix(0,(nrow=upwind+(-1)*downwind+1),ncol=4)        #initalize growth curve data structure
-  period <- (C*K)/(2*pi*w)*(sin(2*pi*w*(time-TW-.5))-sin(2*pi*w*(timestart-TW+.5)))
+  period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(time-TW-.5))-sin(2*pi*w*(timestart-TW+.5)))
   cur[,1] <-(time+sdate)#keep real time
   cur[,2] <-(time+sdate)%%modday #wrap time so mapping the time to the plot is easy
   cur[,3] <- Linf*(1-exp(-K*((time-timestart))+period))#put in the growth curve
@@ -195,18 +193,17 @@ wetherall <- function(da=data,points=3){
   print(z)
   print(z$coefficients)
   Linfest <- -z$coefficients[1]/(z$coefficients[2]-1)#compute Linf 
-  plot(Li,Liprime,xlim=c(0,max(Li,Linfest)+2),ylim=c(0,max(Liprime,Linfest)+2),xlab="Cutoff Length L'",ylab=expression(paste("Mean Length above cutoff  ", bar(L) )))
+  plot(Li,Liprime,xlim=c(0,max(Li,Linfest)*1.22),ylim=c(0,max(Liprime,Linfest)*1.22),xlab="Cutoff Length L'",ylab=expression(paste("Mean Length above cutoff  ", bar(L) )))
   points(Lip,Lipoints,col="black",pch=19)
   points(Linfest,z$coefficients[1]+z$coefficients[2]*Linfest,col="purple",pch=19,cex=.5)
   abline(a=0,b=1,col="red")
-  abline(z,col="blue")
+  lines(c(Lip,Linfest),z$coefficients[1]+z$coefficients[2]*c(Lip,Linfest),col="blue")
   abline(v=Linfest,col="grey")
   abline(h=0,col="grey")
-  temp=signif(Linfest,6)
-  text(Linfest,1,expression(paste("L",infinity)))
-  l1 <- c((expression(paste("L",infinity,"="))),temp)
-  legend(x="topleft",c(l1))
-  
+  temp=as.character(signif(Linfest,6))
+  l1 <-expression(paste("L",infinity,"="))
+  text(Linfest*1.0,min(1,.01*(z$coefficients[1]+z$coefficients[2]*Linfest)),l1)
+  text(Linfest*1.12,min(1,.01*(z$coefficients[1]+z$coefficients[2]*Linfest)),temp)
   return(Linfest)
 }
 
