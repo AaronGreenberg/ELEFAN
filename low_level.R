@@ -188,22 +188,25 @@ wetherall <- function(da=data,points=3){
   Lipoints=Liprime[(length(Liprime)-points):length(Liprime)]
   Lip=Li[(length(Liprime)-points):length(Liprime)]
   
-  par(las=1)
+  par(las=1,bty='n')
   z=lm(Lipoints~Lip)
   print(z)
   print(z$coefficients)
   Linfest <- -z$coefficients[1]/(z$coefficients[2]-1)#compute Linf 
   plot(Li,Liprime,xlim=c(0,max(Li,Linfest)*1.22),ylim=c(0,max(Liprime,Linfest)*1.22),xlab="Cutoff Length L'",ylab=expression(paste("Mean Length above cutoff  ", bar(L) )))
   points(Lip,Lipoints,col="black",pch=19)
-  points(Linfest,z$coefficients[1]+z$coefficients[2]*Linfest,col="purple",pch=19,cex=.5)
-  abline(a=0,b=1,col="red")
-  lines(c(Lip,Linfest),z$coefficients[1]+z$coefficients[2]*c(Lip,Linfest),col="blue")
+  points(Linfest,z$coefficients[1]+z$coefficients[2]*Linfest,col="black",pch=19,cex=.5)
+  abline(a=0,b=1,col="black")
+  lines(c(Lip,Linfest),z$coefficients[1]+z$coefficients[2]*c(Lip,Linfest),col="black")
   abline(v=Linfest,col="grey")
   abline(h=0,col="grey")
-  temp=as.character(signif(Linfest,6))
-  l1 <-expression(paste("L",infinity,"="))
+  temp=signif(Linfest,3)
+  l1 <-expression(paste("L",infinity))
   text(Linfest*1.0,min(1,.01*(z$coefficients[1]+z$coefficients[2]*Linfest)),l1)
-  text(Linfest*1.12,min(1,.01*(z$coefficients[1]+z$coefficients[2]*Linfest)),temp)
+  temp2 <-bquote(paste("L",infinity==.(temp),"
+  ",bar(L),"=",.(signif(z$coefficients[1],4)),"+",.(signif(z$coefficients[2],4)),"L'","  ",R^2,"=",.(signif(summary(z)$r.squared,4))))
+  print(temp2)
+  legend(x="topleft",legend=temp2)
   return(Linfest)
 }
 
