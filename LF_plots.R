@@ -18,7 +18,7 @@ rectplot <- function(ser,bins,xmin,xmax,ylim,barcol1,barcol2){
 
 
 
-rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(min(time),max(time)), ylim = c(0, ceiling((max(bins)*1.1)+.2*(bins[2]-bins[1]))), barscale = 1, barcol1 = "red",barcol2="grey",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),title=" ",...) {
+rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(min(time),max(time)), ylim = c(0, ceiling((max(bins)*1.1)+.2*(bins[2]-bins[1]))), barscale = 1, barcol1 = "black",barcol2="grey",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),title=" ",...) {
    ## This function makes the fancy graphs that seems central to the output of ELEFAN
    ## In particular it provides a way of plotting a growth curve over length frequancy data plots over time.
    ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
@@ -49,7 +49,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
               }
 	}
     #print(bins)
-   points(sdate+as.numeric(dates$Date[1]),sML,col="black",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
+   points(sdate+as.numeric(dates$Date[1]),sML,col="blue",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
    points(curves$c[,2]+as.numeric(dates$Date[1]),curves$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
 #   points(curves$c[,2]+as.numeric(dates$Date[1]),curves$c[,4],pch=1 ,cex=.02,col="pink")# make real growth curve!
                                         #      lines(curves$c[,2],curves$c[,3],col="red")

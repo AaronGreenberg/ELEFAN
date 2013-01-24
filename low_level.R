@@ -196,16 +196,18 @@ wetherall <- function(da=data,points=3){
   plot(Li,Liprime,xlim=c(0,max(Li,Linfest)*1.22),ylim=c(0,max(Liprime,Linfest)*1.22),xlab="Cutoff Length L'",ylab=expression(paste("Mean Length above cutoff  ", bar(L) )))
   points(Lip,Lipoints,col="black",pch=19)
   points(Linfest,z$coefficients[1]+z$coefficients[2]*Linfest,col="black",pch=19,cex=.5)
-  abline(a=0,b=1,col="black")
+  abline(a=0,b=1,col="grey")
   lines(c(Lip,Linfest),z$coefficients[1]+z$coefficients[2]*c(Lip,Linfest),col="black")
   abline(v=Linfest,col="grey")
   abline(h=0,col="grey")
   temp=signif(Linfest,3)
   l1 <-expression(paste("L",infinity))
+  text(Li,Liprime+min(.2*max(Liprime),.2),as.character(1:length(Li)))
   text(Linfest*1.0,min(1,.01*(z$coefficients[1]+z$coefficients[2]*Linfest)),l1)
   temp2 <-bquote(paste("L",infinity==.(temp),"
   ",bar(L),"=",.(signif(z$coefficients[1],4)),"+",.(signif(z$coefficients[2],4)),"L'","  ",R^2,"=",.(signif(summary(z)$r.squared,4))))
   print(temp2)
+  
   legend(x="topleft",legend=temp2)
   return(Linfest)
 }
@@ -213,18 +215,19 @@ wetherall <- function(da=data,points=3){
 
 
 
-kscan <- function(dat=data,d=days){
-  getWinVal(scope="L")
-  print(paste("Linf","K","c","tw"))
-  temp <- c(Linf,K,c,tw)
+kscan <- function(Linf=Linf,c=c,tw=tw){
+  print(paste("Linf","c","tw"))
+  temp <- c(Linf,c,tw)
   print(temp)
+  d=days
+  dat=data
   growthdata <- matrix(0,ncol=d,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
   lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
   peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
   asp <- aspcompute(peaks)                      #compute asp
   print("asp")
   print(asp)
-  K <- exp(seq(log(.1),log(10),length.out=100))
+  K <- exp(seq(log(.1),log(10),length.out=50))
   zkscan <- matrix(0,nrow=length(K),ncol=4)
 
   
