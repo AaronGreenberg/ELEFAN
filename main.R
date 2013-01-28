@@ -23,7 +23,7 @@ source("low_level.R")                   #load misc routines really mostly data p
 ## %
 
 datefilein <- function(){
-fname1 <- selectFile()
+fname1 <<- selectFile()
 date<-read.table(fname1,head=TRUE,as.is=TRUE)  #read in date key for the length frequency data This should probably be documented
 date$Date=(as.Date(date$Date,format="%d/%m/%y"))       #convert dates into the date class.
 datelength <- length(date$Date)                                      #get number of days data was collected
@@ -35,7 +35,7 @@ assign("days", moddays, envir = .GlobalEnv)
 
 
 lffilein <- function(){
-fname2 <- selectFile()
+fname2 <<- selectFile()
 data<-read.table(fname2,head=TRUE,as.is=TRUE)  #read in date key for the length frequency data This should probably be documented
 assign("data", data, envir = .GlobalEnv)
 assign("lfbin",length(data$ML),envir=.GlobalEnv)                   #get number of bins

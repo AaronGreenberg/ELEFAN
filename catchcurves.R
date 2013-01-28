@@ -29,11 +29,14 @@ temp2 <-bquote(paste("log(N)/(delT)"," = ",.(signif(z$coefficients[1],4)),.(sign
 legend(x="topright",legend=temp2)  
 print(z)
 selectivity <- list()
+selectivity$prob <- 1:length(data[,1])*0+1
 selectivity$index <- 1:pointsupper
-selectivity$prob <- (sumsample[1:(pointsupper-1)]/delti[1:(pointsupper-1)])/exp(z$coefficients[1]+z$coefficients[2]*ti[1:(pointsupper-1)])#compute selectivity probability
-print(selectivity)  
+selectivity$prob[1:pointsupper]<- (sumsample[1:(pointsupper-1)]/delti[1:(pointsupper-1)])/exp(z$coefficients[1]+z$coefficients[2]*ti[1:(pointsupper-1)])#compute selectivity probability
+print(selectivity)
+dataout <- data#initialize
+for(i in 2:length(data[1,])){dataout[,i] <-data[,i]*selectivity$prob} 
   
-  
+return(dataout)  
 }
 
 

@@ -202,7 +202,7 @@ wetherall <- function(da=data,points=3){
   abline(h=0,col="grey")
   temp=signif(Linfest,3)
   l1 <-expression(paste("L",infinity))
-  text(Li,Liprime+min(.2*max(Liprime),.2),as.character(1:length(Li)))
+  text(Li,Liprime+min(.2*max(Liprime),.2),as.character(sort(0:(length(Li)-1),decreasing=TRUE)))
   text(Linfest*1.0,min(1,.01*(z$coefficients[1]+z$coefficients[2]*Linfest)),l1)
   temp2 <-bquote(paste("L",infinity==.(temp),"
   ",bar(L),"=",.(signif(z$coefficients[1],4)),"+",.(signif(z$coefficients[2],4)),"L'","  ",R^2,"=",.(signif(summary(z)$r.squared,4))))
@@ -255,5 +255,34 @@ kscan <- function(Linf=Linf,c=c,tw=tw){
 }                                      
 
 ckscan <- cmpfun(kscan)
+
+
+
+
+fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,c=c,tw=tw){
+  d=days
+  
+  dat=data
+  growthdata <- matrix(0,ncol=d,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+  lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
+  peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
+  asp <- aspcompute(peaks)                      #compute asp
+  print("asp")
+  print(asp)
+  K <- exp(seq(log(.1),log(10),length.out=50))
+  fixzkscan <- vector()
+ for(i in 1:length(K)){
+        index <- 1
+        inside <- matrix(0,nrow=length(dat$ML)*d,ncol=3)#
+        gcurve <- curves(Linf,c,tw,K[i],dat$ML,days,peaks,sdate,ML)      # compute growth curve this has index, day in growthcurve and properbin.
+        esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
+        gf <- gfcompute(asp,esp)
+        fixzkscan[i] <- gf
+      }
+  fixzkscan<<-fixzkscan
+  return(fixzkscan)
+}                                      
+
+cfixedkscan <- cmpfun(fixedkscan)
 
 
