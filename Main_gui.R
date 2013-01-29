@@ -1,4 +1,5 @@
 library(gWidgetsRGtk2)
+library(MASS)
 options("guiToolkit"="RGtk2")
 source("main.R")
 
@@ -48,6 +49,8 @@ lffileinh <- function(h,...){
   visible(Datatable) <- TRUE
   Linfslide[] <- seq(0,2*max(data$ML),length.out=100)
   Pointslide[] <- 2:length(data$ML)
+  Pointslideuc[] <- 2:length(data$ML)
+  Pointslidelc[] <- 2:length(data$ML)
   midlength[] <- data$ML
   midlengthk[] <- data$ML
   }
@@ -55,7 +58,7 @@ lffileinh <- function(h,...){
 
 #adding buttons
 Entrylogo <- ggroup(container=Entrylittle,expand=FALSE,horizontal=FALSE,visible=TRUE,width=200)# make little entry group
-gimage("/home/daft/ELEFAN/png/usaid.png",container=Entrylogo)
+gimage("png/usaid.png",dirname=getwd(),container=Entrylogo)
 
 readdatefile=gbutton("Date file",handler=datefileinh)
 readlengthfile=gbutton("Length file",handler=lffileinh)
@@ -75,7 +78,7 @@ LFpic<- gnotebook(container=LFplot,expand=TRUE,visible=TRUE)#create the Entry pi
 histgraphic<- ggraphics(container = LFpic,width=700,height=500,label="LF Plot")
 refactorgraphic<- ggraphics(container = LFpic,width=700,height=500,label="Peaks Plot")
 LFplotlogo <- ggroup(container=LFplotlittle,expand=FALSE,horizontal=FALSE,visible=TRUE,width=200)# make little entry group
-gimage("/home/daft/ELEFAN/png/usaid.png",container=LFplotlogo)
+gimage("png/usaid.png",dirname=getwd(),container=LFplotlogo)
 
   Linfslide = gslider(from=1,to=10,length.out=100,value=2)
   tmp = gframe("Linf", container = LFplotlittle)
@@ -124,7 +127,7 @@ Wetherallpic<- gnotebook(container=Wetherallplot,expand=TRUE,visible=TRUE)#creat
 Wetherallgraphic<- ggraphics(container = Wetherallpic,width=700,height=500,label="Wetherall Plot")
 
 Wetherallplotlogo <- ggroup(container=Wetherallplotlittle,expand=FALSE,horizontal=FALSE,visible=TRUE,width=200)# make little entry group
-gimage("/home/daft/ELEFAN/png/usaid.png",container=Wetherallplotlogo)
+gimage("png/usaid.png",dirname=getwd(),container=Wetherallplotlogo)
 
 Pointslide = gslider(from=1,to=50,by=1,value=4)
 tmp = gframe("#number of points", container = Wetherallplotlittle)
@@ -149,7 +152,7 @@ Kscanplotlittle <- ggroup(container=Kscanplot,expand=FALSE,horizontal=FALSE,visi
 Kscanplotpic<- gnotebook(container=Kscanplot,expand=TRUE,visible=TRUE)#create the Entry pic.
 Kscangraphic<- ggraphics(container = Kscanplotpic,width=700,height=500,label="K Scan")
 Kscanplotlogo <- ggroup(container=Kscanplotlittle,expand=FALSE,horizontal=FALSE,visible=TRUE,width=200)# make little entry group
-gimage("/home/daft/ELEFAN/png/usaid.png",container=Kscanplotlogo)
+gimage("png/usaid.png",dirname=getwd(),container=Kscanplotlogo)
 
 Linfslidek = gslider(from=1,to=10,length.out=100,value=2)
 tmp = gframe("Linf", container = Kscanplotlittle)
@@ -225,7 +228,7 @@ Catchcurvepic<- gnotebook(container=Catchcurveplot,expand=TRUE,visible=TRUE)#cre
 Catchcurvegraphic<- ggraphics(container = Catchcurvepic,width=700,height=500,label="Catch Curve Plot Non Seasonal")
 Catchcurvelogo <- ggroup(container=Catchcurvelittle,expand=FALSE,horizontal=FALSE,visible=TRUE,width=200)# make little entry group
 Datatablemodified<- gtable(data,container=Catchcurvepic,label="Modified Data")
-gimage("/home/daft/ELEFAN/png/usaid.png",container=Catchcurvelogo)
+gimage("png/usaid.png",dirname=getwd(),container=Catchcurvelogo)
 
 Klocslidec=gslider(from=0,to=1,by=.01,value=0)
 tmp = gframe("K", container = Catchcurvelittle)
@@ -251,7 +254,12 @@ visible(Catchcurvegraphic) <- TRUE #make correct picture
 temp<- plotnonseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Pointslideuc),svalue(Pointslidelc))
 Datatablemodified[] <- temp
 Datatablemodified[] <- temp
-write(temp,file=(paste(fname2,"corrected.dat")))
+filename <- (paste(fname2,"corrected.dat",sep="_"))
+print(temp)
+if(file.exists(filename)){file.remove(filename)}#remove file
+write.matrix(temp,file=filename)
+
+#lapply(t(temp), write, filename, append=TRUE, ncolumns=1000)#write to file
 visible(Catchcurvegraphic) <- TRUE #make correct picture  
  }
 

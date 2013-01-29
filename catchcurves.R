@@ -18,7 +18,7 @@ plotnonseacatchcurve <- function(Kloc=K,Linfloc=Linf,pointsupper,pointslower){
   ti <- -1/Kloc*log(1-(dataloc$ML)/Linfloc)
 sumsample <- ifelse(sumsample==0,mean(sumsample),sumsample)#get rid of zeros
 #Ok time to make the plot
-widthvec <- pointsupper:(length(sumsample)-pointslower)
+widthvec <- pointslower:(pointsupper)
 par(1,las=1,bty='n')
 plot(ti,log(sumsample/delti),xlab="Age", ylab="ln(N)/delT)",xlim=c(0,ceiling(max(ti))),ylim=c(0,ceiling(max(log(sumsample/delti)))))
 text(ti,log(sumsample/delti)+min(.2*max(log(sumsample/delti)),.3),as.character(1:length(ti)))
@@ -31,7 +31,7 @@ print(z)
 selectivity <- list()
 selectivity$prob <- 1:length(data[,1])*0+1
 selectivity$index <- 1:pointsupper
-selectivity$prob[1:pointsupper]<- (sumsample[1:(pointsupper-1)]/delti[1:(pointsupper-1)])/exp(z$coefficients[1]+z$coefficients[2]*ti[1:(pointsupper-1)])#compute selectivity probability
+selectivity$prob[1:pointsupper]<- (sumsample[1:(pointsupper)]/delti[1:(pointsupper)])/exp(z$coefficients[1]+z$coefficients[2]*ti[1:(pointsupper)])#compute selectivity probability
 print(selectivity)
 dataout <- data#initialize
 for(i in 2:length(data[1,])){dataout[,i] <-data[,i]*selectivity$prob} 
