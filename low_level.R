@@ -202,7 +202,7 @@ wetherall <- function(da=data,points=3){
   abline(h=0,col="grey")
   temp=signif(Linfest,3)
   l1 <-expression(paste("L",infinity))
-  text(Li,Liprime+min(.2*max(Liprime),.2),as.character(sort(0:(length(Li)-1),decreasing=TRUE)))
+  text(Li,Liprime+.4*log(max(Liprime)),as.character(sort(0:(length(Li)-1),decreasing=TRUE)))
   text(Linfest*1.0,min(1,.01*(z$coefficients[1]+z$coefficients[2]*Linfest)),l1)
   temp2 <-bquote(paste("L",infinity==.(temp),"
   ",bar(L),"=",.(signif(z$coefficients[1],4)),"+",.(signif(z$coefficients[2],4)),"L'","  ",R^2,"=",.(signif(summary(z)$r.squared,4))))
@@ -227,13 +227,16 @@ kscan <- function(Linf=Linf,c=c,tw=tw){
   asp <- aspcompute(peaks)                      #compute asp
   print("asp")
   print(asp)
-  K <- exp(seq(log(.1),log(10),length.out=50))
+  K <- exp(seq(log(.1),log(10),length.out=25))
   zkscan <- matrix(0,nrow=length(K),ncol=4)
 
-  
+  pb <- tkProgressBar(title = "progress bar", min = 0,
+                    max = length(K), width = 300)
+
  for(i in 1:length(K)){
         index <- 1
         inside <- matrix(0,nrow=length(dat$ML)*d,ncol=3)#
+        
    for(j in 1:(length(dat$ML))){
       for(sdate in 1:d){
         if(peaks$out[j,sdate]>0 & lfdata[j,sdate]>0){
@@ -248,7 +251,8 @@ kscan <- function(Linf=Linf,c=c,tw=tw){
     }
   }
     zkscan[i,] <- c(max(inside[,1]),K[i],inside[which.max(inside[,1]),2],inside[which.max(inside[,1]),3])
-    print(i/length(K))  
+    setTkProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
+    
   }
   zkscan<<-zkscan
   return(zkscan)
@@ -262,6 +266,7 @@ ckscan <- cmpfun(kscan)
 fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,C=C,tw=tw){
   d=days
   dat=data
+  
 
   growthdata <- matrix(0,ncol=d,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
   lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
@@ -278,7 +283,9 @@ fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,C=C,tw=tw){
   asp <- aspcompute(peaks)                      #compute asp
   print("asp")
   print(asp)
-  K <- exp(seq(log(.1),log(10),length.out=100))
+  K <- exp(seq(log(.1),log(10),length.out=50))
+    pb <- tkProgressBar(title = "progress bar", min = 0,
+                    max = length(K), width = 300)
   fixzkscan <- matrix(0,nrow=length(K),ncol=2)
  for(i in 1:length(K)){
         gcurve <- curves(Linf,C,tw,K[i],dat$ML,d,peaks,sdate,ML)      # compute growth curve this has index, day in growthcurve and properbin.
@@ -286,7 +293,9 @@ fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,C=C,tw=tw){
         gf <- gfcompute(asp,esp)
         print(i/length(K))
         fixzkscan[i,] <- c(gf,K[i])
+          setTkProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
       }
+
   fixzkscan<<-fixzkscan
   return(fixzkscan)
 }                                      

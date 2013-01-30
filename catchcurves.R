@@ -21,7 +21,7 @@ sumsample <- ifelse(sumsample==0,mean(sumsample),sumsample)#get rid of zeros
 widthvec <- pointslower:(pointsupper)
 par(1,las=1,bty='n')
 plot(ti,log(sumsample/delti),xlab="Age", ylab="ln(N)/delT)",xlim=c(0,ceiling(max(ti))),ylim=c(0,ceiling(max(log(sumsample/delti)))))
-text(ti,log(sumsample/delti)+min(.2*max(log(sumsample/delti)),.3),as.character(1:length(ti)))
+text(ti,log(sumsample/delti)+.2*log(max(log(sumsample/delti))),as.character(1:length(ti)))
 points(ti[widthvec],log(sumsample[widthvec]/delti[widthvec]),pch=19,col="black")
 z <- lm(log(sumsample[widthvec]/delti[widthvec])~ti[widthvec])
 lines(x=ti[widthvec],y=(z$coefficients[1]+z$coefficients[2]*ti[widthvec]),col="black")

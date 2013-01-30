@@ -2,7 +2,7 @@ library(gWidgetsRGtk2)
 library(MASS)
 options("guiToolkit"="RGtk2")
 source("main.R")
-
+library("tcltk")
 
 
 #create the Main window.
@@ -48,6 +48,8 @@ lffileinh <- function(h,...){
   Datatable[] <- data
   visible(Datatable) <- TRUE
   Linfslide[] <- seq(0,2*max(data$ML),length.out=100)
+  Linfslidek[] <- seq(0,2*max(data$ML),length.out=100)
+  Linfslidec[] <- seq(0,2*max(data$ML),length.out=100)
   Pointslide[] <- 2:length(data$ML)
   Pointslideuc[] <- 2:length(data$ML)
   Pointslidelc[] <- 2:length(data$ML)
@@ -185,8 +187,8 @@ ckscan(Linf=svalue(Linfslidek),c=svalue(Cslidek),tw=svalue(twslidek))
 
 computefixedkscan <- function(h,...){
 print(svalue(stdatek))
-sdatek <- as.numeric(svalue(stdatek))
 cfixedkscan(sdate=svalue(stdatek),ML=svalue(midlengthk),Linf=svalue(Linfslidek),C=svalue(Cslidek),tw=svalue(twslidek))
+
 }
 plotfullkscan <- function(h,...){ 
 visible(Kscangraphic) <- TRUE #make correct picture  
