@@ -186,7 +186,7 @@ ckscan(Linf=svalue(Linfslidek),c=svalue(Cslidek),tw=svalue(twslidek))
 computefixedkscan <- function(h,...){
 print(svalue(stdatek))
 sdatek <- as.numeric(svalue(stdatek))
-cfixedkscan(startdate=svalue(stdatek),midlength=svalue(midlengthk),Linf=svalue(Linfslidek),c=svalue(Cslidek),tw=svalue(twslidek))
+cfixedkscan(sdate=svalue(stdatek),ML=svalue(midlengthk),Linf=svalue(Linfslidek),C=svalue(Cslidek),tw=svalue(twslidek))
 }
 plotfullkscan <- function(h,...){ 
 visible(Kscangraphic) <- TRUE #make correct picture  

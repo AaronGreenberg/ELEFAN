@@ -68,7 +68,7 @@ kscanplot <- function(window=window,z=zkscan){
 
 
 
-fixedkscanplot <- function(window=window,z=fixedzkscan){
+fixedkscanplot <- function(window=window,z=fixzkscan){
     nzero <- which(z[,1]>0)
     par(las=1,bty="n")
     ma <- movingAverage(z[nzero,1],window)
