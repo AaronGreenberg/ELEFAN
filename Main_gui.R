@@ -51,8 +51,8 @@ lffileinh <- function(h,...){
   Linfslidek[] <- seq(0,2*max(data$ML),length.out=100)
   Linfslidec[] <- seq(0,2*max(data$ML),length.out=100)
   Pointslide[] <- 2:length(data$ML)
-  Pointslideuc[] <- 2:length(data$ML)
-  Pointslidelc[] <- 2:length(data$ML)
+  Pointslideuc[] <- 1:length(data$ML)
+  Pointslidelc[] <- 1:length(data$ML)
   midlength[] <- data$ML
   midlengthk[] <- data$ML
   }
@@ -243,11 +243,11 @@ add(tmp, Linfslidec, expand=TRUE)
 
 
 Pointslideuc=gslider(from=0,to=10,by=1,value=0)
-tmp = gframe("Points", container = Catchcurvelittle)
+tmp = gframe("Points upper limit", container = Catchcurvelittle)
 add(tmp, Pointslideuc, expand=TRUE)
 
 Pointslidelc=gslider(from=0,to=10,by=1,value=0)
-tmp = gframe("Points", container = Catchcurvelittle)
+tmp = gframe("Points lower limit", container = Catchcurvelittle)
 add(tmp, Pointslidelc, expand=TRUE)
 
 

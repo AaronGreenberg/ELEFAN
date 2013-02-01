@@ -50,7 +50,7 @@ if(ptype=="LF"){
 
 kscanplot <- function(window=window,z=zkscan){
     nzero <- which(z[,1]>0)
-    par(las=1,bty="n")
+    par(las=1,bty="n",xaxs="i",yaxs="i")
     ma <- movingAverage(z[nzero,1],window)
     plot(z[nzero,2],z[nzero,1],type="l",xlab="K",ylab="Goodness of Fit",log="x",ylim=c(0,max(z[,1])*1.1),col="grey")
     points(z[nzero,2],z[nzero,1],col="grey",cex=.4,pch=19)
@@ -70,7 +70,7 @@ kscanplot <- function(window=window,z=zkscan){
 
 fixedkscanplot <- function(window=window,z=fixzkscan){
     nzero <- which(z[,1]>0)
-    par(las=1,bty="n")
+    par(las=1,bty="n",xaxs="i",yaxs="i")
     ma <- movingAverage(z[nzero,1],window)
     plot(z[nzero,2],z[nzero,1],type="l",xlab="K",ylab="Goodness of Fit",log="x",ylim=c(0,max(z[,1])*1.1),col="grey")
     points(z[nzero,2],z[nzero,1],col="grey",cex=.4,pch=19)

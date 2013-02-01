@@ -7,9 +7,12 @@ plotnonseacatchcurve <- function(Kloc=K,Linfloc=Linf,pointsupper,pointslower){
   print(points)
   dataloc <- data
   size <- length(dataloc[1,]) #
-  stripdataloc <- dataloc[,2:size]
+  
+  if(size>g2){
+  stripdataloc <- dataloc[,2:size]  
   sumsample <- rowSums(stripdataloc)
-
+  }else{sumsample <- dataloc[,2]}
+    
 #then I compute the time needed for the fish of a given length class to grow
 #through that length class
   width <- 2*(dataloc$ML[2]-dataloc$ML[1])/2 #assuming that the lengthfreq lengths are mid points.
@@ -30,8 +33,8 @@ legend(x="topright",legend=temp2)
 print(z)
 selectivity <- list()
 selectivity$prob <- 1:length(data[,1])*0+1
-selectivity$index <- 1:pointsupper
-selectivity$prob[1:pointsupper]<- (sumsample[1:(pointsupper)]/delti[1:(pointsupper)])/exp(z$coefficients[1]+z$coefficients[2]*ti[1:(pointsupper)])#compute selectivity probability
+selectivity$index <- 1:pointslower
+selectivity$prob[1:pointslower]<- (sumsample[1:(pointslower)]/delti[1:(pointslower)])/exp(z$coefficients[1]+z$coefficients[2]*ti[1:(pointslower)])#compute selectivity probability
 print(selectivity)
 dataout <- data#initialize
 for(i in 2:length(data[1,])){dataout[,i] <-data[,i]*selectivity$prob} 

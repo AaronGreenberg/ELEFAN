@@ -227,11 +227,10 @@ kscan <- function(Linf=Linf,c=c,tw=tw){
   asp <- aspcompute(peaks)                      #compute asp
   print("asp")
   print(asp)
-  K <- exp(seq(log(.1),log(10),length.out=25))
+  K <- exp(seq(log(.1),log(10),length.out=50))
   zkscan <- matrix(0,nrow=length(K),ncol=4)
 
-  pb <- tkProgressBar(title = "progress bar", min = 0,
-                    max = length(K), width = 300)
+  pb <- tkProgressBar(title = "progress bar", min = 0, max = length(K))
 
  for(i in 1:length(K)){
         index <- 1
@@ -283,9 +282,8 @@ fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,C=C,tw=tw){
   asp <- aspcompute(peaks)                      #compute asp
   print("asp")
   print(asp)
-  K <- exp(seq(log(.1),log(10),length.out=50))
-    pb <- tkProgressBar(title = "progress bar", min = 0,
-                    max = length(K), width = 300)
+  K <- exp(seq(log(.1),log(10),length.out=200))
+    pb <- tkProgressBar(title = "progress bar", min = 0,max = length(K))
   fixzkscan <- matrix(0,nrow=length(K),ncol=2)
  for(i in 1:length(K)){
         gcurve <- curves(Linf,C,tw,K[i],dat$ML,d,peaks,sdate,ML)      # compute growth curve this has index, day in growthcurve and properbin.
