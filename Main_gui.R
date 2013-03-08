@@ -1,10 +1,12 @@
 library(gWidgetsRGtk2)
 library(MASS)
+library("Rcpp")
 options("guiToolkit"="RGtk2")
 source("main.R")
 library("tcltk")
 
 
+sourceCpp("low_level.cpp")
 #create the Main window.
 
 size=1000
@@ -242,6 +244,17 @@ tmp = gframe("Linf", container = Catchcurvelittle)
 add(tmp, Linfslidec, expand=TRUE)
 
 
+
+Cslidec=gslider(from=0,to=100,by=.01,value=0)
+tmp = gframe("C", container = Catchcurvelittle)
+add(tmp, Cslidec, expand=TRUE)
+
+
+TWslidec=gslider(from=0,to=100,by=.01,value=0)
+tmp = gframe("TW", container = Catchcurvelittle)
+add(tmp, TWslidec, expand=TRUE)
+
+
 Pointslideuc=gslider(from=0,to=10,by=1,value=0)
 tmp = gframe("Points upper limit", container = Catchcurvelittle)
 add(tmp, Pointslideuc, expand=TRUE)
@@ -251,7 +264,7 @@ tmp = gframe("Points lower limit", container = Catchcurvelittle)
 add(tmp, Pointslidelc, expand=TRUE)
 
 
-plotcatch <- function(h,...){ 
+plotnonseacatch <- function(h,...){ 
 visible(Catchcurvegraphic) <- TRUE #make correct picture
 temp<- plotnonseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Pointslideuc),svalue(Pointslidelc))
 Datatablemodified[] <- temp
@@ -265,7 +278,28 @@ write.matrix(temp,file=filename)
 visible(Catchcurvegraphic) <- TRUE #make correct picture  
  }
 
- plot=gbutton("Make the plots",handler=plotcatch)
+ plot=gbutton("Make the plots",handler=plotnonseacatch)
+ tmp=gframe("Plot",container=Catchcurvelittle)
+ add(tmp, plot, expand=TRUE)
+
+
+
+
+plotseacatch <- function(h,...){ 
+visible(Catchcurvegraphic) <- TRUE #make correct picture
+temp<- plotseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Cslidec),svalue(TWslidec))
+Datatablemodified[] <- temp
+Datatablemodified[] <- temp
+filename <- (paste(fname2,"corrected.dat",sep="_"))
+print(temp)
+if(file.exists(filename)){file.remove(filename)}#remove file
+write.matrix(temp,file=filename)
+
+#lapply(t(temp), write, filename, append=TRUE, ncolumns=1000)#write to file
+visible(Catchcurvegraphic) <- TRUE #make correct picture  
+ }
+
+ plot=gbutton("Make the plots",handler=plotseacatch)
  tmp=gframe("Plot",container=Catchcurvelittle)
  add(tmp, plot, expand=TRUE)
 

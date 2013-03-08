@@ -20,10 +20,12 @@ if(K!=0){
 gcurve <- curves(Linf,Cseasonal,tw,K,data$ML,days,lfdata,startime,ML)      # compute growth curve this has index, day in growthcurve and properbin.
 asp <- aspcompute(peaks)                      #compute asp
 esp <- espcompute(gcurve,peaks$out,days,data$ML)               #compute esp
+esp2 <- espcomputeC(gcurve$c,peaks$out,days,data$ML)               #compute esp
 gf <- gfcompute(asp,esp)
 #graphics.off()
 print("esp")
-print(esp$esp)
+print(esp)
+print(esp2)
 print("goodfit")
 print(gf)
 }else{

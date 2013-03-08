@@ -168,6 +168,7 @@ espcompute <- function(gcurve,p=peaks$out,modday,ML)
    return(list(esp=ESP))#,peaks2=peaks2))
 }
 cespcompute <- cmpfun(espcompute)
+
 gfcompute <- function(asp,esp){
   #print(esp$esp)
   #print(asp)
