@@ -127,7 +127,7 @@ cbisect <- cmpfun(bisect)
   lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
   gcurve<-loccurve(Cloc=Cloc,Kloc=Kloc,TW=TW,timestart=timestart,time=time)
  
-  rqFreqPlot(1:days,data$ML,lfdata,1,1,gcurve,date,barscale=days*(1-exp(-days))/(50*length(date[,2])),GF=0)
+  rqFreqPlot(1:days,data$ML,lfdata,startime,data$ML[1],gcurve,date,GF=0)
   
  #--3--compute sums
   

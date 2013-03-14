@@ -20,12 +20,12 @@ if(K!=0){
 gcurve <- curves(Linf,Cseasonal,tw,K,data$ML,days,lfdata,startime,ML)      # compute growth curve this has index, day in growthcurve and properbin.
 asp <- aspcompute(peaks)                      #compute asp
 esp <- espcompute(gcurve,peaks$out,days,data$ML)               #compute esp
-esp2 <- espcomputeC(gcurve$c,peaks$out,days,data$ML)               #compute esp
+#esp2 <- espcomputeC(gcurve$c,peaks$out,days,data$ML)               #compute esp
 gf <- gfcompute(asp,esp)
 #graphics.off()
 print("esp")
 print(esp)
-print(esp2)
+#print(esp2)
 print("goodfit")
 print(gf)
 }else{
@@ -36,12 +36,12 @@ gcurve$c <- matrix(0,4,ncol=4)
 print(date)
 if(ptype=="Peaks"){
 #  png("lfplot1.png",width=1000,height=1000)
-  rqFreqPlot(1:days,data$ML,peaks$out,startime,ML,gcurve,date,barscale=days*(1-exp(-days))/(5*length(date[,2])),GF=signif(gf,4))
+  rqFreqPlot(1:days,data$ML,peaks$out,startime,ML,gcurve,date,GF=signif(gf,4))
 #  dev.off()
 }
 if(ptype=="LF"){
 #  png("lfplot2.png",width=1000,height=1000)
-  rqFreqPlot(1:days,data$ML,lfdata,startime,ML,gcurve,date,barscale=days*(1-exp(-days))/(50*length(date[,2])),GF=signif(gf,4))
+  rqFreqPlot(1:days,data$ML,lfdata,startime,ML,gcurve,date,GF=signif(gf,4))
 #  dev.off()
 }
 

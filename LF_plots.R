@@ -24,6 +24,14 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
    ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
    X <- time                         #store time
    xlim <- c(min(time+as.numeric(dates$Date[1])),max(time+as.numeric(dates$Date[1])))
+   temp <- vector()
+   temp2 <- vector()
+   temp3 <- vector()
+   for(j in 1:(length(time))){temp[j] <-sum(as.vector(freqs[,j]))}
+   temp2 <- which(temp!=0)
+   for(i in 1:(length(temp2)-1)){temp3[i] <- temp2[i+1]-temp2[i]}
+
+   maxscale<- max(freqs)/min(temp3)*1.1
    dateaxis <-as.Date(dates$Date[1]+X)#place things right location
    #create axis for plots
    par(new = FALSE)
@@ -31,7 +39,8 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
    title(main=title, col.main="red", font.main=1)
    #plot Rectangles
 
-
+    print("MAXscale")
+    print(maxscale)
 
    count=0
    lengthtime=length(time)
@@ -40,7 +49,8 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
 		xmin <- (time[i]+as.numeric(dates$Date[1]))         #at time i
 		xmax <- xlim[2] - (time[i]+as.numeric(dates$Date[1]))       #got to find two points for 
 		ser <- as.vector(freqs[,i]) #putting right and left sides of rectangles
-		ser <- ser * barscale       #scaleing... sometimes it is nice make things bigger or smaller
+                
+		ser <-ser/maxscale*barscale      #scaleing... sometimes it is nice make things bigger or smaller
                 if(sum(ser) != 0){          #if there is lf data at time i make plot
                 count=count+1
 		rectplot(-ser,bins,xmin,xmax,ylim,barcol1,barcol2)#make bar plot
