@@ -97,10 +97,13 @@ Cslide= gslider(from=0,to=2,by=.01,value=0)
 tmp = gframe("C", container = LFplotlittle)
 add(tmp, Cslide, expand=TRUE)
 
+twslide=gslider(from=0,to=1,by=.01,value=0)
+tmp = gframe("Wp", container = LFplotlittle)
+add(tmp, twslide, expand=TRUE)
 
-  twslide=gslider(from=0,to=1,by=.01,value=0)
-  tmp = gframe("Wp", container = LFplotlittle)
-  add(tmp, twslide, expand=TRUE)
+scaleslide= gslider(from=0,to=4,by=.01,value=1)
+tmp = gframe("Scale", container = LFplotlittle)
+add(tmp, scaleslide, expand=TRUE)
 
   stdate <- gdroplist(list(1:10*0))
   tmp <- gframe("Start Sample",container=LFplotlittle)
@@ -115,9 +118,9 @@ plotlf <- function(h,...){
   sdate <- sdate+1#converting to real sample number.
   ML <- as.numeric(svalue(midlength))
  visible(histgraphic) <- TRUE #make correct picture  
- plotpeak(svalue(Linfslide),svalue(Kslide),svalue(Cslide),svalue(twslide),ptype="LF",sdate,ML)
+ plotpeak(svalue(Linfslide),svalue(Kslide),svalue(Cslide),svalue(twslide),ptype="LF",sdate,ML,svalue(scaleslide))
  visible(refactorgraphic) <- TRUE #make correct picture  
- plotpeak(svalue(Linfslide),svalue(Kslide),svalue(Cslide),svalue(twslide),ptype="Peaks",sdate,ML)
+ plotpeak(svalue(Linfslide),svalue(Kslide),svalue(Cslide),svalue(twslide),ptype="Peaks",sdate,ML,svalue(scaleslide))
  }
 
 

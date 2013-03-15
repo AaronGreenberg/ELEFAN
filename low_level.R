@@ -144,12 +144,15 @@ espcompute <- function(gcurve,p=peaks$out,modday,ML)
           ## print(gcurve$c[timesweep,])
           esp[timesweeper] <- peaks2val
           peaks2[gclocation,tsweep] <- 0
-          for(i in 1:200){
+          for(i in 1:200){ #sweep up check peaks
             pos <- ifelse(gclocation+i<which.max(ML),gclocation+i,which.max(ML))
-            neg <- ifelse(gclocation-i>which.min(ML),gclocation-i,which.min(ML))
             if(peaks2[pos,tsweep]>0) {peaks2[pos,tsweep] <- 0}
+            if(peaks2[pos,tsweep]<0 ) {break}
+          }
+            for(i in 1:200){#sweep down check peaks
+            neg <- ifelse(gclocation-i>which.min(ML),gclocation-i,which.min(ML))
             if(peaks2[neg,tsweep]>0) {peaks2[neg,tsweep] <- 0}
-            if(peaks2[neg,tsweep]<0 && peaks2[pos,tsweep]<0 ) {break}
+            if(peaks2[neg,tsweep]<0) {break}
           }
         }else{
           if(peaks2val<0){

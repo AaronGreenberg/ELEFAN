@@ -27,6 +27,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
    temp <- vector()
    temp2 <- vector()
    temp3 <- vector()
+   #this is all about scaling the bars so they look alright... however the user still has the slider.
    for(j in 1:(length(time))){temp[j] <-sum(as.vector(freqs[,j]))}
    temp2 <- which(temp!=0)
    for(i in 1:(length(temp2)-1)){temp3[i] <- temp2[i+1]-temp2[i]}
