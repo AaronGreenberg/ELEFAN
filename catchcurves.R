@@ -50,11 +50,17 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   w <- 1/365
   Kloc <- Kloc/365
  #--1--compute oldest and youngest
- 
-  print(head(dataloc))
+  growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+  lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
+  oldest <- max(which(lfdata[1,]>0))            #get oldest fish
+  youngest <- min(which(lfdata[length(lfdata[,1]),]>0)) #get youngest fish.
+  print("oldest")
+  print(oldest)
+  print("youngest")
+  print(youngest)
   edge <- dataloc$ML[2]-data$ML[1]
   edge <- edge/2
-  cohortvector <- dataloc$ML-edge # vector of points that the growth curves go through
+  cohortvector <- dataloc$ML-edge 
  #--2--compute slices
   #each slide is determined by a unique t0
  growth_rootf <- function(x,K,Linf,Cloc,TW){
@@ -123,12 +129,11 @@ cbisect <- cmpfun(bisect)
    ## cur[,2] <- time%%days
  return(list(c=cur))
 }
-  growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-  lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
   gcurve<-loccurve(Cloc=Cloc,Kloc=Kloc,TW=TW,timestart=timestart,time=time)
- 
-  rqFreqPlot(1:days,data$ML,lfdata,startime,data$ML[1],gcurve,date,GF=0)
-  
+  x11()
+  rqFreqPlot(1:days,data$ML,lfdata,oldest,max(data$ML),gcurve,date,GF=0)
+  x11()
+    rqFreqPlot(1:days,data$ML,lfdata,youngest,data$ML[1],gcurve,date,GF=0)
  #--3--compute sums
   
  #--4--make plots
