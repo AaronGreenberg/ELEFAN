@@ -50,17 +50,26 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   w <- 1/365
   Kloc <- Kloc/365
  #--1--compute oldest and youngest
-  growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-  lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
+  
+  dateloc <- date
+  dateloc$Date[1] <- dateloc$Date[1]-365
+  print("date")
+  print(date)
+  print("dateloc")
+  print(dateloc)
+  datelength <- length(dateloc)                                      #get number of days data was collected
+  daystemp= as.numeric(dateloc[length(dateloc[,1]),1]-dateloc[1,1])
+  daysloc<- (365-daystemp%%365)+daystemp                                         #compute
+  print(daysloc)
+  growthdata <- matrix(0,ncol=daysloc,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+  lfdata<- fillgrowthdata(dateloc,data,growthdata) #make data structure with length frequency data
   oldest <- max(which(lfdata[1,]>0))            #get oldest fish
   youngest <- min(which(lfdata[length(lfdata[,1]),]>0)) #get youngest fish.
   print("oldest")
   print(oldest)
   print("youngest")
   print(youngest)
-  edge <- dataloc$ML[2]-data$ML[1]
-  edge <- edge/2
-  cohortvector <- dataloc$ML-edge 
+ 
  #--2--compute slices
   #each slide is determined by a unique t0
  growth_rootf <- function(x,K,Linf,Cloc,TW){
@@ -71,6 +80,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   return(out)
   }
 cgrowth_rootf <- cmpfun(growth_rootf)
+ 
   bisect <- function(a,b,equal,K,Linf,Cloc,TW){ #returns t0
   if((cgrowth_rootf(a,K,Linf,Cloc,TW)-equal)^2<10^(-10)){return(a)}
   if((cgrowth_rootf(b,K,Linf,Cloc,TW)-equal)^2<10^(-10)){return(b)}
@@ -95,6 +105,7 @@ cgrowth_rootf <- cmpfun(growth_rootf)
 cbisect <- cmpfun(bisect)
 
 
+ cohortvector <- 1
  tzero <- cohortvector*0 # initalize tzero vector
  for (i in 1:length(cohortvector)){
  tzero[i] <- bisect(-200*365,200*365,cohortvector[i],Kloc,Linfloc,Cloc,TW)
@@ -130,10 +141,12 @@ cbisect <- cmpfun(bisect)
  return(list(c=cur))
 }
   gcurve<-loccurve(Cloc=Cloc,Kloc=Kloc,TW=TW,timestart=timestart,time=time)
+  print("Catch dateloc")
+  print(dateloc)
   x11()
-  rqFreqPlot(1:days,data$ML,lfdata,oldest,max(data$ML),gcurve,date,GF=0)
+  rqFreqPlot(1:daysloc,data$ML,lfdata,oldest,max(data$ML),gcurve,date,datesloc=dateloc,GF=0)
   x11()
-    rqFreqPlot(1:days,data$ML,lfdata,youngest,data$ML[1],gcurve,date,GF=0)
+ rqFreqPlot(1:daysloc,data$ML,lfdata,youngest,data$ML[1],gcurve,date,datesloc=dateloc,GF=0)
  #--3--compute sums
   
  #--4--make plots

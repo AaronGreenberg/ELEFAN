@@ -18,22 +18,24 @@ rectplot <- function(ser,bins,xmin,xmax,ylim,barcol1,barcol2){
 
 
 
-rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(min(time),max(time)), ylim = c(0, ceiling((max(bins)*1.1)+.2*(bins[2]-bins[1]))), barscale = 1, barcol1 = "black",barcol2="grey",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),title=" ",GF=0,...) {
+rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c(min(time),max(time)), ylim = c(0, ceiling((max(bins)*1.1)+.2*(bins[2]-bins[1]))), barscale = 1, barcol1 = "black",barcol2="grey",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),title=" ",GF=0,...) {
    ## This function makes the fancy graphs that seems central to the output of ELEFAN
    ## In particular it provides a way of plotting a growth curve over length frequancy data plots over time.
    ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
+     print("LF datesloc")
+   print(datesloc)
    X <- time                         #store time
-   xlim <- c(min(time+as.numeric(dates$Date[1])),max(time+as.numeric(dates$Date[1])))
+   xlim <- c(min(time+as.numeric(datesloc$Date[1])),max(time+as.numeric(datesloc$Date[1])))
    temp <- vector()
    temp2 <- vector()
    temp3 <- vector()
+
    #this is all about scaling the bars so they look alright... however the user still has the slider.
    for(j in 1:(length(time))){temp[j] <-sum(as.vector(freqs[,j]))}
    temp2 <- which(temp!=0)
    for(i in 1:(length(temp2)-1)){temp3[i] <- temp2[i+1]-temp2[i]}
-
    maxscale<- max(freqs)/min(temp3)*1.1
-   dateaxis <-as.Date(dates$Date[1]+X)#place things right location
+   dateaxis <-as.Date(datesloc$Date[1]+X)#place things right location
    #create axis for plots
    par(new = FALSE)
    plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,las=2,...)
@@ -47,8 +49,8 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
    lengthtime=length(time)
 	for (i in 1:lengthtime){    #figure out how to make the rectangles
 		par(new = TRUE)
-		xmin <- (time[i]+as.numeric(dates$Date[1]))         #at time i
-		xmax <- xlim[2] - (time[i]+as.numeric(dates$Date[1]))       #got to find two points for 
+		xmin <- (time[i]+as.numeric(datesloc$Date[1]))         #at time i
+		xmax <- xlim[2] - (time[i]+as.numeric(datesloc$Date[1]))       #got to find two points for 
 		ser <- as.vector(freqs[,i]) #putting right and left sides of rectangles
                 
 		ser <-ser/maxscale*barscale      #scaleing... sometimes it is nice make things bigger or smaller
@@ -56,14 +58,14 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,dates=dates,xlim = c(mi
                 count=count+1
 		rectplot(-ser,bins,xmin,xmax,ylim,barcol1,barcol2)#make bar plot
                 #abline(h=bins,col="gray60",lty=1,cex=.001)
-                text(cbind((time[i]+as.numeric(dates$Date[1])),max(bins)+((count%%2)*.2+1.1)*min(c((bins[2]-bins[1]),1))),label=as.character(dates$Date[count+1],format="%y-%m-%d"),cex=.75,col="black")#add dates to things
+                text(cbind((time[i]+as.numeric(datesloc$Date[1])),max(bins)+((count%%2)*.2+1.1)*min(c((bins[2]-bins[1]),1))),label=as.character(datesloc$Date[count+1],format="%y-%m-%d"),cex=.75,col="black")#add datesloc to things
               }
 	}
     #print(bins)
    if(sum(curves$c[,2])!=0){
-   points(sdate+as.numeric(dates$Date[1]),sML,col="blue",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
-   points(curves$c[,2]+as.numeric(dates$Date[1]),curves$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
-#   points(curves$c[,2]+as.numeric(dates$Date[1]),curves$c[,4],pch=1 ,cex=.02,col="pink")# make real growth curve!
+   points(sdate+as.numeric(datesloc$Date[1]),sML,col="blue",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
+   points(curves$c[,2]+as.numeric(datesloc$Date[1]),curves$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
+#   points(curves$c[,2]+as.numeric(datesloc$Date[1]),curves$c[,4],pch=1 ,cex=.02,col="pink")# make real growth curve!
                                         #      lines(curves$c[,2],curves$c[,3],col="red")
  }
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
