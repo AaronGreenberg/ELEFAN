@@ -43,113 +43,62 @@ return(dataout)
 }
 
 
+
+
 plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
+  # initialize data structure
  
- #This takes five easy steps.
- dataloc <- data
-  w <- 1/365
-  Kloc <- Kloc/365
- #--1--compute oldest and youngest
+  growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+  lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
+
   
-  dateloc <- date
-  dateloc$Date[1] <- dateloc$Date[1]-365
-  print("date")
-  print(date)
-  print("dateloc")
-  print(dateloc)
-  datelength <- length(dateloc)                                      #get number of days data was collected
-  daystemp= as.numeric(dateloc[length(dateloc[,1]),1]-dateloc[1,1])
-  daysloc<- (365-daystemp%%365)+daystemp                                         #compute
-  print(daysloc)
-  growthdata <- matrix(0,ncol=daysloc,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-  lfdata<- fillgrowthdata(dateloc,data,growthdata) #make data structure with length frequency data
+  #--1--compute oldest and youngest
+  #locate the oldest and youngest fish.
   oldest <- max(which(lfdata[1,]>0))            #get oldest fish
   youngest <- min(which(lfdata[length(lfdata[,1]),]>0)) #get youngest fish.
-  print("oldest")
-  print(oldest)
-  print("youngest")
-  print(youngest)
- 
- #--2--compute slices
-  #each slide is determined by a unique t0
- growth_rootf <- function(x,K,Linf,Cloc,TW){
-  #makes computing tstart and time when length is .95%Linf easy.
-  Tw <- 1/365
-  period <- (Cloc*K)/(2*pi*w)*(sin(2*pi*w*(0-TW-.5/365))-sin(2*pi*w*(x-TW-.5/365)))
-  out <- Linf*(1-exp(-K*(0-x)+period))
+  # compute growth curve that goes through oldest and youngest
+  gcurve1 <- curves(Linfloc,Cloc,TW,Kloc,data$ML,days,lfdata,oldest,data$ML[1])#compute growth curve that goes through oldest
+  gcurve2 <- curves(Linfloc,Cloc,TW,Kloc,data$ML,days,lfdata,youngest,data$ML[length(data$ML)])#compute growth curve that goes through youngest
+
+
+
+  #make new window
+  dateloc <- date
+  dateloc$Date[1] <- date$Date[1]+gcurve1$tzero*20
+  print("dateloc")
+  print(dateloc)
+  print(date)
+  datelength <- length(date$Date)                                      #get number of days data was collected
+  daysloc= as.numeric(julian(dateloc$Date[datelength])-julian(dateloc$Date[1])) #set default number of days
+  daysloc<- (365-daysloc%%365)+daysloc                                         #compute width of plot window in years... 
+  growthdata <- matrix(0,ncol=daysloc,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+  lfdata<- fillgrowthdata(dateloc,data,growthdata) #make data structure with length frequency data
+  youngest <- youngest-gcurve1$tzero*20
+  oldest <- oldest-gcurve1$tzero*20
+  gcurve1 <- curves(Linfloc,Cloc,TW,Kloc,data$ML,daysloc,lfdata,oldest,data$ML[1])#compute growth curve that goes through oldest
+  gcurve2 <- curves(Linfloc,Cloc,TW,Kloc,data$ML,daysloc,lfdata,youngest,data$ML[length(data$ML)])#compute growth curve that goes through youngest
+
+  #so now we need to compute intermediate growth curves.
+
+  tzero <- (seq(gcurve1$tzero,gcurve2$tzero,length.out=length(data$ML))-gcurve1$tzero*20)#get the start times for the real growth curve functions
+
+  gcurvemain <- matrix(0,nrow=length(data$ML),ncol=daysloc)# create a matrix of real growth curves.
+  time <- 1:daysloc
+  curveloc <- function(Linfloc,Kloc,Cloc,TW,time,tzero){
+   Kloc <- Kloc/365
+   w <- 1/365
+   TW <- TW/365
+  period <- (Cloc*Kloc)/(2*pi*w)*(sin(2*pi*w*(time-TW-.5/365))-sin(2*pi*w*(tzero-TW-.5/365)))
+  out <- Linfloc*(1-exp(-Kloc*(time-tzero)+period))
+   
   return(out)
   }
-cgrowth_rootf <- cmpfun(growth_rootf)
- 
-  bisect <- function(a,b,equal,K,Linf,Cloc,TW){ #returns t0
-  if((cgrowth_rootf(a,K,Linf,Cloc,TW)-equal)^2<10^(-10)){return(a)}
-  if((cgrowth_rootf(b,K,Linf,Cloc,TW)-equal)^2<10^(-10)){return(b)}
-  #This function uses bisection to compute the required values of tstart and...
-  if((growth_rootf(a,K,Linf,Cloc,TW)-equal)*(growth_rootf(b,K,Linf,Cloc,TW)-equal)>0){#make sure that inputs are okay... 
-    print("f(xup) and f(xlow) are of same sign 1")
-    print(paste("fxup::",(cgrowth_rootf(a,K,Linf,Cloc,TW)-equal),"fxlow::",(cgrowth_rootf(b,K,Linf,Cloc,TW)-equal)))
-    return(1)} 
-  termtest <- 1#set counter to protect against errors. 
-  while(termtest<= 10000) {# limit iterations to prevent infinite loop
-    d <- (a + b)/2 #new midpoint
-    if(((cgrowth_rootf(d,K,Linf,Cloc,TW)-equal)==0||(b-a)/2<= 10^-(10))) { #solution found
-    return(d)
-    break
-  }
-  termtest <- termtest + 1 #increment step counter
-  if(sign(cgrowth_rootf(d,K,Linf,Cloc,TW)-equal) == sign(cgrowth_rootf(a,K,Linf,Cloc,TW)-equal)){ a <- d}
-  else{b <- d }# new interval
-  }
-  print("Method failed. max number of steps exceeded")#just a nice test to make sure that the first test really worked.
-}
-cbisect <- cmpfun(bisect)
+  for(i in 1:length(data$ML)){
+  gcurvemain[i,] <-ifelse(time>tzero[i],curveloc(Linfloc,Kloc,Cloc,TW,time,tzero[i]),0)
 
-
- cohortvector <- 1
- tzero <- cohortvector*0 # initalize tzero vector
- for (i in 1:length(cohortvector)){
- tzero[i] <- bisect(-200*365,200*365,cohortvector[i],Kloc,Linfloc,Cloc,TW)
  }
- print(cohortvector)
- print(tzero)
 
- time <- 1:(length(cohortvector)*days)
- timestart <- 0*time
-    startdate <- as.Date(date[1,1])
-   startime <- as.numeric(startdate-date[1,1])
- loccurve <- function(Cloc=Cloc,Kloc=Kloc,TW=TW,timestart=timestart,time=time){
+  catchrqFreqPlot(1:daysloc,data$ML,lfdata,c(oldest,youngest),c(data$ML[1],data$ML[length(data$ML)]),gcurve1,gcurve2,gcurvemain,dateloc,barscale=1,GF=0)
 
-  cur<- matrix(0,length(cohortvector)*days,ncol=4)        #initalize growth curve data structure    
-  for( j in 1:length(timestart))
-    {
-      k <- floor(j/days)+1
-      if(j%%days==0){print(k)}
-      timestart[j]=tzero[k]+startime
-    }
-
-  cur[,1] <-(time)+startime#keep real time
-  cur[,2] <-(time)%%days+startime #wrap time so mapping the time to the plot is easy
-  period <- (Cloc*Kloc)/(2*pi*w)*(sin(2*pi*w*(time%%days-TW-.5))-sin(2*pi*w*(timestart-TW+.5)))
-  cur[,3] <- Linfloc*(1-exp(-Kloc*((time%%days-timestart))+period))#put in the growth curve
-#  fn <- function(i){dataloc$ML[which.min(((dataloc$ML)-cur[i,3])^2)]} #snazzy function that allows use of sapply  to find the right bins!
-#  cur[,4] <- sapply(1:length(cur[,3]),fn)             #get a version of the growth curve that makes computing esp and asp easy
-  print("am local")
-  print(head(cur))
-   ## cur <- matrix(1,length(cohortvector)*365*2,4)
-   cur[,4] <- time*0
-   ## cur[,2] <- time%%days
- return(list(c=cur))
-}
-  gcurve<-loccurve(Cloc=Cloc,Kloc=Kloc,TW=TW,timestart=timestart,time=time)
-  print("Catch dateloc")
-  print(dateloc)
-  x11()
-  rqFreqPlot(1:daysloc,data$ML,lfdata,oldest,max(data$ML),gcurve,date,datesloc=dateloc,GF=0)
-  x11()
- rqFreqPlot(1:daysloc,data$ML,lfdata,youngest,data$ML[1],gcurve,date,datesloc=dateloc,GF=0)
- #--3--compute sums
-  
- #--4--make plots
-
-
+    
 }

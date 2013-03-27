@@ -1,4 +1,5 @@
-#%############################################################
+
+                                        #%############################################################
 ##this function fills in the growth data with the data that is being read in.
 ##It is important to realize that we need to have a data structure that keeps track of time.
 ##This is a really sparse structure, but it allows us keep time proportional.
@@ -117,7 +118,7 @@ time <- downwind:upwind
  # plot(time,cur[,3],type="l",xlab="time", ylab="Length",main="Debug growth curve plot")
  # points(0,sML)
 #print(head(cur))
-return(list(c=cur))
+return(list(c=cur,tzero=timestart))
 }
 
 ccurves<- cmpfun(curves)

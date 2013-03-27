@@ -72,3 +72,68 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
   if(GF!=0){ legend(x="topleft",legend=paste("gf=",GF))}
  }
 
+
+
+
+catchrqFreqPlot <- function(time,bins,freqs, sdate,sML,curves1,curves2,maincurve,datesloc=dates,xlim = c(min(time),max(time)), ylim = c(0, ceiling((max(bins)*1.1)+.2*(bins[2]-bins[1]))), barscale = 1, barcol1 = "black",barcol2="grey",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),title=" ",GF=0,...) {
+   ## This function makes the fancy graphs that seems central to the output of ELEFAN
+   ## In particular it provides a way of plotting a growth curve over length frequancy data plots over time.
+   ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
+     print("LF datesloc")
+   print(datesloc)
+   X <- time                         #store time
+   xlim <- c(min(time+as.numeric(datesloc$Date[1])),max(time+as.numeric(datesloc$Date[1])))
+   temp <- vector()
+   temp2 <- vector()
+   temp3 <- vector()
+
+   #this is all about scaling the bars so they look alright... however the user still has the slider.
+   for(j in 1:(length(time))){temp[j] <-sum(as.vector(freqs[,j]))}
+   temp2 <- which(temp!=0)
+   for(i in 1:(length(temp2)-1)){temp3[i] <- temp2[i+1]-temp2[i]}
+   maxscale<- max(freqs)/min(temp3)*1.1
+   dateaxis <-as.Date(datesloc$Date[1]+X)#place things right location
+   #create axis for plots
+   par(new = FALSE)
+   plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,las=2,...)
+   title(main=title, col.main="red", font.main=1)
+   #plot Rectangles
+
+    print("MAXscale")
+    print(maxscale)
+
+   count=0
+   lengthtime=length(time)
+	for (i in 1:lengthtime){    #figure out how to make the rectangles
+		par(new = TRUE)
+		xmin <- (time[i]+as.numeric(datesloc$Date[1]))         #at time i
+		xmax <- xlim[2] - (time[i]+as.numeric(datesloc$Date[1]))       #got to find two points for 
+		ser <- as.vector(freqs[,i]) #putting right and left sides of rectangles
+                
+		ser <-ser/maxscale*barscale      #scaleing... sometimes it is nice make things bigger or smaller
+                if(sum(ser) != 0){          #if there is lf data at time i make plot
+                count=count+1
+		rectplot(-ser,bins,xmin,xmax,ylim,barcol1,barcol2)#make bar plot
+                #abline(h=bins,col="gray60",lty=1,cex=.001)
+                text(cbind((time[i]+as.numeric(datesloc$Date[1])),max(bins)+((count%%2)*.2+1.1)*min(c((bins[2]-bins[1]),1))),label=as.character(datesloc$Date[count+1],format="%y-%m-%d"),cex=.75,col="black")#add datesloc to things
+              }
+	}
+    #print(bins)
+   for(i in 1:length(sdate)){
+   print("sdate")
+   print(c(sdate[i],sML[i]))
+   points(sdate[i]+as.numeric(datesloc$Date[1]),sML[i],col="blue",pch=19) 
+ }
+   points(curves1$c[,1]+as.numeric(datesloc$Date[1]),curves1$c[,3],pch=1 ,cex=.2,col="red")# make real growth curve!
+   points(curves2$c[,1]+as.numeric(datesloc$Date[1]),curves2$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
+
+   for(i in 1:length(bins)){
+     lines(time,maincurve[i,],col="green")
+     
+}     
+   axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
+  if(GF!=0){ legend(x="topleft",legend=paste("gf=",GF))}
+ }
+
+
+
