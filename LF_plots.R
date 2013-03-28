@@ -122,13 +122,13 @@ catchrqFreqPlot <- function(time,bins,freqs, sdate,sML,curves1,curves2,maincurve
    for(i in 1:length(sdate)){
    print("sdate")
    print(c(sdate[i],sML[i]))
-   points(sdate[i]+as.numeric(datesloc$Date[1]),sML[i],col="blue",pch=19) 
+   points(sdate[i]+as.numeric(datesloc$Date[1]),sML[i],col="magenta",pch=19) 
  }
    points(curves1$c[,1]+as.numeric(datesloc$Date[1]),curves1$c[,3],pch=1 ,cex=.2,col="red")# make real growth curve!
    points(curves2$c[,1]+as.numeric(datesloc$Date[1]),curves2$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
 
    for(i in 1:length(bins)){
-     lines(time,maincurve[i,],col="green")
+     lines(time,maincurve[i,],col="blue")
      
 }     
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")

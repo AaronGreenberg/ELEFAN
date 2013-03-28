@@ -118,7 +118,10 @@ time <- downwind:upwind
  # plot(time,cur[,3],type="l",xlab="time", ylab="Length",main="Debug growth curve plot")
  # points(0,sML)
 #print(head(cur))
-return(list(c=cur,tzero=timestart))
+ print("so really what is tzero?")
+ print(timestart)
+ print(downwind)
+return(list(c=cur,tzero=downwind))
 }
 
 ccurves<- cmpfun(curves)
