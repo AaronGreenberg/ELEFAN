@@ -26,8 +26,8 @@ curves <- function(Linf,Cseasonal,tw,K,ML,modday,lfdata,sdate,sML){
  
 growth_rootf <- function(x,K,Linf,Cseasonal,TW){
 #makes computing tstart and time when length is .95%Linf easy.
-  Tw <- 1/365
-  period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(0-TW-.5/365))-sin(2*pi*w*(x-TW-.5/365)))
+    w <- 1/365
+  period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(0-TW-.5/365))-sin(2*pi*w*(x-TW+.5/365)))
   out <- Linf*(1-exp(-K*(0-x)+period))
   return(out)
 }
@@ -108,7 +108,7 @@ downwind <- (floor(zerotime))
 time <- downwind:upwind
  #third compute growth curve and put it in the right place.
   cur <- matrix(0,(nrow=upwind+(-1)*downwind+1),ncol=4)        #initalize growth curve data structure
-  period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(time-TW-.5))-sin(2*pi*w*(timestart-TW+.5)))
+  period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(time-TW-.5/365))-sin(2*pi*w*(timestart-TW+.5/365)))
   cur[,1] <-(time+sdate)#keep real time
   cur[,2] <-(time+sdate)%%modday #wrap time so mapping the time to the plot is easy
   cur[,3] <- Linf*(1-exp(-K*((time-timestart))+period))#put in the growth curve
