@@ -54,8 +54,8 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   
   #--1--compute oldest and youngest
   #locate the oldest and youngest fish.
-  oldest <- max(which(lfdata[1,]>0))            #get oldest fish
-  youngest <- min(which(lfdata[length(lfdata[,1]),]>0)) #get youngest fish.
+  youngest <- max(which(lfdata[1,]>0))            #get oldest fish
+  oldest <- min(which(lfdata[length(lfdata[,1]),]>0)) #get youngest fish.
   # compute growth curve that goes through oldest and youngest
   gcurve1 <- curves(Linfloc,Cloc,TW,Kloc,data$ML,days,lfdata,youngest,data$ML[1])#compute growth curve that goes through oldest
   gcurve2 <- curves(Linfloc,Cloc,TW,Kloc,data$ML,days,lfdata,oldest,data$ML[length(data$ML)])#compute growth curve that goes through youngest
@@ -78,33 +78,35 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
 
   #so now we need to compute intermediate growth curves.
 
-  tzero <-ceiling(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(data$ML)))#get the start times for the real growth curve functions
+  tzero <-ceiling(c(oldest+gcurve2$tzero,oldest+gcurve2$tzero+100)+as.numeric(dateloc$Date[1]))+100
+                                        #ceiling(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(data$ML))+as.numeric(dateloc$Date[1]))#get the start times for the real growth curve functions
   print("tzero")
   print(tzero)
   print(oldest+gcurve2$tzero)
   print(youngest+gcurve1$tzero)
-  time <-1:daysloc
+  timeblue <-1:daysloc+as.numeric(dateloc$Date[1])+100
+
   curveloc <- function(Cloc,Kloc,Linfloc,TW,time,tzero){
      
   Kloc <- Kloc/365
   w <- 1/365
-  #TW <- TW/365
+  TW <- TW/365
  
   period <- (Cloc*Kloc)/(2*pi*w)*(sin(2*pi*w*(time-TW-.5/365))-sin(2*pi*w*(tzero-TW+.5/365)))
   out <- Linfloc*(1-exp(-Kloc*(time-tzero)+period))
   return(out)
 }
   
-  gcurvemain <- matrix(0,nrow=length(data$ML),ncol=length(time))# create a matrix of real growth curves.
+  gcurvemain <- matrix(0,nrow=length(data$ML),ncol=length(timeblue))# create a matrix of real growth curves.
   for(i in 1:length(data$ML)){
-   gcurvemain[i,] <- ifelse(time>tzero[i],curveloc(Cloc,Kloc,Linfloc,TW,time,tzero[i]),NA) #make curves
+   gcurvemain[i,] <- ifelse(timeblue>tzero[i],curveloc(Cloc,Kloc,Linfloc,TW,timeblue,tzero[i]),NA) #make curves
   
     
   }
 
 
   
-catchrqFreqPlot(1:daysloc,data$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(data$ML[1],data$ML[length(data$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,dateloc,barscale=1,GF=0)
+catchrqFreqPlot(1:daysloc,data$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(data$ML[1],data$ML[length(data$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,timeblue,dateloc,barscale=1,GF=0)
 
 
 }
