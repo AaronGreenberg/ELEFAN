@@ -28,9 +28,14 @@ date<-read.table(fname1,head=TRUE,as.is=TRUE)  #read in date key for the length 
 date$Date=(as.Date(date$Date,format="%d/%m/%y"))       #convert dates into the date class.
 datelength <- length(date$Date)                                      #get number of days data was collected
 days= as.numeric(julian(date$Date[datelength])-julian(date$Date[1])) #set default number of days
-moddays<- (365-days%%365)+days                                         #compute width of plot window in years... 
+moddays<- (365-days%%365)+days                                         #compute width of plot window in years...
+yeartemp <- as.numeric(format(date$Date[2],"%y"))
+BIRTHDAY <- as.numeric(julian(as.Date(paste("01/01/",yeartemp),format="%d/%m/%y"))-julian(date$Date[1]))
+print(c("BIRTHDAY_input",BIRTHDAY))
+assign("BIRTHDAY", BIRTHDAY, envir = .GlobalEnv)
 assign("date", date, envir = .GlobalEnv)
 assign("days", moddays, envir = .GlobalEnv)
+
 }
 
 

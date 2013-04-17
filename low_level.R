@@ -23,12 +23,12 @@ fillgrowthdata <- function(date,data,growthdata){
 curves <- function(Linf,Cseasonal,tw,K,ML,modday,lfdata,sdate,sML){
   K <- K/365
   w <- 1/365
-  TW <- tw/365
+  TW <- tw*365
 growth_rootf <- function(x,K,Linf,Cseasonal,TW,age){
 #makes computing tstart and time when length is .95%Linf easy.
   w <- 1/365
   
-  period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(age-TW-.5/365))-sin(2*pi*w*(x-TW+.5/365)))
+  period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(age-TW-.5*365))-sin(2*pi*w*(x-TW-.5*365)))
   out <- Linf*(1-exp(-K*(age-x)+period))
   return(out)
 }
@@ -63,7 +63,7 @@ cbisect <- cmpfun(bisect)
 growth_rootf2 <- function(x,K,Linf,Cseasonal,TW,ts,age){
 #makes computing to and time when length is .95%Linf easy. 
   w <- 1/365
-  period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(x-(TW-age)-.5/365))-sin(2*pi*w*(ts-TW+.5/365)))
+  period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(x-(TW-age)-.5*365))-sin(2*pi*w*(ts-TW-.5*365)))
   out <- Linf*(1-exp(-K*(x-(ts-age))+period))
   return(out)
 }
@@ -94,7 +94,7 @@ print("Method failed. max number of steps exceeded")#just a nice test to make su
 }
   
 cbisect2 <- cmpfun(bisect2)
-  age=100#need to compute age.
+  age= sdate-BIRTHDAY #need to compute age.
   #first  compute time_start
   timestart <-  bisect(-200*365,200*365,sML,K,Linf,Cseasonal,TW,age)
   #second compute time of  95%*Linf
@@ -108,7 +108,7 @@ downwind <- (floor(zerotime))
 time <- downwind:upwind
  #third compute growth curve and put it in the right place.
   cur <- matrix(0,(nrow=upwind+(-1)*downwind+1),ncol=4)        #initalize growth curve data structure
-  period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(time-(TW-age)-.5/365))-sin(2*pi*w*(timestart-TW+.5/365)))
+  period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(time-(TW-age)-.5*365))-sin(2*pi*w*(timestart-TW-.5*365)))
   cur[,1] <-(time+sdate)#keep real time
   cur[,2] <-(time+sdate)%%modday #wrap time so mapping the time to the plot is easy
   cur[,3] <- Linf*(1-exp(-K*((time-(-age+timestart)))+period))#put in the growth curve

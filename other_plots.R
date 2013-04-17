@@ -36,12 +36,12 @@ gcurve$c <- matrix(0,4,ncol=4)
 print(date)
 if(ptype=="Peaks"){
 #  png("lfplot1.png",width=1000,height=1000)
-  rqFreqPlot(1:days,data$ML,peaks$out,startime,ML,gcurve,date,barscale=scale,GF=signif(gf,4))
+  rqFreqPlot(1:days,data$ML,peaks$out,startime,ML,gcurve,date,barscale=scale,GF=signif(gf,4),birthday=BIRTHDAY)
 #  dev.off()
 }
 if(ptype=="LF"){
 #  png("lfplot2.png",width=1000,height=1000)
-  rqFreqPlot(1:days,data$ML,lfdata,startime,ML,gcurve,date,barscale=scale,GF=signif(gf,4))
+  rqFreqPlot(1:days,data$ML,lfdata,startime,ML,gcurve,date,barscale=scale,GF=signif(gf,4),birthday=BIRTHDAY)
 #  dev.off()
 }
 
