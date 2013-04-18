@@ -86,25 +86,29 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   print(tzero)
   print(oldest+gcurve2$tzero)
   print(youngest+gcurve1$tzero)
-  timeblue <-1:daysloc+as.numeric(dateloc$Date[1])+100
+  timeblue <-1:daysloc+as.numeric(dateloc$Date[1])
 
-  curveloc <- function(Cloc,Kloc,Linfloc,TW,time,tzero){
+##   curveloc <- function(Cloc,Kloc,Linfloc,TW,time,tzero){
      
-  Kloc <- Kloc/365
-  w <- 1/365
-  TW <- TW*365
+##   Kloc <- Kloc/365
+##   w <- 1/365
+##   TW <- TW*365
  
-  period <- (Cloc*Kloc)/(2*pi*w)*(sin(2*pi*w*(time-TW-.5/365))-sin(2*pi*w*(tzero-TW+.5/365)))
-  out <- Linfloc*(1-exp(-Kloc*(time-tzero)+period))
-  return(out)
-}
+##   period <- (Cloc*Kloc)/(2*pi*w)*(sin(2*pi*w*(time-birthdayloc-TW-.5*365))-sin(2*pi*w*(tzero-TW+.5*365)))
+##   out <- Linfloc*(1-exp(-Kloc*(time-birthdayloc-tzero)+period))
+##   return(out)
+## }
   
-  gcurvemain <- matrix(0,nrow=length(data$ML),ncol=length(timeblue))# create a matrix of real growth curves.
+ gcurvemain <- matrix(0,nrow=length(data$ML),ncol=(length(timeblue)))# create a matrix of real growth curves.
+
+  
   for(i in 1:length(data$ML)){
-   gcurvemain[i,] <- ifelse(timeblue>tzero[i],curveloc(Cloc,Kloc,Linfloc,TW,timeblue,tzero[i]),NA) #make curves
-  
-    
-  }
+
+     tempered <- curves(Linfloc,Cloc,TW,Kloc,data$ML,daysloc,lfdata,tzero[i],0,birthdaycurve=birthdayloc)$c
+     print(head(tempered))
+    gcurvemain[i,] <-tempered     
+     #curveloc(Cloc,Kloc,Linfloc,TW,timeblue,tzero[i]) #make curves
+   }
 
 
   

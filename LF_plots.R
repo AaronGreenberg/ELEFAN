@@ -68,8 +68,8 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
 #   points(curves$c[,2]+as.numeric(datesloc$Date[1]),curves$c[,4],pch=1 ,cex=.02,col="pink")# make real growth curve!
                                         #      lines(curves$c[,2],curves$c[,3],col="red")
  }
-   if(birthday!=0){abline(v=birthday+as.numeric(datesloc$Date[1]),col="red")
-       print(c("birthday",birthday))          } 
+   abline(v=birthday+as.numeric(datesloc$Date[1]),col="red")
+   print(c("birthday",birthday)) 
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
   if(GF!=0){ legend(x="topleft",legend=paste("gf=",GF))}
  }

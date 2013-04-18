@@ -1,5 +1,5 @@
 
-                                        #%############################################################
+#%############################################################
 ##this function fills in the growth data with the data that is being read in.
 ##It is important to realize that we need to have a data structure that keeps track of time.
 ##This is a really sparse structure, but it allows us keep time proportional.
@@ -20,7 +20,7 @@ fillgrowthdata <- function(date,data,growthdata){
 #%############################################################
 #%############################################################
 
-curves <- function(Linf,Cseasonal,tw,K,ML,modday,lfdata,sdate,sML){
+curves <- function(Linf,Cseasonal,tw,K,ML,modday,lfdata,sdate,sML,birthdaycurve=BIRTHDAY){
   K <- K/365
   w <- 1/365
   TW <- tw*365
@@ -94,7 +94,7 @@ print("Method failed. max number of steps exceeded")#just a nice test to make su
 }
   
 cbisect2 <- cmpfun(bisect2)
-  age= sdate-BIRTHDAY #need to compute age.
+  age= sdate-birthdaycurve #need to compute age.
   #first  compute time_start
   timestart <-  bisect(-200*365,200*365,sML,K,Linf,Cseasonal,TW,age)
   #second compute time of  95%*Linf
