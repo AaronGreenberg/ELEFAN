@@ -155,6 +155,7 @@ espcompute <- function(gcurve,p=peaks$out,modday,ML)
           if(peaks2val<0){
             ## print("neg peak")
             ## print(gclocation)
+
             ## print(peaks2val)
             ## print(gcurve$c[timesweep,])
              }

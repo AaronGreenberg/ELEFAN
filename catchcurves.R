@@ -47,7 +47,6 @@ return(dataout)
 
 plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   # initialize data structure
- 
   growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
   lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
 
@@ -60,59 +59,15 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   gcurve1 <- curves(Linfloc,Cloc,TW,Kloc,data$ML,days,lfdata,youngest,data$ML[1])#compute growth curve that goes through oldest
   gcurve2 <- curves(Linfloc,Cloc,TW,Kloc,data$ML,days,lfdata,oldest,data$ML[length(data$ML)])#compute growth curve that goes through youngest
 
-
-  #make new window
-  dateloc <- date
-  dateloc$Date[1] <- date$Date[1]+gcurve2$tzero #throw left margin.
-  datelength <- length(date$Date)                                      #get number of days data was collected
-  daysloc= as.numeric(julian(dateloc$Date[datelength])-julian(dateloc$Date[1])) #set default number of days
-  daysloc<- (365-daysloc%%365)+daysloc                                         #compute width of plot window in years...
-  print(daysloc)
+ tzero <- ceiling(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=5))
   
-  yeartemp <- as.numeric(format(dateloc$Date[2],"%y"))
-  birthdayloc <- as.numeric(julian(as.Date(paste("01/01/",yeartemp),format="%d/%m/%y"))-julian(dateloc$Date[1]))
-
-  growthdata <- matrix(0,ncol=daysloc,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-  lfdata<- fillgrowthdata(dateloc,data,growthdata) #make data structure with length frequency data
-  youngest <- youngest-gcurve2$tzero# restore time
-  oldest <- oldest-gcurve2$tzero#restore time
-  gcurve1 <- curves(Linfloc,Cloc,TW,Kloc,data$ML,daysloc,lfdata,youngest,data$ML[1])#compute growth curve that goes through oldest
-  gcurve2 <- curves(Linfloc,Cloc,TW,Kloc,data$ML,daysloc,lfdata,oldest,data$ML[length(data$ML)])#compute growth curve that goes through youngest
-
-  #so now we need to compute intermediate growth curves.
-
-  tzero <-ceiling(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(data$ML))+as.numeric(dateloc$Date[1]))#get the start times for the real growth curve functions
-  print("tzero")
-  print(tzero)
-  print(oldest+gcurve2$tzero)
-  print(youngest+gcurve1$tzero)
-  timeblue <-1:daysloc+as.numeric(dateloc$Date[1])
-
-##   curveloc <- function(Cloc,Kloc,Linfloc,TW,time,tzero){
-     
-##   Kloc <- Kloc/365
-##   w <- 1/365
-##   TW <- TW*365
- 
-##   period <- (Cloc*Kloc)/(2*pi*w)*(sin(2*pi*w*(time-birthdayloc-TW-.5*365))-sin(2*pi*w*(tzero-TW+.5*365)))
-##   out <- Linfloc*(1-exp(-Kloc*(time-birthdayloc-tzero)+period))
-##   return(out)
-## }
-  
- gcurvemain <- matrix(0,nrow=length(data$ML),ncol=(length(timeblue)))# create a matrix of real growth curves.
-
-  
-  for(i in 1:length(data$ML)){
-
-     tempered <- curves(Linfloc,Cloc,TW,Kloc,data$ML,daysloc,lfdata,tzero[i],0,birthdaycurve=birthdayloc)$c
-     print(head(tempered))
-    gcurvemain[i,] <-tempered     
-     #curveloc(Cloc,Kloc,Linfloc,TW,timeblue,tzero[i]) #make curves
-   }
+ tempered <- curves(Linfloc,Cloc,TW,Kloc,data$ML,days,lfdata,tzero[3],0)$c
+ gcurvemain <- as.vector(tempered[,3])
+ timeblue <- as.vector(tempered[,1])
 
 
   
-catchrqFreqPlot(1:daysloc,data$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(data$ML[1],data$ML[length(data$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,timeblue,dateloc,barscale=1,GF=0,birthday=birthdayloc)
+catchrqFreqPlot(1:days,data$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(data$ML[1],data$ML[length(data$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,timeblue,date,barscale=1,GF=0)
 
 
 }

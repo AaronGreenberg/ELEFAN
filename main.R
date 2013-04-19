@@ -29,7 +29,7 @@ date$Date=(as.Date(date$Date,format="%d/%m/%y"))       #convert dates into the d
 datelength <- length(date$Date)                                      #get number of days data was collected
 
 yeartemp <- as.numeric(format(date$Date[2],"%y")) #sort out birthday
-date$Date[1] <- as.Date(paste("01/01/",yeartemp),format="%d/%m/%y")
+#date$Date[1] <- as.Date(paste("01/01/",yeartemp),format="%d/%m/%y")
 BIRTHDAY <- as.numeric(julian(as.Date(paste("01/01/",yeartemp),format="%d/%m/%y"))-julian(date$Date[1]))
 days= as.numeric(julian(date$Date[datelength])-julian(date$Date[1])) #set default number of da
 moddays<- (365-days%%365)+days                                         #compute width of plot window in years...
