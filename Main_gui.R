@@ -62,8 +62,8 @@ lffileinh <- function(h,...){
 
 
 #adding buttons
-Entrylogo <- ggroup(container=Entrylittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
-gimage("png/usaid.png",dirname=getwd(),container=Entrylogo)
+
+
 
 readdatefile=gbutton("Date file",handler=datefileinh)
 readlengthfile=gbutton("Length file",handler=lffileinh)
@@ -71,7 +71,8 @@ tmp = gframe("Read in date file", container = Entrylittle)
 add(tmp, readdatefile, expand=TRUE)
 tmp = gframe("Read in length file", container = Entrylittle)
 add(tmp, readlengthfile, expand=TRUE)
-
+Entrylogo <- ggroup(container=Entrylittle,expand=TRUE,horizontal=FALSE,width=200)# make little entry group
+gimage("png/usaid.png",dirname=getwd(),container=Entrylogo,anchor=c(-1,-1))
 
 
 ## ## #Make Length Frequency plot window.
