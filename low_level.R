@@ -37,7 +37,6 @@ cgrowth_rootf <- cmpfun(growth_rootf)
 bisect <- function(a,b,equal,K,Linf,Cseasonal,TW,age){
   if((cgrowth_rootf(a,K,Linf,Cseasonal,TW,age)-equal)^2<10^(-10)){return(a)}
   if((cgrowth_rootf(b,K,Linf,Cseasonal,TW,age)-equal)^2<10^(-10)){return(b)}#make sure zero isn't endpoints.
-  
   #This function uses bisection to compute the required values of tstart and...
   if((growth_rootf(a,K,Linf,Cseasonal,TW,age)-equal)*(growth_rootf(b,K,Linf,Cseasonal,TW,age)-equal)>0){#make sure that inputs are okay... 
     print("f(xup) and f(xlow) are of same sign 1")
@@ -286,7 +285,7 @@ fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,C=C,tw=tw){
   print("asp")
   print(asp)
   K <- exp(seq(log(.1),log(10),length.out=200))
-    pb <- tkProgressBar(title = "progress bar", min = 0,max = length(K))
+  pb <- tkProgressBar(title = "progress bar", min = 0,max = length(K))
   fixzkscan <- matrix(0,nrow=length(K),ncol=2)
  for(i in 1:length(K)){
         gcurve <- curves(Linf,C,tw,K[i],dat$ML,d,peaks,sdate,ML)      # compute growth curve this has index, day in growthcurve and properbin.

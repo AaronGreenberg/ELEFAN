@@ -5,8 +5,7 @@ options("guiToolkit"="RGtk2")
 source("main.R")
 library("tcltk")
 
-
-#sourceCpp("low_level.cpp")
+sourceCpp("low_level.cpp")
 #create the Main window.
 
 size=1000

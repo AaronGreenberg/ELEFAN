@@ -84,5 +84,5 @@ List espcomputeC(NumericMatrix gcurve,NumericMatrix p, int modday, NumericVector
   }
   ESPout= sum(esp);
 
-  return(Rcpp::List::create(Rcpp::Named("esp")=ESPout));
+  return(Rcpp::List::create(Rcpp::Named("esp")=1));//ESPout));
 }
