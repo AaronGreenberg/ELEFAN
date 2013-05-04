@@ -1,11 +1,11 @@
-library(gWidgetsRGtk2)
+library(gWidgets)
 library(MASS)
 library("Rcpp")
 options("guiToolkit"="RGtk2")
 source("main.R")
-library("tcltk")
+#library("tcltk")
 
-sourceCpp("low_level.cpp")
+sourceCpp("growth_curve.cpp")
 #create the Main window.
 
 size=1000

@@ -104,6 +104,7 @@ cbisect2 <- cmpfun(bisect2)
   #get vector of times!
 upwind <- (ceiling(nintyfivetime))
 downwind <- (floor(zerotime))
+print(c("So this is the R version", downwind, upwind,timestart))
 time <- downwind:upwind
  #third compute growth curve and put it in the right place.
   cur <- matrix(0,(nrow=upwind+(-1)*downwind+1),ncol=4)        #initalize growth curve data structure
@@ -232,7 +233,7 @@ kscan <- function(Linf=Linf,c=c,tw=tw){
   K <- exp(seq(log(.1),log(10),length.out=50))
   zkscan <- matrix(0,nrow=length(K),ncol=4)
 
-  pb <- tkProgressBar(title = "progress bar", min = 0, max = length(K))
+#  pb <- tkProgressBar(title = "progress bar", min = 0, max = length(K))
 
  for(i in 1:length(K)){
         index <- 1
@@ -241,7 +242,8 @@ kscan <- function(Linf=Linf,c=c,tw=tw){
    for(j in 1:(length(dat$ML))){
       for(sdate in 1:d){
         if(peaks$out[j,sdate]>0 & lfdata[j,sdate]>0){
-        gcurve <- curves(Linf,c,tw,K[i],dat$ML,days,peaks,sdate,dat$ML[j])      # compute growth curve this has index, day in growthcurve and properbin.
+        gcurve <- curves_cpp(Linf,c,tw,K[i],dat$ML,days,peaks,sdate,dat$ML[j],BIRTHDAY)      # compute growth curve thishas index, day in growthcurve and properbin.
+        print(head(gcurve$c))
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
         gf <- gfcompute(asp,esp)
       } else{gf <- 0}
@@ -252,7 +254,7 @@ kscan <- function(Linf=Linf,c=c,tw=tw){
     }
   }
     zkscan[i,] <- c(max(inside[,1]),K[i],inside[which.max(inside[,1]),2],inside[which.max(inside[,1]),3])
-    setTkProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
+ #   setTkProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
     
   }
   zkscan<<-zkscan
@@ -285,15 +287,15 @@ fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,C=C,tw=tw){
   print("asp")
   print(asp)
   K <- exp(seq(log(.1),log(10),length.out=200))
-  pb <- tkProgressBar(title = "progress bar", min = 0,max = length(K))
+  #pb <- tkProgressBar(title = "progress bar", min = 0,max = length(K))
   fixzkscan <- matrix(0,nrow=length(K),ncol=2)
  for(i in 1:length(K)){
-        gcurve <- curves(Linf,C,tw,K[i],dat$ML,d,peaks,sdate,ML)      # compute growth curve this has index, day in growthcurve and properbin.
+        gcurve <- curves_cpp(Linf,C,tw,K[i],dat$ML,d,peaks,sdate,ML,BIRTHDAY)      # compute growth curve this has index, day in growthcurve and properbin.
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
         gf <- gfcompute(asp,esp)
         print(i/length(K))
         fixzkscan[i,] <- c(gf,K[i])
-          setTkProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
+   #       setTkProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
       }
 
   fixzkscan<<-fixzkscan
