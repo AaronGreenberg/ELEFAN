@@ -18,8 +18,11 @@ lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length f
 peaks <- lfrestruc(lfdata)                  #create restructure lfdata into peaks and valleys.
 if(K!=0){
 
-gcurve <- curves_cpp(Linf,Cseasonal,tw,K,data$ML,days,lfdata,startime,ML,BIRTHDAY)      # compute growth curve this has index, day in growthcurve and properbin.
+gcurve <- curves_cpp(Linf,Cseasonal,tw,K,data$ML,days,startime,ML,BIRTHDAY) # compute growth curve this has index, day in growthcurve and properbin.
 print(head(gcurve$c))
+print(length(gcurve$c[,1]))
+
+
 asp <- aspcompute(peaks)                      #compute asp
 esp <- espcompute(gcurve,peaks$out,days,data$ML)               #compute esp
 gf <- gfcompute(asp,esp)

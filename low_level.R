@@ -107,7 +107,7 @@ downwind <- (floor(zerotime))
 print(c("So this is the R version", downwind, upwind,timestart))
 time <- downwind:upwind
  #third compute growth curve and put it in the right place.
-  cur <- matrix(0,(nrow=upwind+(-1)*downwind+1),ncol=4)        #initalize growth curve data structure
+  cur <- matrix(0,(nrow=upwind+(-1)*downwind),ncol=4)        #initalize growth curve data structure
   period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(time-(TW-age)-.5*365))-sin(2*pi*w*(timestart-TW-.5*365)))
   cur[,1] <-(time+sdate)#keep real time
   cur[,2] <-(time+sdate)%%modday #wrap time so mapping the time to the plot is easy
@@ -134,6 +134,7 @@ espcompute <- function(gcurve,p=peaks$out,modday,ML)
       if(gclocation>0){
         tsweep <- gcurve$c[timesweeper,2]+1
         peaks2val <- peaks2[gclocation,tsweep]
+#        print(peaks2val)
         if(peaks2val>0){
           ## print("pos peaks")
           ## print(gclocation)
@@ -218,9 +219,9 @@ wetherall <- function(da=data,points=3){
 
 
 
-kscan <- function(Linf=Linf,c=c,tw=tw){
+kscan <- function(Linf=Linf,cloc=cloc,tw=tw){
   print(paste("Linf","c","tw"))
-  temp <- c(Linf,c,tw)
+  temp <- c(Linf,cloc,tw)
   print(temp)
   d=days
   dat=data
@@ -228,7 +229,7 @@ kscan <- function(Linf=Linf,c=c,tw=tw){
   lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
   peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
   asp <- aspcompute(peaks)                      #compute asp
-  print("asp")
+  print("asp--snazzy")
   print(asp)
   K <- exp(seq(log(.1),log(10),length.out=50))
   zkscan <- matrix(0,nrow=length(K),ncol=4)
@@ -241,10 +242,13 @@ kscan <- function(Linf=Linf,c=c,tw=tw){
         
    for(j in 1:(length(dat$ML))){
       for(sdate in 1:d){
+        
         if(peaks$out[j,sdate]>0 & lfdata[j,sdate]>0){
-        gcurve <- curves_cpp(Linf,c,tw,K[i],dat$ML,days,peaks,sdate,dat$ML[j],BIRTHDAY)      # compute growth curve thishas index, day in growthcurve and properbin.
-        print(head(gcurve$c))
+        gcurve <- curves_cpp(Linf,cloc,tw,K[i],dat$ML,days,sdate,dat$ML[j],BIRTHDAY)      # compute growth curve thishas index, day in growthcurve and properbin.
+
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
+        print("ESPtest")
+        print(esp$esp)
         gf <- gfcompute(asp,esp)
       } else{gf <- 0}
         if(gf>0){
@@ -290,7 +294,10 @@ fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,C=C,tw=tw){
   #pb <- tkProgressBar(title = "progress bar", min = 0,max = length(K))
   fixzkscan <- matrix(0,nrow=length(K),ncol=2)
  for(i in 1:length(K)){
-        gcurve <- curves_cpp(Linf,C,tw,K[i],dat$ML,d,peaks,sdate,ML,BIRTHDAY)      # compute growth curve this has index, day in growthcurve and properbin.
+        print("WTF???")
+        #print(c(Linf,C,tw,K[i],dat$ML,d,peaks,sdate,ML,BIRTHDAY))
+        gcurve <- curves_cpp(Linf,C,tw,K[i],dat$ML,days,sdate,ML,BIRTHDAY)      # compute growth curve this has index, day in growthcurve and properbin.
+#        print(head(gcurve$c))
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
         gf <- gfcompute(asp,esp)
         print(i/length(K))

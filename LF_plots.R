@@ -64,7 +64,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
     #print(bins)
    if(sum(curves$c[,2])!=0){
    points(sdate+as.numeric(datesloc$Date[1]),sML,col="blue",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
-   points(curves$c[,2]+as.numeric(datesloc$Date[1]),curves$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
+   points(curves$c[,2]+as.numeric(datesloc$Date[1]),curves$c[,4],pch=1 ,cex=.2,col="black")# make real growth curve!
 #   points(curves$c[,2]+as.numeric(datesloc$Date[1]),curves$c[,4],pch=1 ,cex=.02,col="pink")# make real growth curve!
                                         #      lines(curves$c[,2],curves$c[,3],col="red")
  }
