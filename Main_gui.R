@@ -23,7 +23,7 @@ datetmp <- NA
 data <- NA
 #visible(nb[1]) <- TRUE
 Entry <- ggroup(container = nb,label="Data Display", expand=TRUE,horizontal=TRUE)#make entry gr
-Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE)# make little entry group
 
 Entrypic<- gnotebook(container=Entry,expand=TRUE)#create the Entry pic.
 Datetable<- gtable(datetmp,container=Entrypic,label="Date")
@@ -70,8 +70,9 @@ tmp = gframe("Read in date file", container = Entrylittle)
 add(tmp, readdatefile, expand=TRUE)
 tmp = gframe("Read in length file", container = Entrylittle)
 add(tmp, readlengthfile, expand=TRUE)
+addSpring(Entrylittle)
 Entrylogo <- ggroup(container=Entrylittle,expand=TRUE,horizontal=FALSE,width=200)# make little entry group
-gimage("png/usaid.png",dirname=getwd(),container=Entrylogo,anchor=c(-1,-1))
+gimage("png/usaid.png",dirname=getwd(),container=Entrylogo)
 
 
 ## ## #Make Length Frequency plot window.
