@@ -71,6 +71,7 @@ spv <- function(unw){           #rescale according to Routine F in Manual page 6
   psum <- sum(unw[posi])
   nsum <- sum(unw[negi])
   y <- ifelse(y<0,y*psum/(-nsum),y)
+  
   return(y)
 }
 
@@ -94,7 +95,7 @@ availablesumpeaks <- function(x){
   ## print(m)
   ## print(m1)
   ## print(mend)
-  return(sum(m)+m1+mend)
+  return((sum(m)+m1+mend))
 }
 
 
@@ -120,6 +121,7 @@ return(as.vector(datatmp$F))
 
 main2 <-function(peaks) {               #this computes the available sum of peaks for each data set
 ASP <- availablesumpeaks(peaks)
+
 #print("ASP")
 #print(ASP)
 return(ASP)

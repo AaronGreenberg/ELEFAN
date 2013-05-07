@@ -17,110 +17,12 @@ fillgrowthdata <- function(date,data,growthdata){
 
 
 
-#%############################################################
-#%############################################################
-
-curves <- function(Linf,Cseasonal,tw,K,ML,modday,lfdata,sdate,sML,birthdaycurve=BIRTHDAY){
-  K <- K/365
-  w <- 1/365
-  TW <- tw*365
-growth_rootf <- function(x,K,Linf,Cseasonal,TW,age){
-#makes computing tstart and time when length is .95%Linf easy.
-  w <- 1/365
-  
-  period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(age-TW-.5*365))-sin(2*pi*w*(x-TW-.5*365)))
-  out <- Linf*(1-exp(-K*(age-x)+period))
-  return(out)
-}
-cgrowth_rootf <- cmpfun(growth_rootf)
-  
-bisect <- function(a,b,equal,K,Linf,Cseasonal,TW,age){
-  if((cgrowth_rootf(a,K,Linf,Cseasonal,TW,age)-equal)^2<10^(-10)){return(a)}
-  if((cgrowth_rootf(b,K,Linf,Cseasonal,TW,age)-equal)^2<10^(-10)){return(b)}#make sure zero isn't endpoints.
-  #This function uses bisection to compute the required values of tstart and...
-  if((growth_rootf(a,K,Linf,Cseasonal,TW,age)-equal)*(growth_rootf(b,K,Linf,Cseasonal,TW,age)-equal)>0){#make sure that inputs are okay... 
-    print("f(xup) and f(xlow) are of same sign 1")
-    print(paste("fxup::",(cgrowth_rootf(a,K,Linf,Cseasonal,TW,age)-equal),"fxlow::",(cgrowth_rootf(b,K,Linf,Cseasonal,TW,age)-equal)))
-    return(1)} 
-termtest <- 1#set counter to protect against errors. 
-  while(termtest<= 10000) {# limit iterations to prevent infinite loop
-    d <- (a + b)/2 #new midpoint
-    if(((cgrowth_rootf(d,K,Linf,Cseasonal,TW,age)-equal)==0||(b-a)/2<= 10^-(10))) { #solution found
-    return(d)
-    break
-  }
-  termtest <- termtest + 1 #increment step counter
-  if(sign(cgrowth_rootf(d,K,Linf,Cseasonal,TW,age)-equal) == sign(cgrowth_rootf(a,K,Linf,Cseasonal,TW,age)-equal)){ a <- d}
-  else{b <- d }# new interval
-}
-print("Method failed. max number of steps exceeded")#just a nice test to make sure that the first test really worked.
-}
-
-cbisect <- cmpfun(bisect)
-  #I should talk to Laura about making things polymorphic... Cause this is ugly and has code redundancy. 
-   
-growth_rootf2 <- function(x,K,Linf,Cseasonal,TW,ts,age){
-#makes computing to and time when length is .95%Linf easy. 
-  w <- 1/365
-  period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(x-(TW-age)-.5*365))-sin(2*pi*w*(ts-TW-.5*365)))
-  out <- Linf*(1-exp(-K*(x-(ts-age))+period))
-  return(out)
-}
-cgrowth_rootf2 <- cmpfun(growth_rootf2)
-  
-bisect2 <- function(a,b,equal,K,Linf,Cseasonal,TW,ts,age){
-  if(((cgrowth_rootf2(a,K,Linf,Cseasonal,TW,ts,age)-equal)^2)<10^(-10)){return(a)}
-  if(((cgrowth_rootf2(b,K,Linf,Cseasonal,TW,ts,age)-equal)^2)<10^(-10)){return(b)}
-  #This function uses bisection to compute the required end time values
-  if((growth_rootf2(a,K,Linf,Cseasonal,TW,ts,age)-equal)*(growth_rootf2(b,K,Linf,Cseasonal,TW,ts,age)-equal)>0){#make sure that inputs are okay... 
-    print("f(xup) and f(xlow) are of same sign 2")
-    print(paste("fxup::",(cgrowth_rootf2(a,K,Linf,Cseasonal,TW,ts,age)-equal),"fxlow::",(cgrowth_rootf2(b,K,Linf,Cseasonal,TW,ts,age)-equal)))
-    print(paste("a::",a,"b::",b))
-    return(1)}
-  
-termtest <- 1#set counter to protect against errors. 
-  while(termtest<= 10000) {# limit iterations to prevent infinite loop
-    d <- (a + b)/2 #new midpoint
-    if(((cgrowth_rootf2(d,K,Linf,Cseasonal,TW,ts,age)-equal)==0||(b-a)/2<= 10^-(10))) { #solution found
-    return(d)
-    break
-  }
-  termtest <- termtest + 1 #increment step counter
-  if(sign(cgrowth_rootf2(d,K,Linf,Cseasonal,TW,ts,age)-equal) == sign(cgrowth_rootf2(a,K,Linf,Cseasonal,TW,ts,age)-equal)){ a <- d}
-  else{b <- d }# new interval
-}
-print("Method failed. max number of steps exceeded")#just a nice test to make sure that the first test really worked.
-}
-  
-cbisect2 <- cmpfun(bisect2)
-  age= sdate-birthdaycurve #need to compute age.
-  #first  compute time_start
-  timestart <-  bisect(-200*365,200*365,sML,K,Linf,Cseasonal,TW,age)
-  #second compute time of  95%*Linf
-  nintyfivetime <-  bisect2(-200*365,200*365,.95*Linf,K,Linf,Cseasonal,TW,timestart,age)
-  #compute tzero
-  #really only important when Cseasonal!=0 because it should be about -timestart  but ...
-  zerotime <- bisect2(-200*365,200*365,0,K,Linf,Cseasonal,TW,timestart,age)
-  #get vector of times!
-upwind <- (ceiling(nintyfivetime))
-downwind <- (floor(zerotime))
-time <- downwind:upwind
- #third compute growth curve and put it in the right place.
-  cur <- matrix(0,(nrow=upwind+(-1)*downwind+1),ncol=4)        #initalize growth curve data structure
-  period <- (Cseasonal*K)/(2*pi*w)*(sin(2*pi*w*(time-(TW-age)-.5*365))-sin(2*pi*w*(timestart-TW-.5*365)))
-  cur[,1] <-(time+sdate)#keep real time
-  cur[,2] <-(time+sdate)%%modday #wrap time so mapping the time to the plot is easy
-  cur[,3] <- Linf*(1-exp(-K*((time-(-age+timestart)))+period))#put in the growth curve
-  fn <- function(i){ML[which.min(((ML)-cur[i,3])^2)]} #snazzy function that allows use of sapply  to find the right bins!
-  cur[,4] <- sapply(1:length(cur[,3]),fn)             #get a version of the growth curve that makes computing esp and asp easy
-return(list(c=cur,tzero=downwind))
-}
-
-ccurves<- cmpfun(curves)
 
 
 aspcompute <- function(peaks){
-  asp <- sum(peaks$asp)
+  asp <- sum(peaks$asp/max(peaks$asp))
+  print("ASP REAL")
+  print(asp)
       } #compute sum of asp. 
 caspcompute <- cmpfun(aspcompute)
 espcompute <- function(gcurve,p=peaks$out,modday,ML)
@@ -133,6 +35,7 @@ espcompute <- function(gcurve,p=peaks$out,modday,ML)
       if(gclocation>0){
         tsweep <- gcurve$c[timesweeper,2]+1
         peaks2val <- peaks2[gclocation,tsweep]
+#        print(peaks2val)
         if(peaks2val>0){
           ## print("pos peaks")
           ## print(gclocation)
@@ -180,6 +83,7 @@ wetherall <- function(da=data,points=3){
   data2 <- data
   data2$ML <- data$ML*0
   z <- rowSums(data2)#sum up all the frequencies
+  points <- points-1
   Li=Liprime=z*0
   for(i in 1:length(data2$ML)){
     Li[i]=data$ML[i]-(data$ML[2]-data$ML[1])/2    #get list of cut off values
@@ -203,7 +107,7 @@ wetherall <- function(da=data,points=3){
   abline(h=0,col="grey")
   temp=signif(Linfest,3)
   l1 <-expression(paste("L",infinity))
-  text(Li,Liprime+.4*log(max(Liprime)),as.character(sort(0:(length(Li)-1),decreasing=TRUE)))
+  text(Li,Liprime+.4*log(max(Liprime)),as.character(sort(1:(length(Li)),decreasing=TRUE)))
   text(Linfest*1.0,min(1,.01*(z$coefficients[1]+z$coefficients[2]*Linfest)),l1)
   temp2 <-bquote(paste("L",infinity==.(temp),"  ",
                        bar(L), "=",.(signif(z$coefficients[1],3)),"+",.(signif(z$coefficients[2],3)),"L'",
@@ -217,19 +121,20 @@ wetherall <- function(da=data,points=3){
 
 
 
-kscan <- function(Linf=Linf,c=c,tw=tw){
+kscan <- function(Linf=Linf,cloc=cloc,tw=tw){
   print(paste("Linf","c","tw"))
-  temp <- c(Linf,c,tw)
+  temp <- c(Linf,cloc,tw)
   print(temp)
   d=days
   dat=data
-  growthdata <- matrix(0,ncol=d,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+  #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+  growthdata <- matrix(0,ncol=d,nrow=lfbin)
   lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
   peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
   asp <- aspcompute(peaks)                      #compute asp
-  print("asp")
+  print("asp--snazzy")
   print(asp)
-  K <- exp(seq(log(.1),log(10),length.out=50))
+  K <- exp(seq(log(.1),log(10),length.out=200))
   zkscan <- matrix(0,nrow=length(K),ncol=4)
 
   pb <- tkProgressBar(title = "progress bar", min = 0, max = length(K))
@@ -240,10 +145,15 @@ kscan <- function(Linf=Linf,c=c,tw=tw){
         
    for(j in 1:(length(dat$ML))){
       for(sdate in 1:d){
+        
         if(peaks$out[j,sdate]>0 & lfdata[j,sdate]>0){
-        gcurve <- curves(Linf,c,tw,K[i],dat$ML,days,peaks,sdate,dat$ML[j])      # compute growth curve this has index, day in growthcurve and properbin.
+        gcurve <- curves_cpp(Linf,cloc,tw,K[i],dat$ML,days,sdate,dat$ML[j],BIRTHDAY)      # compute growth curve thishas index, day in growthcurve and properbin.
+
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
+        print("ESPtest")
+
         gf <- gfcompute(asp,esp)
+        print(c(gf,":::",K[i]))
       } else{gf <- 0}
         if(gf>0){
       }
@@ -267,16 +177,17 @@ ckscan <- cmpfun(kscan)
 fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,C=C,tw=tw){
   d=days
   dat=data
-  
-
   growthdata <- matrix(0,ncol=d,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
   lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
   peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
-  fn <- function(dayl,peaks){sum(lfdata[,dayl])}
+  fn <- function(dayl,lfdata){sum(lfdata[,dayl])}
   temp <- sapply(1:d,fn,lfdata)
-  print(temp)
+  
+  #print(temp)
   temp2 <- which(temp!=0)
+  print("days with nonzero lfdata")
   print(temp2)
+  print("sdate")
   print(sdate)
   sdate <- temp2[sdate]
   print("fixed sdate?")
@@ -284,16 +195,18 @@ fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,C=C,tw=tw){
   asp <- aspcompute(peaks)                      #compute asp
   print("asp")
   print(asp)
-  K <- exp(seq(log(.1),log(10),length.out=200))
-  pb <- tkProgressBar(title = "progress bar", min = 0,max = length(K))
+  K <- exp(seq(log(.1),log(10),length.out=500))
+  #pb <- tkProgressBar(title = "progress bar", min = 0,max = length(K))
   fixzkscan <- matrix(0,nrow=length(K),ncol=2)
  for(i in 1:length(K)){
-        gcurve <- curves(Linf,C,tw,K[i],dat$ML,d,peaks,sdate,ML)      # compute growth curve this has index, day in growthcurve and properbin.
+ 
+        gcurve <- curves_cpp(Linf,C,tw,K[i],dat$ML,days,sdate,ML,BIRTHDAY)      # compute growth curve this has index, day in growthcurve and properbin.
+        #print(head(gcurve$c))
+        
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
         gf <- gfcompute(asp,esp)
         print(i/length(K))
         fixzkscan[i,] <- c(gf,K[i])
-          setTkProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
       }
 
   fixzkscan<<-fixzkscan

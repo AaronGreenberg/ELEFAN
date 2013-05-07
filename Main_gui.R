@@ -1,11 +1,11 @@
-library(gWidgetsRGtk2)
+library(gWidgets)
 library(MASS)
 library("Rcpp")
 options("guiToolkit"="RGtk2")
 source("main.R")
-library("tcltk")
+#library("tcltk")
 
-sourceCpp("low_level.cpp")
+sourceCpp("growth_curve.cpp")
 #create the Main window.
 
 size=1000
@@ -49,9 +49,9 @@ lffileinh <- function(h,...){
   Datatable[] <- data
   Datatable[] <- data
   visible(Datatable) <- TRUE
-  Linfslide[] <- seq(0,2*max(data$ML),length.out=100)
-  Linfslidek[] <- seq(0,2*max(data$ML),length.out=100)
-  Linfslidec[] <- seq(0,2*max(data$ML),length.out=100)
+  Linfslide[] <- seq(0,1.2*max(data$ML),length.out=100)
+  Linfslidek[] <- seq(0,1.2*max(data$ML),length.out=100)
+  Linfslidec[] <- seq(0,1.22*max(data$ML),length.out=100)
   Pointslide[] <- 2:length(data$ML)
   Pointslideuc[] <- 1:length(data$ML)
   Pointslidelc[] <- 1:length(data$ML)
@@ -82,7 +82,7 @@ LFplotlittle <- ggroup(container=LFplot,expand=FALSE,horizontal=FALSE,width=200)
 LFpic<- gnotebook(container=LFplot,expand=TRUE)#create the Entry pic.
 
 histgraphic<- ggraphics(container = LFpic,width=700,height=500,label="LF Plot")
-refactorgraphic<- ggraphics(container = LFpic,width=700,height=500,label="Peaks Plot")
+refactorgraphic<- ggraphics(container = LFpic,width=700,height=500,label="Restructured Plot")
 LFplotlogo <- ggroup(container=LFplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/usaid.png",dirname=getwd(),container=LFplotlogo)
 
@@ -170,7 +170,7 @@ add(tmp, Cslidek, expand=TRUE)
 twslidek=gslider(from=0,to=1,by=.01,value=0)
 tmp = gframe("Wp", container = Kscanplotlittle)
 add(tmp, twslidek, expand=TRUE)
-movingaveragek=gslider(from=0,to=10,by=1,value=1)
+movingaveragek=gslider(from=0,to=100,by=1,value=1)
 tmp = gframe("Moving Average Window", container = Kscanplotlittle)
 add(tmp, movingaveragek, expand=TRUE)
 stdatek <- gdroplist(list(1:10*0))
@@ -244,13 +244,14 @@ tmp = gframe("TW", container = Catchcurvelittle)
 add(tmp, TWslidec, expand=TRUE)
 
 
-Pointslideuc=gslider(from=0,to=10,by=1,value=0)
-tmp = gframe("Points upper limit", container = Catchcurvelittle)
-add(tmp, Pointslideuc, expand=TRUE)
 
 Pointslidelc=gslider(from=0,to=10,by=1,value=0)
-tmp = gframe("Points lower limit", container = Catchcurvelittle)
+tmp = gframe("First Point", container = Catchcurvelittle)
 add(tmp, Pointslidelc, expand=TRUE)
+
+Pointslideuc=gslider(from=0,to=10,by=1,value=0)
+tmp = gframe("Last Point", container = Catchcurvelittle)
+add(tmp, Pointslideuc, expand=TRUE)
 
 
 plotnonseacatch <- function(h,...){ 
