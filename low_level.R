@@ -20,7 +20,9 @@ fillgrowthdata <- function(date,data,growthdata){
 
 
 aspcompute <- function(peaks){
-  asp <- sum(peaks$asp)
+  asp <- sum(peaks$asp/max(peaks$asp))
+  print("ASP REAL")
+  print(asp)
       } #compute sum of asp. 
 caspcompute <- cmpfun(aspcompute)
 espcompute <- function(gcurve,p=peaks$out,modday,ML)
