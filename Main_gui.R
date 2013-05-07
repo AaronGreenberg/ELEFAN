@@ -70,7 +70,8 @@ tmp = gframe("Read in date file", container = Entrylittle)
 add(tmp, readdatefile, expand=TRUE)
 tmp = gframe("Read in length file", container = Entrylittle)
 add(tmp, readlengthfile, expand=TRUE)
-addSpring(Entrylittle)
+addSpace(Entrylittle,700,horizontal=FALSE)# needs to be tuned for each slide
+#addSpring(Entrylittle)
 Entrylogo <- ggroup(container=Entrylittle,expand=TRUE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/usaid.png",dirname=getwd(),container=Entrylogo)
 
@@ -286,12 +287,30 @@ if(file.exists(filename)){file.remove(filename)}#remove file
 write.matrix(temp,file=filename)
 
 #lapply(t(temp), write, filename, append=TRUE, ncolumns=1000)#write to file
-visible(Catchcurvegraphic) <- TRUE #make correct picture  
+visible(Catchcurvegraphic) <- TRUE #make correct picture
  }
 
  plot=gbutton("Make the plots",handler=plotseacatch)
  tmp=gframe("Plot",container=Catchcurvelittle)
  add(tmp, plot, expand=TRUE)
+
+
+datetmp <- NA
+data <- NA
+#visible(nb[1]) <- TRUE
+SeasonalCatch <- ggroup(container = nb,label="Seasonal Catch Curve", expand=TRUE,horizontal=TRUE)#make entry gr
+SeasonalCatchlittle <- ggroup(container=SeasonalCatch,expand=FALSE,horizontal=FALSE)# make little entry group
+
+RecruitmentPattern <- ggroup(container = nb,label="Recruitment Pattern", expand=TRUE,horizontal=TRUE)#make entry gr
+RecruitmentPatternlittle <- ggroup(container=RecruitmentPattern,expand=FALSE,horizontal=FALSE)# make little entry group
+
+
+YeildperRecruit <- ggroup(container = nb,label="Yield Per Recruit", expand=TRUE,horizontal=TRUE)#make entry gr
+YeildperRecruitlittle <- ggroup(container=YeildperRecruit,expand=FALSE,horizontal=FALSE)# make little entry group
+
+
+BiomassperRecruit <- ggroup(container = nb,label="Biomass Per Recruit", expand=TRUE,horizontal=TRUE)#make entry gr
+BiomassperRecruit <- ggroup(container=BiomassperRecruit,expand=FALSE,horizontal=FALSE)# make little entry group
 
 svalue(nb)=1
 visible(window) <- TRUE
