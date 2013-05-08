@@ -20,7 +20,7 @@ fillgrowthdata <- function(date,data,growthdata){
 
 
 aspcompute <- function(peaks){
-  asp <- sum(peaks$asp/max(peaks$asp))
+  asp <- sum(peaks$asp)
   print("ASP REAL")
   print(asp)
       } #compute sum of asp. 
