@@ -1,0 +1,22 @@
+Change below:#
+setwd("~/Dropbox/Rwkspace/ELEFAN")#
+library(gWidgets)#
+library(MASS)#
+library(Rcpp) # connects to c++ programs#
+options("guiToolkit"="RGtk2")#
+source("R/main.R")#
+sourceCpp("src/growth_curve.cpp") #compiles and sources. #
+#create the Main window.#
+#
+size=100#
+window = gwindow("New ELEFAN",height=size,width=1.618*size,visible=TRUE)#
+biggroup <- ggroup(container=window,expand=TRUE,horizontal=FALSE)
+nb <- gnotebook(container=biggroup,expand=TRUE,horizontal=TRUE)
+datetmp <- read.tab("data/abra_alba.dat_corrected.dat",header=T)
+help(read.table)
+datetmp <- read.delim("data/abra_alba.dat_corrected.dat",header=T)
+datetmp
+names(datetmp)
+datetmp <- read.delim("data/abra_alba.dat_corrected.dat",header=T,delim=" ")
+help(read.delim)
+datetmp <- read.delim("data/abra_alba.dat_corrected.dat",header=T,sep=" ")

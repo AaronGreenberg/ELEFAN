@@ -1,9 +1,13 @@
+### Be sure to set the working directory to a mylocation/ELEFAN 
+## for relative paths to work.
+### Change below:
+setwd("~/Dropbox/Rwkspace/ELEFAN")
 library(gWidgets)
 library(MASS)
-library("Rcpp") # connects to c++ programs
+library(Rcpp) # connects to c++ programs
 options("guiToolkit"="RGtk2")
-source("main.R")
-sourceCpp("growth_curve.cpp") #compiles and sources. 
+source("R/main.R")
+sourceCpp("src/growth_curve.cpp") #compiles and sources. 
 #create the Main window.
 
 size=100
