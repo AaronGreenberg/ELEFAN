@@ -6,7 +6,7 @@ source("main.R")
 sourceCpp("growth_curve.cpp") #compiles and sources. 
 #create the Main window.
 
-size=1000
+size=100
 window = gwindow("New ELEFAN",height=size,width=1.618*size,visible=TRUE)
 biggroup <- ggroup(container=window,expand=TRUE,horizontal=FALSE)
 
