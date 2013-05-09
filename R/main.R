@@ -7,12 +7,12 @@
 require(compiler)
 require(PBSmodelling);                  #nice software that makes making gui easier
 #library(animation)
-source("ASP.R")                         #load routines to compute peaks and available sum of peaks
-source("ESP.R")                         #load routines to compute Explained Sum of Peakz
-source("catchcurves.R")
-source("LF_plots.R")                    #load routines to make the special plots in particular rqFreqplot
-source("other_plots.R")                 #load routines that make other plots
-source("low_level.R")                   #load misc routines really mostly data proccessing     
+source("R/ASP.R")                         #load routines to compute peaks and available sum of peaks
+source("R/ESP.R")                         #load routines to compute Explained Sum of Peakz
+source("R/catchcurves.R")
+source("R/LF_plots.R")                    #load routines to make the special plots in particular rqFreqplot
+source("R/other_plots.R")                 #load routines that make other plots
+source("R/low_level.R")                   #load misc routines really mostly data proccessing     
 #createWin("main_gui.txt")
 
 
