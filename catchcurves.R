@@ -22,13 +22,20 @@ plotnonseacatchcurve <- function(Kloc=K,Linfloc=Linf,pointsupper,pointslower){
 sumsample <- ifelse(sumsample==0,mean(sumsample),sumsample)#get rid of zeros
 #Ok time to make the plot
 widthvec <- pointslower:(pointsupper)
+print(ti)
+widthvec2 <-0:pointslower
+z <- lm(log(sumsample[widthvec]/delti[widthvec])~ti[widthvec])
 par(1,las=1,bty='n')
-plot(ti,log(sumsample/delti),xlab="Age", ylab="ln(N)/delT)",xlim=c(0,ceiling(max(ti))),ylim=c(0,ceiling(max(log(sumsample/delti)))))
+plot(x=ti[widthvec2],y=(z$coefficients[1]+z$coefficients[2]*ti[widthvec2]),type="l",
+     col="black",xlab="Age", ylab=bquote(paste("ln(N)/",Delta,"T")),xlim=c(-0.5,ceiling(max(ti))),ylim=c(0,ceiling(1.1*max(log(sumsample/delti)))))#make the line that does not count  
+points(ti,log(sumsample/delti))
 text(ti,log(sumsample/delti)+.2*log(max(log(sumsample/delti))),as.character(1:length(ti)))
 points(ti[widthvec],log(sumsample[widthvec]/delti[widthvec]),pch=19,col="black")
-z <- lm(log(sumsample[widthvec]/delti[widthvec])~ti[widthvec])
-lines(x=ti[widthvec],y=(z$coefficients[1]+z$coefficients[2]*ti[widthvec]),col="black")
-temp2 <-bquote(paste("log(N)/(delT)"," = ",.(signif(z$coefficients[1],4)),.(signif(z$coefficients[2],4)),"Age","  ",R^2,"=",.(signif(summary(z)$r.squared,4))))  
+
+lines(x=ti[widthvec],y=(z$coefficients[1]+z$coefficients[2]*ti[widthvec]),col="red")#make the line through the selected points
+
+  
+temp2 <-bquote(paste("log(N)/",Delta,"T"," = ",.(signif(z$coefficients[1],4)),.(signif(z$coefficients[2],4)),"Age","  ",R^2,"=",.(signif(summary(z)$r.squared,4))))  
 legend(x="topright",legend=temp2)  
 print(z)
 selectivity <- list()

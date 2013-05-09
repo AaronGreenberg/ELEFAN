@@ -58,7 +58,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
                 count=count+1
 		rectplot(-ser,bins,xmin,xmax,ylim,barcol1,barcol2)#make bar plot
                 #abline(h=bins,col="gray60",lty=1,cex=.001)
-                text(cbind((time[i]+as.numeric(datesloc$Date[1])),max(bins)+((count%%2)*.2+1.1)*min(c((bins[2]-bins[1]),1))),label=as.character(datesloc$Date[count+1],format="%y-%m-%d"),cex=.75,col="black")#add datesloc to things
+                text(cbind((time[i]+as.numeric(datesloc$Date[1])),max(bins)+((count%%2)*.7+1.1)*min(c((bins[2]-bins[1]),1))),label=as.character(datesloc$Date[count+1],format="%y-%m-%d"),cex=.75,col="black")#add datesloc to things
               }
 	}
     #print(bins)

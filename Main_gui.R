@@ -1,11 +1,9 @@
 library(gWidgets)
 library(MASS)
-library("Rcpp")
+library("Rcpp") # connects to c++ programs
 options("guiToolkit"="RGtk2")
 source("main.R")
-#library("tcltk")
-
-sourceCpp("growth_curve.cpp")
+sourceCpp("growth_curve.cpp") #compiles and sources. 
 #create the Main window.
 
 size=1000
@@ -23,7 +21,8 @@ datetmp <- NA
 data <- NA
 #visible(nb[1]) <- TRUE
 Entry <- ggroup(container = nb,label="Data Display", expand=TRUE,horizontal=TRUE)#make entry gr
-Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE)# make little entry group
+addSpace(biggroup,300,horizontal=FALSE)
+Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE,height=30)# make little entry group
 
 Entrypic<- gnotebook(container=Entry,expand=TRUE)#create the Entry pic.
 Datetable<- gtable(datetmp,container=Entrypic,label="Date")
