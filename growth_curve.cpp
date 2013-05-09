@@ -1,6 +1,5 @@
 #include <Rcpp.h>
-using namespace Rcpp;
-// This set of cpp routines speeds up computing growth curves.
+using namespace Rcpp;// This set of cpp routines speeds up computing growth curves.
 // The main routines are almost directly ported from the R routines
 // however it is important to compute growth curves very quickly.
 
@@ -116,7 +115,13 @@ List curves_cpp(double Linf,double locperiodC,double tw,double K,NumericVector M
   period = (locperiodC*K)/(2.0*pi*w)*(sin(2.0*pi*w*(time(i)-(TW-age)-.5*365.0))-sin(2.0*pi*w*(timestart-TW-.5*365.0)));
   cur(i,0) =(time(i)+intsdate);//keep real time
   //Rcout<<"cur"<<cur(i,0)<<"::"<<i<<"###"<<-1.0*downwind+upwind<<"\n";
-  cur(i,1) =abs((time(i)+intsdate)%int(modday)); //wrap time so mapping the time to the plot is easy
+  if(((time(i)+intsdate)%int(modday))>0)
+    {
+     cur(i,1)= (time(i)+intsdate)%int(modday);
+    }
+  else{
+   cur(i,1)= (time(i)+intsdate+30*int(modday))%int(modday);
+    } //wrap time so mapping the time to the plot is easy
   cur(i,2) =Linf*(1-exp(-K*((time(i)-(-age+timestart)))+period));//put in the growth curve
   cur(i,3) = ML(which_min(pow(ML-cur(i,2),2)));            //get a version of the growth curve that makes computing esp anda
   

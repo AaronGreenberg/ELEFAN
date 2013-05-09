@@ -132,7 +132,7 @@ kscan <- function(Linf=Linf,cloc=cloc,tw=tw){
   lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
   peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
   asp <- aspcompute(peaks)                      #compute asp
-  K <- exp(seq(log(.1),log(10),length.out=200))
+  K <- exp(seq(log(.1),log(10),length.out=100))
   zkscan <- matrix(0,nrow=length(K),ncol=4)
  for(i in 1:length(K)){
         index <- 1
@@ -188,7 +188,7 @@ fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,C=C,tw=tw){
   asp <- aspcompute(peaks)                      #compute asp
   #print("asp")
   #print(asp)
-  K <- exp(seq(log(.1),log(10),length.out=500))
+  K <- exp(seq(log(.1),log(10),length.out=250))
 
   fixzkscan <- matrix(0,nrow=length(K),ncol=2)
  for(i in 1:length(K)){
