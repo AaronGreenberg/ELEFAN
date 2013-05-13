@@ -1,7 +1,7 @@
 ### Be sure to set the working directory to a mylocation/ELEFAN 
 ## for relative paths to work.
 ### Change below:
-setwd("~/Dropbox/Rwkspace/ELEFAN")
+setwd("~/ELEFAN")
 library(gWidgets)
 library(MASS)
 library(Rcpp) # connects to c++ programs
