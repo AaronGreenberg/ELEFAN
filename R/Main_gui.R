@@ -1,4 +1,5 @@
 ### Be sure to set the working directory to a mylocation/ELEFAN 
+## Just showing Danielle how pull requests work
 ## for relative paths to work.
 ### Change below:
 setwd("~/ELEFAN")
