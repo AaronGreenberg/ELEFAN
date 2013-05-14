@@ -53,16 +53,19 @@ return(dataout)
 
 
 plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
+  print("Hi")
   # initialize data structure
   growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
   lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
-
+  print("so")
   
   #--1--compute oldest and youngest
   #locate the oldest and youngest fish.
   youngest <- max(which(lfdata[1,]>0))            #get oldest fish
   oldest <- min(which(lfdata[length(lfdata[,1]),]>0)) #get youngest fish.
+  print("hum")
   # compute growth curve that goes through oldest and youngest
+
   gcurve1 <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,youngest,data$ML[1],BIRTHDAY)#compute growth curve that goes through oldest
   gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,oldest,data$ML[length(data$ML)],BIRTHDAY)#compute growth curve that goes through youngest
 
@@ -74,6 +77,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
  gcurvemain[i,1:days] <- as.vector(tempered[1:days,3])
 }
   
+
  timeblue <- as.vector(tempered[,1])
 
 

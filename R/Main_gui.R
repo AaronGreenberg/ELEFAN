@@ -280,20 +280,23 @@ visible(Catchcurvegraphic) <- TRUE #make correct picture
 
 
 
+
+
+datetmp <- NA
+data <- NA
+#visible(nb[1]) <- TRUE
+SeasonalCatch <- ggroup(container = nb,label="Seasonal Catch Curve", expand=TRUE,horizontal=TRUE)#make entry gr
+SeasonalCatchlittle <- ggroup(container=SeasonalCatch,expand=FALSE,horizontal=FALSE)# make little entry group
+
 plotseacatch <- function(h,...){ 
 visible(SeasonalCatchgraphic) <- TRUE #make correct picture
 temp<- plotseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Cslidec),svalue(TWslidec))
 Datatablemodified[] <- temp
 Datatablemodified[] <- temp
-filename <- (paste(fname2,"corrected.dat",sep="_"))
-print(temp)
-if(file.exists(filename)){file.remove(filename)}#remove file
-write.matrix(temp,file=filename)
-
-#lapply(t(temp), write, filename, append=TRUE, ncolumns=1000)#write to file
 visible(Catchcurvegraphic) <- TRUE #make correct picture
  }
 
+<<<<<<< HEAD
 
 datetmp <- NA
 data <- NA
@@ -309,6 +312,13 @@ SeasonalCatchgraphic<- ggraphics(container = SeasonalCatchpic,width=700,height=5
 
 
 
+=======
+ plot=gbutton("Make the plots",handler=plotseacatch)
+ tmp=gframe("Plot",container=SeasonalCatchlittle)
+ add(tmp, plot, expand=TRUE)
+
+
+>>>>>>> 2ece7a0256cbc8403ffc4c5978cc30daf10806a8
 RecruitmentPattern <- ggroup(container = nb,label="Recruitment Pattern", expand=TRUE,horizontal=TRUE)#make entry gr
 RecruitmentPatternlittle <- ggroup(container=RecruitmentPattern,expand=FALSE,horizontal=FALSE)# make little entry group
 
