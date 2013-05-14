@@ -281,7 +281,7 @@ visible(Catchcurvegraphic) <- TRUE #make correct picture
 
 
 plotseacatch <- function(h,...){ 
-visible(Catchcurvegraphic) <- TRUE #make correct picture
+visible(SeasonalCatchgraphic) <- TRUE #make correct picture
 temp<- plotseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Cslidec),svalue(TWslidec))
 Datatablemodified[] <- temp
 Datatablemodified[] <- temp
@@ -300,7 +300,8 @@ data <- NA
 #visible(nb[1]) <- TRUE
 SeasonalCatch <- ggroup(container = nb,label="Seasonal Catch Curve", expand=TRUE,horizontal=TRUE)#make entry gr
 SeasonalCatchlittle <- ggroup(container=SeasonalCatch,expand=FALSE,horizontal=FALSE)# make little entry group
-SeasonalCatchcurvegraphic<- ggraphics(container = SeasonalCatchcurvepic,width=700,height=500,label="Catch Curve Plot Seasonal")
+SeasonalCatchpic<- gnotebook(container=SeasonalCatch,expand=TRUE)#create the Entry pic.
+SeasonalCatchgraphic<- ggraphics(container = SeasonalCatchpic,width=700,height=500,label="Catch Curve Plot Seasonal")
 
  plot=gbutton("Make the plots",handler=plotseacatch)
  tmp=gframe("Plot",container=SeasonalCatchlittle)

@@ -63,13 +63,17 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   youngest <- max(which(lfdata[1,]>0))            #get oldest fish
   oldest <- min(which(lfdata[length(lfdata[,1]),]>0)) #get youngest fish.
   # compute growth curve that goes through oldest and youngest
-  gcurve1 <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,lfdata,youngest,data$ML[1])#compute growth curve that goes through oldest
-  gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,lfdata,oldest,data$ML[length(data$ML)])#compute growth curve that goes through youngest
+  gcurve1 <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,youngest,data$ML[1],BIRTHDAY)#compute growth curve that goes through oldest
+  gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,oldest,data$ML[length(data$ML)],BIRTHDAY)#compute growth curve that goes through youngest
 
  tzero <- ceiling(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=5))
+ gcurvemain <- matrix(0,nrow=5,ncol=days)
+ for( i in 1:5){
+   print(i)
+ tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,tzero[i],0,BIRTHDAY)$c
+ gcurvemain[i,1:days] <- as.vector(tempered[1:days,3])
+}
   
- tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,lfdata,tzero[3],0)$c
- gcurvemain <- as.vector(tempered[,3])
  timeblue <- as.vector(tempered[,1])
 
 
