@@ -11,7 +11,7 @@ source("R/main.R")
 sourceCpp("src/growth_curve.cpp") #compiles and sources. 
 #create the Main window.
 
-size=100
+size=1000
 window = gwindow("New ELEFAN",height=size,width=1.618*size,visible=TRUE)
 biggroup <- ggroup(container=window,expand=TRUE,horizontal=FALSE)
 
@@ -294,16 +294,19 @@ write.matrix(temp,file=filename)
 visible(Catchcurvegraphic) <- TRUE #make correct picture
  }
 
- plot=gbutton("Make the plots",handler=plotseacatch)
- tmp=gframe("Plot",container=Catchcurvelittle)
- add(tmp, plot, expand=TRUE)
-
 
 datetmp <- NA
 data <- NA
 #visible(nb[1]) <- TRUE
 SeasonalCatch <- ggroup(container = nb,label="Seasonal Catch Curve", expand=TRUE,horizontal=TRUE)#make entry gr
 SeasonalCatchlittle <- ggroup(container=SeasonalCatch,expand=FALSE,horizontal=FALSE)# make little entry group
+SeasonalCatchcurvegraphic<- ggraphics(container = SeasonalCatchcurvepic,width=700,height=500,label="Catch Curve Plot Seasonal")
+
+ plot=gbutton("Make the plots",handler=plotseacatch)
+ tmp=gframe("Plot",container=SeasonalCatchlittle)
+ add(tmp, plot, expand=TRUE)
+
+
 
 RecruitmentPattern <- ggroup(container = nb,label="Recruitment Pattern", expand=TRUE,horizontal=TRUE)#make entry gr
 RecruitmentPatternlittle <- ggroup(container=RecruitmentPattern,expand=FALSE,horizontal=FALSE)# make little entry group
