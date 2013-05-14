@@ -282,12 +282,6 @@ visible(Catchcurvegraphic) <- TRUE #make correct picture
 
 
 
-datetmp <- NA
-data <- NA
-#visible(nb[1]) <- TRUE
-SeasonalCatch <- ggroup(container = nb,label="Seasonal Catch Curve", expand=TRUE,horizontal=TRUE)#make entry gr
-SeasonalCatchlittle <- ggroup(container=SeasonalCatch,expand=FALSE,horizontal=FALSE)# make little entry group
-
 plotseacatch <- function(h,...){ 
 visible(SeasonalCatchgraphic) <- TRUE #make correct picture
 temp<- plotseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Cslidec),svalue(TWslidec))
@@ -297,9 +291,19 @@ visible(Catchcurvegraphic) <- TRUE #make correct picture
  }
 
 
+plotrecruit <- function(h,...){ 
+visible(RecruitmentPatterngraphic) <- TRUE #make correct picture
+temp<- plotseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Cslidec),svalue(TWslidec))
+Datatablemodified[] <- temp
+Datatablemodified[] <- temp
+visible(RecruitmentPatterngraphic) <- TRUE #make correct picture
+ }
+
+
 
 datetmp <- NA
 data <- NA
+
 #visible(nb[1]) <- TRUE
 SeasonalCatch <- ggroup(container = nb,label="Seasonal Catch Curve", expand=TRUE,horizontal=TRUE)#make entry gr
 SeasonalCatchlittle <- ggroup(container=SeasonalCatch,expand=FALSE,horizontal=FALSE)# make little entry group
@@ -313,8 +317,18 @@ SeasonalCatchgraphic<- ggraphics(container = SeasonalCatchpic,width=700,height=5
 
 
 
-RecruitmentPattern <- ggroup(container = nb,label="Recruitment Pattern", expand=TRUE,horizontal=TRUE)#make entry gr
+#visible(nb[1]) <- TRUE
+RecruitmentPattern <- ggroup(container = nb,label="Recruitment Pattern Curve", expand=TRUE,horizontal=TRUE)#make entry gr
 RecruitmentPatternlittle <- ggroup(container=RecruitmentPattern,expand=FALSE,horizontal=FALSE)# make little entry group
+RecruitmentPatternpic<- gnotebook(container=RecruitmentPattern,expand=TRUE)#create the Entry pic.
+RecruitmentPatterngraphic<- ggraphics(container = RecruitmentPatternpic,width=700,height=500,label="Catch Curve Plot Seasonal")
+
+ plot=gbutton("Make the plots",handler=plotrecruit)
+ tmp=gframe("Plot",container=RecruitmentPatternlittle)
+ add(tmp, plot, expand=TRUE)
+
+
+
 
 
 YeildperRecruit <- ggroup(container = nb,label="Yield Per Recruit", expand=TRUE,horizontal=TRUE)#make entry gr
