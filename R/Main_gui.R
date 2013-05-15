@@ -29,6 +29,9 @@ Entry <- ggroup(container = nb,label="Tab. data", expand=TRUE,horizontal=TRUE)#m
 addSpace(biggroup,300,horizontal=FALSE)
 Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE,height=30)# make little entry group
 
+#Add ELEFAN in R logo at the top of the page
+gimage("png/logo1.png",dirname=getwd(),container=Entrylittle)
+
 Entrypic<- gnotebook(container=Entry,expand=TRUE)#create the Entry pic.
 Datetable<- gtable(datetmp,container=Entrypic,label="Date")
 Datatable<- gtable(data,container=Entrypic,label="Data")
@@ -74,10 +77,12 @@ tmp = gframe("Read in date file", container = Entrylittle)
 add(tmp, readdatefile, expand=TRUE)
 tmp = gframe("Read in length file", container = Entrylittle)
 add(tmp, readlengthfile, expand=TRUE)
-addSpace(Entrylittle,700,horizontal=FALSE)# needs to be tuned for each slide
+
+#Add sponsors logo at the bottom of the page
+addSpace(Entrylittle,439,horizontal=FALSE)# spacing needs to be tuned for each slide
 #addSpring(Entrylittle)
 Entrylogo <- ggroup(container=Entrylittle,expand=TRUE,horizontal=FALSE,width=200)# make little entry group
-gimage("png/usaid.png",dirname=getwd(),container=Entrylogo)
+gimage("png/logo2.png",dirname=getwd(),container=Entrylogo)
 
 
 ## ## #Make Length Frequency plot window.
@@ -86,9 +91,11 @@ LFplot <- ggroup(container = nb,label="L/F", expand=TRUE,horizontal=TRUE)#make e
 LFplotlittle <- ggroup(container=LFplot,expand=FALSE,horizontal=FALSE,width=200)# make little entry group  
 LFpic<- gnotebook(container=LFplot,expand=TRUE)#create the Entry pic.
 
+#Add ELEFAN in R logo at the top of the page
+gimage("png/logo1.png",dirname=getwd(),container=LFplotlittle)
+
 histgraphic<- ggraphics(container = LFpic,width=700,height=500,label="LF Plot")
 refactorgraphic<- ggraphics(container = LFpic,width=700,height=500,label="Restructured Plot")
-LFplotlogo <- ggroup(container=LFplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 
 
 Linfslide = gslider(from=1,to=10,length.out=100,value=2)
@@ -118,7 +125,7 @@ add(tmp, scaleslide, expand=TRUE)
   midlength <- gdroplist(list(1:20*0))
   tmp <- gframe("Mid Length",container=LFplotlittle)
   add(tmp,midlength, expand=TRUE) 
-gimage("png/usaid.png",dirname=getwd(),container=LFplotlogo)
+#gimage("png/usaid.png",dirname=getwd(),container=LFplotlogo)
 plotlf <- function(h,...){
   sdate <- as.numeric(svalue(stdate))
   sdate <- sdate+1#converting to real sample number.
@@ -134,14 +141,20 @@ plotlf <- function(h,...){
  tmp=gframe("Plot",container=LFplotlittle)
  add(tmp, plot, expand=TRUE)
 
+#Add sponsors logo at the bottom of the page
+addSpace(LFplotlittle,100,horizontal=FALSE)# spacing needs to be tuned for each slide
+LFplotlogo <- ggroup(container=LFplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+gimage("png/logo2.png",dirname=getwd(),container=LFplotlogo)
+
 ## ## ## ## #Make Wetherall plot Window
 Wetherallplot <- ggroup(container = nb,label="W. plot", expand=TRUE,horizontal=TRUE)#make entry group
 Wetherallplotlittle <- ggroup(container=Wetherallplot,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 Wetherallpic<- gnotebook(container=Wetherallplot,expand=TRUE)#create the Entry pic.
 Wetherallgraphic<- ggraphics(container = Wetherallpic,width=700,height=500,label="Wetherall Plot")
 
-Wetherallplotlogo <- ggroup(container=Wetherallplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
-gimage("png/usaid.png",dirname=getwd(),container=Wetherallplotlogo)
+#Add ELEFAN in R logo at the top of the page
+gimage("png/logo1.png",dirname=getwd(),container=Wetherallplotlittle)
+
 
 Pointslide = gslider(from=1,to=50,by=1,value=4)
 tmp = gframe("#number of points", container = Wetherallplotlittle)
@@ -158,14 +171,21 @@ tmp=gframe("Plot",container=Wetherallplotlittle)
 add(tmp, plot, expand=TRUE)
 
 
+#Add sponsors logo at the bottom of the page
+addSpace(Wetherallplotlittle,426,horizontal=FALSE)# spacing needs to be tuned for each slide
+Wetherallplotlogo <- ggroup(container=Wetherallplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+gimage("png/logo2.png",dirname=getwd(),container=Wetherallplotlogo)
 
 ## ## ## ## # Make Kscan Window
 Kscanplot <- ggroup(container = nb,label="K-scan", expand=TRUE,horizontal=TRUE)#make entry group
 Kscanplotlittle <- ggroup(container=Kscanplot,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 Kscanplotpic<- gnotebook(container=Kscanplot,expand=TRUE)#create the Entry pic.
 Kscangraphic<- ggraphics(container = Kscanplotpic,width=700,height=500,label="K Scan")
-Kscanplotlogo <- ggroup(container=Kscanplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
-gimage("png/usaid.png",dirname=getwd(),container=Kscanplotlogo)
+
+#Add ELEFAN in R logo at the top of the page
+gimage("png/logo1.png",dirname=getwd(),container=Kscanplotlittle)
+
+
 Linfslidek = gslider(from=1,to=10,length.out=100,value=2)
 tmp = gframe("Linf", container = Kscanplotlittle)
 add(tmp, Linfslidek, expand=TRUE)
@@ -214,6 +234,10 @@ plot=gbutton("Fixed Kscan",handler=plotfixedkscan)
 tmp=gframe("Plot",container=Kscanplotlittle)
 add(tmp, plot, expand=TRUE)
 
+#Add sponsors logo at the bottom of the page
+addSpace(Kscanplotlittle,19,horizontal=FALSE)# spacing needs to be tuned for each slide
+Kscanplotlogo <- ggroup(container=Kscanplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+gimage("png/logo2.png",dirname=getwd(),container=Kscanplotlogo)
 
 
 
@@ -224,9 +248,11 @@ Catchcurveplot <- ggroup(container = nb,label="C.C. I", expand=TRUE,horizontal=T
 Catchcurvelittle <- ggroup(container=Catchcurveplot,expand=FALSE,horizontal=FALSE,with=200)# make little entry group
 Catchcurvepic<- gnotebook(container=Catchcurveplot,expand=TRUE)#create the Entry pic.
 Catchcurvegraphic<- ggraphics(container = Catchcurvepic,width=700,height=500,label="Catch Curve Plot Non Seasonal")
-Catchcurvelogo <- ggroup(container=Catchcurvelittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 Datatablemodified<- gtable(data,container=Catchcurvepic,label="Modified Data")
-gimage("png/usaid.png",dirname=getwd(),container=Catchcurvelogo)
+
+#Add ELEFAN in R logo at the top of the page
+gimage("png/logo1.png",dirname=getwd(),container=Catchcurvelittle)
+
 
 Klocslidec=gslider(from=0,to=1,by=.01,value=0)
 tmp = gframe("K", container = Catchcurvelittle)
@@ -302,6 +328,13 @@ visible(Catchcurvegraphic) <- TRUE #make correct picture
 datetmp <- NA
 data <- NA
 #visible(nb[1]) <- TRUE
+
+#Add sponsors logo at the bottom of the page
+addSpace(Catchcurvelittle,79,horizontal=FALSE)# spacing needs to be tuned for each slide
+Catchcurvelogo <- ggroup(container=Catchcurvelittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+gimage("png/logo2.png",dirname=getwd(),container=Catchcurvelogo)
+
+
 SeasonalCatch <- ggroup(container = nb,label="C.C. II", expand=TRUE,horizontal=TRUE)#make entry gr
 SeasonalCatchlittle <- ggroup(container=SeasonalCatch,expand=FALSE,horizontal=FALSE)# make little entry group
 
