@@ -25,7 +25,7 @@ nb <- gnotebook(container=biggroup,expand=TRUE,horizontal=TRUE)
 datetmp <- NA
 data <- NA
 #visible(nb[1]) <- TRUE
-Entry <- ggroup(container = nb,label="Data Display", expand=TRUE,horizontal=TRUE)#make entry gr
+Entry <- ggroup(container = nb,label="Tab. data", expand=TRUE,horizontal=TRUE)#make entry gr
 addSpace(biggroup,300,horizontal=FALSE)
 Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE,height=30)# make little entry group
 
@@ -82,7 +82,7 @@ gimage("png/usaid.png",dirname=getwd(),container=Entrylogo)
 
 ## ## #Make Length Frequency plot window.
 
-LFplot <- ggroup(container = nb,label="Length Frequency Plots", expand=TRUE,horizontal=TRUE)#make entry group
+LFplot <- ggroup(container = nb,label="L/F", expand=TRUE,horizontal=TRUE)#make entry group
 LFplotlittle <- ggroup(container=LFplot,expand=FALSE,horizontal=FALSE,width=200)# make little entry group  
 LFpic<- gnotebook(container=LFplot,expand=TRUE)#create the Entry pic.
 
@@ -135,7 +135,7 @@ plotlf <- function(h,...){
  add(tmp, plot, expand=TRUE)
 
 ## ## ## ## #Make Wetherall plot Window
-Wetherallplot <- ggroup(container = nb,label="Wetherall Plot", expand=TRUE,horizontal=TRUE)#make entry group
+Wetherallplot <- ggroup(container = nb,label="W. plot", expand=TRUE,horizontal=TRUE)#make entry group
 Wetherallplotlittle <- ggroup(container=Wetherallplot,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 Wetherallpic<- gnotebook(container=Wetherallplot,expand=TRUE)#create the Entry pic.
 Wetherallgraphic<- ggraphics(container = Wetherallpic,width=700,height=500,label="Wetherall Plot")
@@ -160,7 +160,7 @@ add(tmp, plot, expand=TRUE)
 
 
 ## ## ## ## # Make Kscan Window
-Kscanplot <- ggroup(container = nb,label="K scan", expand=TRUE,horizontal=TRUE)#make entry group
+Kscanplot <- ggroup(container = nb,label="K-scan", expand=TRUE,horizontal=TRUE)#make entry group
 Kscanplotlittle <- ggroup(container=Kscanplot,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 Kscanplotpic<- gnotebook(container=Kscanplot,expand=TRUE)#create the Entry pic.
 Kscangraphic<- ggraphics(container = Kscanplotpic,width=700,height=500,label="K Scan")
@@ -219,7 +219,7 @@ add(tmp, plot, expand=TRUE)
 
 ## #Make Catch curve wind-points-pointsow
 
-Catchcurveplot <- ggroup(container = nb,label="Catch Curve", expand=TRUE,horizontal=TRUE)#make entry group
+Catchcurveplot <- ggroup(container = nb,label="C.C. I", expand=TRUE,horizontal=TRUE)#make entry group
 
 Catchcurvelittle <- ggroup(container=Catchcurveplot,expand=FALSE,horizontal=FALSE,with=200)# make little entry group
 Catchcurvepic<- gnotebook(container=Catchcurveplot,expand=TRUE)#create the Entry pic.
@@ -302,18 +302,18 @@ visible(Catchcurvegraphic) <- TRUE #make correct picture
 datetmp <- NA
 data <- NA
 #visible(nb[1]) <- TRUE
-SeasonalCatch <- ggroup(container = nb,label="Seasonal Catch Curve", expand=TRUE,horizontal=TRUE)#make entry gr
+SeasonalCatch <- ggroup(container = nb,label="C.C. II", expand=TRUE,horizontal=TRUE)#make entry gr
 SeasonalCatchlittle <- ggroup(container=SeasonalCatch,expand=FALSE,horizontal=FALSE)# make little entry group
 
-RecruitmentPattern <- ggroup(container = nb,label="Recruitment Pattern", expand=TRUE,horizontal=TRUE)#make entry gr
+RecruitmentPattern <- ggroup(container = nb,label="Recr.", expand=TRUE,horizontal=TRUE)#make entry gr
 RecruitmentPatternlittle <- ggroup(container=RecruitmentPattern,expand=FALSE,horizontal=FALSE)# make little entry group
 
 
-YeildperRecruit <- ggroup(container = nb,label="Yield Per Recruit", expand=TRUE,horizontal=TRUE)#make entry gr
+YeildperRecruit <- ggroup(container = nb,label="Y/R", expand=TRUE,horizontal=TRUE)#make entry gr
 YeildperRecruitlittle <- ggroup(container=YeildperRecruit,expand=FALSE,horizontal=FALSE)# make little entry group
 
 
-BiomassperRecruit <- ggroup(container = nb,label="Biomass Per Recruit", expand=TRUE,horizontal=TRUE)#make entry gr
+BiomassperRecruit <- ggroup(container = nb,label="B/R", expand=TRUE,horizontal=TRUE)#make entry gr
 BiomassperRecruit <- ggroup(container=BiomassperRecruit,expand=FALSE,horizontal=FALSE)# make little entry group
 
 svalue(nb)=1
