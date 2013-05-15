@@ -9,12 +9,11 @@ Title: A package for ELectronic Length Frequency ANalysis of fish
 Description: A method for the "tracing" of growth curves through fish length-frequency samples sequentially arranged in time.  The method allows 
 			for an objective extraction  of growth parameters whenever representative samples are available from a fish population.  The method is 
 			suited both to the analysis of growth in tropical stocks and in temperate stocks where it oscillates seasonally.
-
-Depends: compiler
-         Rcpp
-         PBSmodelling
-         MASS
-         gWidgets
+Depends: compiler,
+         Rcpp,
+         PBSmodelling,
+         MASS,
+         gWidgets,
          gWidgetsRGtk2
 Collate:
     'ELEFAN3-package.r'
