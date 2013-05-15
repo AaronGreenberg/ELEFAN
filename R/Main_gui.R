@@ -2,7 +2,7 @@
 ## Just showing Danielle how pull requests work
 ## for relative paths to work.
 ### Change below:
-setwd("~/ELEFAN")
+#setwd("../")
 library(gWidgets)
 library(MASS)
 library(Rcpp) # connects to c++ programs
@@ -12,7 +12,7 @@ sourceCpp("src/growth_curve.cpp") #compiles and sources.
 #create the Main window.
 
 size=100
-window = gwindow("New ELEFAN",height=size,width=1.618*size,visible=TRUE)
+window = gwindow("ELEFAN in R",height=size,width=1.618*size,visible=TRUE)
 biggroup <- ggroup(container=window,expand=TRUE,horizontal=FALSE)
 
 #make big note book!
@@ -89,7 +89,7 @@ LFpic<- gnotebook(container=LFplot,expand=TRUE)#create the Entry pic.
 histgraphic<- ggraphics(container = LFpic,width=700,height=500,label="LF Plot")
 refactorgraphic<- ggraphics(container = LFpic,width=700,height=500,label="Restructured Plot")
 LFplotlogo <- ggroup(container=LFplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
-gimage("png/usaid.png",dirname=getwd(),container=LFplotlogo)
+
 
 Linfslide = gslider(from=1,to=10,length.out=100,value=2)
 tmp = gframe("Linf", container = LFplotlittle)
@@ -118,7 +118,7 @@ add(tmp, scaleslide, expand=TRUE)
   midlength <- gdroplist(list(1:20*0))
   tmp <- gframe("Mid Length",container=LFplotlittle)
   add(tmp,midlength, expand=TRUE) 
- 
+gimage("png/usaid.png",dirname=getwd(),container=LFplotlogo)
 plotlf <- function(h,...){
   sdate <- as.numeric(svalue(stdate))
   sdate <- sdate+1#converting to real sample number.
