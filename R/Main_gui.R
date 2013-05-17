@@ -2,7 +2,7 @@
 ## Just showing Danielle how pull requests work
 ## for relative paths to work.
 ### Change below:
-#setwd("../")
+setwd("../")
 library(gWidgets)
 library(MASS)
 library(Rcpp) # connects to c++ programs
@@ -11,8 +11,9 @@ source("R/main.R")
 sourceCpp("src/growth_curve.cpp") #compiles and sources. 
 #create the Main window.
 
-size=100
+size=1000
 window = gwindow("ELEFAN in R",height=size,width=1.618*size,visible=TRUE)
+
 biggroup <- ggroup(container=window,expand=TRUE,horizontal=FALSE)
 
 #make big note book!
@@ -312,27 +313,36 @@ visible(Catchcurvegraphic) <- TRUE #make correct picture
 
 
 
+
+
 plotseacatch <- function(h,...){ 
-visible(Catchcurvegraphic) <- TRUE #make correct picture
+visible(SeasonalCatchgraphic) <- TRUE #make correct picture
 temp<- plotseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Cslidec),svalue(TWslidec))
 Datatablemodified[] <- temp
 Datatablemodified[] <- temp
-filename <- (paste(fname2,"corrected.dat",sep="_"))
-print(temp)
-if(file.exists(filename)){file.remove(filename)}#remove file
-write.matrix(temp,file=filename)
-
-#lapply(t(temp), write, filename, append=TRUE, ncolumns=1000)#write to file
 visible(Catchcurvegraphic) <- TRUE #make correct picture
  }
+
+
+
+plotrecruit <- function(h,...){ 
+visible(RecruitmentPatterngraphic) <- TRUE #make correct picture
+temp<- plotseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Cslidec),svalue(TWslidec))
+Datatablemodified[] <- temp
+Datatablemodified[] <- temp
+visible(RecruitmentPatterngraphic) <- TRUE #make correct picture
+ }
+
 
  plot=gbutton("Make plot",handler=plotseacatch)
  tmp=gframe("Plot",container=Catchcurvelittle)
  add(tmp, plot, expand=FALSE)
 
 
+
 datetmp <- NA
 data <- NA
+
 #visible(nb[1]) <- TRUE
 
 #Add sponsors logo at the bottom of the page
@@ -343,9 +353,27 @@ gimage("png/logo2.png",dirname=getwd(),container=Catchcurvelogo)
 
 SeasonalCatch <- ggroup(container = nb,label="C.C. II", expand=TRUE,horizontal=TRUE)#make entry gr
 SeasonalCatchlittle <- ggroup(container=SeasonalCatch,expand=FALSE,horizontal=FALSE)# make little entry group
+SeasonalCatchpic<- gnotebook(container=SeasonalCatch,expand=TRUE)#create the Entry pic.
+SeasonalCatchgraphic<- ggraphics(container = SeasonalCatchpic,width=700,height=500,label="Catch Curve Plot Seasonal")
+
+ plot=gbutton("Make the plots",handler=plotseacatch)
+ tmp=gframe("Plot",container=SeasonalCatchlittle)
+ add(tmp, plot, expand=TRUE)
+
+
 
 RecruitmentPattern <- ggroup(container = nb,label="Recr.", expand=TRUE,horizontal=TRUE)#make entry gr
+
 RecruitmentPatternlittle <- ggroup(container=RecruitmentPattern,expand=FALSE,horizontal=FALSE)# make little entry group
+RecruitmentPatternpic<- gnotebook(container=RecruitmentPattern,expand=TRUE)#create the Entry pic.
+RecruitmentPatterngraphic<- ggraphics(container = RecruitmentPatternpic,width=700,height=500,label="Catch Curve Plot Seasonal")
+
+ plot=gbutton("Make the plots",handler=plotrecruit)
+ tmp=gframe("Plot",container=RecruitmentPatternlittle)
+ add(tmp, plot, expand=TRUE)
+
+
+
 
 
 YeildperRecruit <- ggroup(container = nb,label="Y/R", expand=TRUE,horizontal=TRUE)#make entry gr
