@@ -71,10 +71,11 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
 
  tzero <- ceiling(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=5))
  gcurvemain <- matrix(0,nrow=5,ncol=days)
+  
  for( i in 1:5){
    print(i)
  tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,tzero[i],0,BIRTHDAY)$c
- gcurvemain[i,1:days] <- as.vector(tempered[1:days,3])
+ gcurvemain[i,z] <- as.vector(tempered[z,3])
 }
   
 
