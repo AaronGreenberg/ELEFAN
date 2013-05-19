@@ -7,7 +7,7 @@ library(gWidgets)
 library(MASS)
 library(Rcpp) # connects to c++ programs
 options("guiToolkit"="RGtk2")
-#source("R/main.R")
+source("R/main.R")
 sourceCpp("src/growth_curve.cpp") #compiles and sources. 
 #create the Main window.
 
