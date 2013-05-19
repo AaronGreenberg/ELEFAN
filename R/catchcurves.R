@@ -70,13 +70,11 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,oldest,data$ML[length(data$ML)],BIRTHDAY)#compute growth curve that goes through youngest
 
  tzero <- ceiling(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=5))
- gcurvemain <- matrix(0,nrow=5,ncol=days)
+# gcurvemain <- matrix(0,nrow=5,ncol=days)
   
- for( i in 1:5){
-   print(i)
- tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,tzero[i],0,BIRTHDAY)$c
- gcurvemain[i,z] <- as.vector(tempered[z,3])
-}
+ tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,tzero[2],0,BIRTHDAY)$c
+ gcurvemain <- as.vector(tempered[,3])
+
   
 
  timeblue <- as.vector(tempered[,1])
