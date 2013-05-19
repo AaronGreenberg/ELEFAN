@@ -68,9 +68,11 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
 
   gcurve1 <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,youngest,data$ML[1],BIRTHDAY)#compute growth curve that goes through oldest
   gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,oldest,data$ML[length(data$ML)],BIRTHDAY)#compute growth curve that goes through youngest
-
+  index <- which(colSums(lfdata)>0)
+  print("index where lfdata not equal zero")
+  print(index)
  tzero <- ceiling(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=5))
-# gcurvemain <- matrix(0,nrow=5,ncol=days)
+# gcurvemain <- 0*lfdata
   
  tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,tzero[2],0,BIRTHDAY)$c
  gcurvemain <- as.vector(tempered[,3])
