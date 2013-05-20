@@ -1,3 +1,6 @@
+#' Minimal doc
+#' @description minimal documentation for roxygen purposes and could be added later 
+#' @export
 
 plotnonseacatchcurve <- function(Kloc=K,Linfloc=Linf,pointsupper,pointslower){
 #time to compute the standard length-converted catch curves :LCC1 sec 2.2 pg2
