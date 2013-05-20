@@ -3,7 +3,7 @@
 #' @export
 
 plotnonseacatchcurve <- function(Kloc=K,Linfloc=Linf,pointsupper,pointslower){
-#time to compute the standard length-converted catch curves :LCC1 sec 2.2 pg2
+#time to catchompute the standard length-converted catch curves :LCC1 sec 2.2 pg2
 #first I compute the number of fish caught in each age class.
   print(Kloc)
   print(Linfloc)

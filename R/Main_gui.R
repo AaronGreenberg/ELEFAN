@@ -16,6 +16,8 @@
 ELEFAN_gui <- function(){
 
 my_path <- paste(.libPaths()[1],"/ELEFAN",sep="")
+sourceCpp(paste(my_path, "/source/growth_curve.cpp",sep="")) #compiles and sources. 
+
 size=1000
 window = gwindow("ELEFAN in R",height=size,width=1.618*size,visible=TRUE)
 
