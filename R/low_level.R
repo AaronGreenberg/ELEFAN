@@ -4,13 +4,13 @@
 #' This is a really sparse structure, but it allows us keep time proportional.
 #' @export
 
-fillgrowthdata <- function(date,data,growthdata){ 
+fillgrowthdata <- function(datein,datain,growthdata){ 
   interval <- vector()
-  for(i in 1:(length(date$Date)-1)){    # compute intervals between dates so that dates are stored correctly. 
-    interval[i]=date$Date[i+1]-date$Date[1]
+  for(i in 1:(length(datein$Date)-1)){    # compute intervals between dates so that dates are stored correctly. 
+    interval[i]=datein$Date[i+1]-datein$Date[1]
   }
-  for(i in 1:(length(date$Date)-1)){    #assign length frequency data to big array of date length frequency data
-    growthdata[,interval[i]]=data[,i+1]
+  for(i in 1:(length(datein$Date)-1)){    #assign length frequency data to big array of date length frequency data
+    growthdata[,interval[i]]=datain[,i+1]
   }
   return(growthdata)# return data structure with either zeros or length frequency data by day
 }
@@ -79,15 +79,15 @@ gf <- 10^(esp$esp/asp)/10}
 cgfcompute <- cmpfun(gfcompute)
 
 
-wetherall <- function(da=data,points=3){
-  data2 <- data
+wetherall <- function(da=datain,points=3){
+  data2 <- datain
   data2$ML <- data$ML*0
   z <- rowSums(data2)#sum up all the frequencies
   points <- points-1
   Li=Liprime=z*0
   for(i in 1:length(data2$ML)){
-    Li[i]=data$ML[i]-(data$ML[2]-data$ML[1])/2    #get list of cut off values
-    Liprime[i]=sum(data$ML[i:length(data$ML)]*z[i:length(data$ML)])/sum(z[i:length(data$ML)])  #get list scaled mean lengths
+    Li[i]=datain$ML[i]-(datain$ML[2]-datain$ML[1])/2    #get list of cut off values
+    Liprime[i]=sum(datain$ML[i:length(datain$ML)]*z[i:length(datain$ML)])/sum(z[i:length(datain$ML)])  #get list scaled mean lengths
   }
 #  points=8
   Lipoints=Liprime[(length(Liprime)-points):length(Liprime)]
@@ -126,10 +126,10 @@ kscan <- function(Linf=Linf,cloc=cloc,tw=tw){
   print(paste("Linf","c","tw"))
   temp <- c(Linf,cloc,tw)
   d=days
-  dat=data
+  dat=datain
   #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
   growthdata <- matrix(0,ncol=d,nrow=lfbin)
-  lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
+  lfdata<- fillgrowthdata(datein,dat,growthdata) #make data structure with length frequency data
   peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
   asp <- aspcompute(peaks)                      #compute asp
   K <- exp(seq(log(.1),log(10),length.out=100))
@@ -169,9 +169,9 @@ ckscan <- cmpfun(kscan)
 
 fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,C=C,tw=tw){
   d=days
-  dat=data
+  dat=datain
   growthdata <- matrix(0,ncol=d,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-  lfdata<- fillgrowthdata(date,dat,growthdata) #make data structure with length frequency data
+  lfdata<- fillgrowthdata(datein,dat,growthdata) #make data structure with length frequency data
   peaks <- lfrestruc(lfdata)                    #create restructure lfdata into peaks and valleys.
   fn <- function(dayl,lfdata){sum(lfdata[,dayl])}
   temp <- sapply(1:d,fn,lfdata)
