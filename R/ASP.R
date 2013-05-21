@@ -1,7 +1,8 @@
-## % ~~~~THIS FILE COMPUTES AVALIABLE SUMS OF PEAKS.
-## %############################################################
-## %############################################################
-## % 
+#' Minimal doc
+#' @description minimal documentation for roxygen purposes and could be added later 
+#' @export
+
+
 
 ##ROUTINES 
 
@@ -104,7 +105,7 @@ availablesumpeaks <- function(x){
 ## %############################################################
 ## %
 
-main1 <- function(data){#This function just puts things in order and returns a appropreate data structure
+main1 <- function(datain){#This function just puts things in order and returns a appropreate data structure
 datatmp <- NULL
 datatmp$OBS <-data
 datatmp$A <- ma5(datatmp$OBS)           #first moving average
