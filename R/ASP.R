@@ -105,7 +105,7 @@ availablesumpeaks <- function(x){
 ## %############################################################
 ## %
 
-main1 <- function(data){#This function just puts things in order and returns a appropreate data structure
+main1 <- function(datain){#This function just puts things in order and returns a appropreate data structure
 datatmp <- NULL
 datatmp$OBS <-data
 datatmp$A <- ma5(datatmp$OBS)           #first moving average

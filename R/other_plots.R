@@ -8,15 +8,15 @@ plotpeak <- function(Linf,K,Cseasonal,tw,ptype,sdate,ML,scale){#function(d=days,
 goodfit <- NULL
 #getWinVal(scope="L")
 
-startdate <- as.Date(date[sdate,1])
+startdate <- as.Date(datein[sdate,1])
 print("start date")
 print(startdate)
 print(c(Linf,Cseasonal,K))
-startime <- as.numeric(startdate-date[1,1])
+startime <- as.numeric(startdate-datein[1,1])
 ML <- as.numeric(ML)
 #need to convert start date to dime.
 growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
+lfdata<- fillgrowthdata(datein,datain,growthdata) #make data structure with length frequency data
 #head(lfdata)
 peaks <- lfrestruc(lfdata)                  #create restructure lfdata into peaks and valleys.
 if(K!=0){
@@ -27,7 +27,7 @@ print(length(gcurve$c[,1]))
 
 
 asp <- aspcompute(peaks)                      #compute asp
-esp <- espcompute(gcurve,peaks$out,days,data$ML)               #compute esp
+esp <- espcompute(gcurve,peaks$out,days,datain$ML)               #compute esp
 gf <- gfcompute(asp,esp)
 print("goodfit")
 print(gf)
@@ -36,15 +36,15 @@ gf <- 0
 gcurve <- matrix(0,4,ncol=4)        #initalize growth curve data structure
 gcurve$c <- matrix(0,4,ncol=4)
 }
-print(date)
+print(datein)
 if(ptype=="Peaks"){
 #  png("lfplot1.png",width=1000,height=1000)
-  rqFreqPlot(1:days,data$ML,peaks$out,startime,ML,gcurve,date,barscale=scale,GF=signif(gf,4),birthday=BIRTHDAY)
+  rqFreqPlot(1:days,datain$ML,peaks$out,startime,ML,gcurve,datein,barscale=scale,GF=signif(gf,4),birthday=BIRTHDAY)
 #  dev.off()
 }
 if(ptype=="LF"){
 #  png("lfplot2.png",width=1000,height=1000)
-  rqFreqPlot(1:days,data$ML,lfdata,startime,ML,gcurve,date,barscale=scale,GF=signif(gf,4),birthday=BIRTHDAY)
+  rqFreqPlot(1:days,datain$ML,lfdata,startime,ML,gcurve,datein,barscale=scale,GF=signif(gf,4),birthday=BIRTHDAY)
 #  dev.off()
 }
 

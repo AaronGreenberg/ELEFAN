@@ -51,32 +51,32 @@ Datatable<- gtable(data,container=Entrypic,label="Data")
 #I need handlers.
 datefileinh <- function(h,...){
   datefilein()
-  datetmp <- date
+  datetmp <- datein
   print("gui Date")
-  print(date)
-  datetmp[,1] <- as.character(date[,1])
-  datetmp[,1] <- as.character(date[,1])
+  print(datein)
+  datetmp[,1] <- as.character(datein[,1])
+  datetmp[,1] <- as.character(datein[,1])
   visible(Datetable) <- FALSE
   Datetable[] <- datetmp
   Datetable[] <- datetmp
-  stdate[] <- 1:length(date[,2])
-  stdatek[] <- 1:length(date[,2])
+  stdate[] <- 1:length(datein[,2])
+  stdatek[] <- 1:length(datein[,2])
   visible(Datetable) <- TRUE
   }
 lffileinh <- function(h,...){
   lffilein()
   visible(Datatable) <- FALSE
-  Datatable[] <- data
-  Datatable[] <- data
+  Datatable[] <- datain
+  Datatable[] <- datain
   visible(Datatable) <- TRUE
-  Linfslide[] <- seq(0,1.2*max(data$ML),length.out=100)
-  Linfslidek[] <- seq(0,1.2*max(data$ML),length.out=100)
-  Linfslidec[] <- seq(0,1.22*max(data$ML),length.out=100)
-  Pointslide[] <- 2:length(data$ML)
-  Pointslideuc[] <- 1:length(data$ML)
-  Pointslidelc[] <- 1:length(data$ML)
-  midlength[] <- data$ML
-  midlengthk[] <- data$ML
+  Linfslide[] <- seq(0,1.2*max(datain$ML),length.out=100)
+  Linfslidek[] <- seq(0,1.2*max(datain$ML),length.out=100)
+  Linfslidec[] <- seq(0,1.22*max(datain$ML),length.out=100)
+  Pointslide[] <- 2:length(datain$ML)
+  Pointslideuc[] <- 1:length(datain$ML)
+  Pointslidelc[] <- 1:length(datain$ML)
+  midlength[] <- datain$ML
+  midlengthk[] <- datain$ML
   }
 
 
