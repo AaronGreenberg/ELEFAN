@@ -1,4 +1,6 @@
-
+#' Minimal doc
+#' @description minimal documentation for roxygen purposes and could be added later 
+#' @export
 ESP <- function(data2=peaks,asp=datafreq$asp,ML=data$ML,dm=date){ #this needs rework.
   getWinVal(scope="L");                 #reads in from gui
   countesp=0;

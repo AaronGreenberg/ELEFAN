@@ -1,3 +1,6 @@
+#' Minimal doc
+#' @description minimal documentation for roxygen purposes and could be added later 
+#' @export
 
 ###THE FUNCTIONS THAT INTERACT WITH THE UI ARE BELOW!!!
 ##

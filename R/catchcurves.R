@@ -1,6 +1,9 @@
+#' Minimal doc
+#' @description minimal documentation for roxygen purposes and could be added later 
+#' @export
 
 plotnonseacatchcurve <- function(Kloc=K,Linfloc=Linf,pointsupper,pointslower){
-#time to compute the standard length-converted catch curves :LCC1 sec 2.2 pg2
+#time to catchompute the standard length-converted catch curves :LCC1 sec 2.2 pg2
 #first I compute the number of fish caught in each age class.
   print(Kloc)
   print(Linfloc)
@@ -68,20 +71,44 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
 
   gcurve1 <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,youngest,data$ML[1],BIRTHDAY)#compute growth curve that goes through oldest
   gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,oldest,data$ML[length(data$ML)],BIRTHDAY)#compute growth curve that goes through youngest
-
- tzero <- ceiling(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=5))
-# gcurvemain <- matrix(0,nrow=5,ncol=days)
+  index <-which(colSums(lfdata)>0)
+  print("index where lfdata not equal zero")
+  print(index)
+ tzero <- (seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(data$ML)))
+# gcurvemain <- 0*lfdata
+ count=1
+  pointscurve <- matrix(0,ncol=4,nrow=days*data$ML)
   
- tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,tzero[2],0,BIRTHDAY)$c
- gcurvemain <- as.vector(tempered[,3])
-
+  for(i in 1:14){
+  tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,tzero[i],0,BIRTHDAY)$c
+  print(index)
+  for( j in index){
+      gcurvemain <- as.vector(tempered[,3])
+      if(j>tzero[i]){
+      int <- which(tempered[,1]==j)
+      print("int")
+      print(int)
+      print(tempered[int,1])
+      if(int>=1){
+      pointscurve[count,1] <- i #determine curve
+      pointscurve[count,2] <- tempered[int,2]#get index of location x axis.date...
+      pointscurve[count,3] <- tempered[int,3]#get index of location y axis. size at date...
+      pointscurve[count,4] <- tempered[int,4]#get index of location bin probably not needed...
+     # print(pointscurve)
+       count=count+1
+    }
+    }
+    }
+     }
   
-
  timeblue <- as.vector(tempered[,1])
-
-
   
-catchrqFreqPlot(1:days,data$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(data$ML[1],data$ML[length(data$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,timeblue,date,barscale=1,GF=0)
+
+ 
+
+print(pointscurve)
+  
+catchrqFreqPlot(1:days,data$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(data$ML[1],data$ML[length(data$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,pointscurve,timeblue,date,barscale=1,GF=0)
 
 
 }

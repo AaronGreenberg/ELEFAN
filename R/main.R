@@ -1,18 +1,17 @@
-## % This file organizes several other files to make ELEFAN a reality
-## %############################################################
-## %############################################################
-#%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#Preamble load required packages,source files and make gui.
-#%############################################################
-require(compiler)
-require(PBSmodelling);                  #nice software that makes making gui easier
+#' Minimal doc
+#' @import compiler PBSmodelling animation
+#' @description minimal documentation for roxygen purposes and could be added later 
+#' @export
+
+#require(compiler)
+#require(PBSmodelling);                  #nice software that makes making gui easier
 #library(animation)
-source("R/ASP.R")                         #load routines to compute peaks and available sum of peaks
-source("R/ESP.R")                         #load routines to compute Explained Sum of Peakz
-source("R/catchcurves.R")
-source("R/LF_plots.R")                    #load routines to make the special plots in particular rqFreqplot
-source("R/other_plots.R")                 #load routines that make other plots
-source("R/low_level.R")                   #load misc routines really mostly data proccessing     
+#source("R/ASP.R")                         #load routines to compute peaks and available sum of peaks
+#source("R/ESP.R")                         #load routines to compute Explained Sum of Peakz
+#source("R/catchcurves.R")
+#source("R/LF_plots.R")                    #load routines to make the special plots in particular rqFreqplot
+#source("R/other_plots.R")                 #load routines that make other plots
+#source("R/low_level.R")                   #load misc routines really mostly data proccessing     
 #createWin("main_gui.txt")
 
 
@@ -27,7 +26,7 @@ fname1 <<- selectFile()
 date<-read.table(fname1,head=TRUE,as.is=TRUE)  #read in date key for the length frequency data This should probably be documented
 date$Date=(as.Date(date$Date,format="%d/%m/%y"))       #convert dates into the date class.
 datelength <- length(date$Date)                                      #get number of days data was collected
-
+print(date)
 yeartemp <- as.numeric(format(date$Date[2],"%y")) #sort out birthday
 #date$Date[1] <- as.Date(paste("01/01/",yeartemp),format="%d/%m/%y")
 BIRTHDAY <- as.numeric(julian(as.Date(paste("01/01/",yeartemp),format="%d/%m/%y"))-julian(date$Date[1]))

@@ -1,7 +1,8 @@
-## % ~~~~THIS FILE COMPUTES AVALIABLE SUMS OF PEAKS.
-## %############################################################
-## %############################################################
-## % 
+#' Minimal doc
+#' @description minimal documentation for roxygen purposes and could be added later 
+#' @export
+
+
 
 ##ROUTINES 
 

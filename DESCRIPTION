@@ -1,20 +1,35 @@
 Package: ELEFAN
 Maintainer: Edmund Hart <edmund.m.hart@gmail.com>
-			Aaron Greenberg  <a.greenberg@fisheries.ubc.ca>
-			Daniel Pauly <d.pauly@fisheries.ubc.ca>
+    Aaron Greenberg  <a.greenberg@fisheries.ubc.ca>
+    Daniel Pauly <d.pauly@fisheries.ubc.ca>
 Author: Aaron Greenberg and Daniel Pauly
 Version: 1.0
 License: GPL-3
 Title: A package for ELectronic Length Frequency ANalysis of fish
-Description: A method for the "tracing" of growth curves through fish length-frequency samples sequentially arranged in time.  The method allows 
-			for an objective extraction  of growth parameters whenever representative samples are available from a fish population.  The method is 
-			suited both to the analysis of growth in tropical stocks and in temperate stocks where it oscillates seasonally.
-
-Depends: compiler
-         Rcpp
-         PBSmodelling
-         MASS
-         gWidgets
-         gWidgetsRGtk2
+Description: A method for the "tracing" of growth curves through fish
+    length-frequency samples sequentially arranged in time.  The method allows
+    for an objective extraction of growth parameters whenever representative
+    samples are available from a fish population.  The method is suited both to
+    the analysis of growth in tropical stocks and in temperate stocks where it
+    oscillates seasonally.
+Depends:
+    compiler,
+    Rcpp,
+    PBSmodelling,
+    MASS,
+    gWidgets,
+    gWidgetsRGtk2
 Collate:
     'ELEFAN3-package.r'
+    'ASP.R'
+    'catchcurves.R'
+    'ESP.R'
+    'LF_plots.R'
+    'low_level.R'
+    'main.R'
+    'Main_gui.R'
+    'other_plots.R'
+    'plot_yield_biomass_per_recruit.r'
+    'yield_biomass_per_recruit.r'
+Depends: Rcpp (>= 0.10.1) 
+LinkingTo: Rcpp 

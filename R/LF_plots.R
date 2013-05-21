@@ -1,7 +1,9 @@
-#This file makes all the length frequency and peak trough plots.
-#It consists of two functions. rectplot and rqFreqPlot.
-#It was written by Aaron Greenberg for the Project New ELEFAN
-#These are the fancy plots that are super important to ELEFAN
+#' Minimal doc
+#' @description This file makes all the length frequency and peak trough plots.
+#' It consists of two functions. rectplot and rqFreqPlot.
+#' It was written by Aaron Greenberg for the Project New ELEFAN
+#' These are the fancy plots that are super important to ELEFAN
+#' @export
 
 
 rectplot <- function(ser,bins,xmin,xmax,ylim,barcol1,barcol2){
@@ -77,7 +79,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
 
 
 
-catchrqFreqPlot <- function(time,bins,freqs, sdate,sML,tzeros,curves1,curves2,maincurve,timeblue,datesloc=dates,xlim = c(min(time),max(time)), ylim = c(0, ceiling((max(bins)*1.1)+.2*(bins[2]-bins[1]))), barscale = 1, barcol1 = "black",barcol2="grey",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),title=" ",GF=0,birthday=BIRTHDAY,...) {
+catchrqFreqPlot <- function(time,bins,freqs, sdate,sML,tzeros,curves1,curves2,maincurve, pointscurve,timeblue,datesloc=dates,xlim = c(min(time),max(time)), ylim = c(0, ceiling((max(bins)*1.1)+.2*(bins[2]-bins[1]))), barscale = 1, barcol1 = "black",barcol2="grey",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),title=" ",GF=0,birthday=BIRTHDAY,...) {
    ## This function makes the fancy graphs that seems central to the output of ELEFAN
    ## In particular it provides a way of plotting a growth curve over length frequancy data plots over time.
    ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
@@ -128,9 +130,11 @@ catchrqFreqPlot <- function(time,bins,freqs, sdate,sML,tzeros,curves1,curves2,ma
 
    points(curves1$c[,1]+as.numeric(datesloc$Date[1]),curves1$c[,3],pch=1 ,cex=.2,col="red")# make real growth curve!
    points(curves2$c[,1]+as.numeric(datesloc$Date[1]),curves2$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
+      points(timeblue+as.numeric(datesloc$Date[1]),maincurve,pch=1 ,cex=.2,col="purple")# make real growth curve!
 
    #for(i in 1:length(bins)){
-     points(timeblue+as.numeric(datesloc$Date[1]),maincurve,col="blue",pch=1,cex=.25)
+     points(pointscurve[,2]+as.numeric(datesloc$Date[1]),pointscurve[,3],col="blue",pch=1,cex=1.95)
+    points(pointscurve[,2],pointscurve[,3],col="red",pch=2,cex=1.95)
      
 #}
     abline(v=birthday+as.numeric(datesloc$Date[1]),col="red")
