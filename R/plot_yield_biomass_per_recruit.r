@@ -1,3 +1,7 @@
+#' Minimal doc
+#' @description minimal documentation for roxygen purposes and could be added later 
+#' @export
+
 plot_yield_biomass_per_recruit <- function(tab_final)
 {
 par(mfrow=c(2,1), mar=c(4,4,0.5,0.5), oma=c(0,1,5,0))
