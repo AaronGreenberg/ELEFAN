@@ -1,3 +1,8 @@
+#' Minimal doc
+#' @import compiler PBSmodelling animation
+#' @description minimal documentation for roxygen purposes and could be added later 
+#' @export
+
 yield_biomass_per_recruit <- function (M,K,Lc,Linf,Pi,pas=NULL,pas2=NULL)
 {
 
