@@ -98,7 +98,7 @@ wetherall <- function(da=data,points=3){
   print(z)
   print(z$coefficients)
   Linfest <- -z$coefficients[1]/(z$coefficients[2]-1)#compute Linf 
-  plot(Li,Liprime,xlim=c(0,max(Li,Linfest)*1.22),ylim=c(0,max(Liprime,Linfest)*1.22),xlab="Cutoff Length L'",ylab=expression(paste("Mean Length above cutoff  ", bar(L) )))
+  plot(Li,Liprime,xlim=c(0,max(Li,Linfest)*1.22),ylim=c(0,max(Liprime,Linfest)*1.22),xlab="Cutoff Length L'",ylab=expression(paste("Mean length above cutoff  ", bar((L)) )))
   points(Lip,Lipoints,col="black",pch=19)
   points(Linfest,z$coefficients[1]+z$coefficients[2]*Linfest,col="black",pch=19,cex=.5)
   abline(a=0,b=1,col="grey")

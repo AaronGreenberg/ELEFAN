@@ -80,7 +80,7 @@ tmp = gframe("Read in length file", container = Entrylittle)
 add(tmp, readlengthfile, expand=TRUE)
 
 #Add sponsors logo at the bottom of the page
-addSpace(Entrylittle,460,horizontal=FALSE)# spacing needs to be tuned for each slide
+#addSpace(Entrylittle,460,horizontal=FALSE)# spacing needs to be tuned for each slide
 #addSpring(Entrylittle)
 Entrylogo <- ggroup(container=Entrylittle,expand=TRUE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=getwd(),container=Entrylogo)
@@ -100,7 +100,7 @@ refactorgraphic<- ggraphics(container = LFpic,width=700,height=500,label="Restru
 
 
 Linfslide = gslider(from=1,to=10,length.out=100,value=2)
-tmp = gframe("L infinity", container = LFplotlittle)
+tmp = gframe("L inf", container = LFplotlittle)
 add(tmp, Linfslide, expand=TRUE)
 
 Kslide = gslider(from=0,to=10,by=.001,value=0)
@@ -139,13 +139,13 @@ plotlf <- function(h,...){
  }
 
 
- addSpace(LFplotlittle,40,horizontal=FALSE)# Daniel wants the "plot" buttons spaced farther from the other buttons
+ #addSpace(LFplotlittle,40,horizontal=FALSE)# Daniel wants the "plot" buttons spaced farther from the other buttons
  plot=gbutton("Make plot",handler=plotlf)
  tmp=gframe("Plot",container=LFplotlittle)
  add(tmp, plot, expand=FALSE)
 
 #Add sponsors logo at the bottom of the page
-addSpace(LFplotlittle,76,horizontal=FALSE)# spacing needs to be tuned for each slide
+#addSpace(LFplotlittle,76,horizontal=FALSE)# spacing needs to be tuned for each slide
 LFplotlogo <- ggroup(container=LFplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=getwd(),container=LFplotlogo)
 
@@ -169,14 +169,14 @@ visible(Wetherallgraphic) <- TRUE #make correct picture
  }
 
 
-addSpace(Wetherallplotlittle,40,horizontal=FALSE)# Daniel wants the "plot" buttons spaced farther from the other buttons
+#addSpace(Wetherallplotlittle,40,horizontal=FALSE)# Daniel wants the "plot" buttons spaced farther from the other buttons
 plot=gbutton("Make plot",handler=plotweth)
 tmp=gframe("Plot",container=Wetherallplotlittle)
 add(tmp, plot, expand=FALSE)
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(Wetherallplotlittle,402,horizontal=FALSE)# spacing needs to be tuned for each slide
+#addSpace(Wetherallplotlittle,402,horizontal=FALSE)# spacing needs to be tuned for each slide
 Wetherallplotlogo <- ggroup(container=Wetherallplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=getwd(),container=Wetherallplotlogo)
 
@@ -191,7 +191,7 @@ gimage("png/logo1.png",dirname=getwd(),container=Kscanplotlittle)
 
 
 Linfslidek = gslider(from=1,to=10,length.out=100,value=2)
-tmp = gframe("L infinity", container = Kscanplotlittle)
+tmp = gframe("L inf", container = Kscanplotlittle)
 add(tmp, Linfslidek, expand=TRUE)
 Cslidek= gslider(from=0,to=2,by=.01,value=0)
 tmp = gframe("C", container = Kscanplotlittle)
@@ -224,7 +224,7 @@ visible(Kscangraphic) <- TRUE #make correct picture
 fixedkscanplot(window=svalue(movingaveragek))
  }
 
-addSpace(Kscanplotlittle,40,horizontal=FALSE)# Daniel wants the "plot" buttons spaced farther from the other buttons
+#addSpace(Kscanplotlittle,40,horizontal=FALSE)# Daniel wants the "plot" buttons spaced farther from the other buttons
 compute=gbutton("Start full scan",handler=computefullkscan)
 tmp=gframe("K-scan",container=Kscanplotlittle)
 add(tmp, compute, expand=FALSE)
@@ -266,7 +266,7 @@ add(tmp, Klocslidec, expand=TRUE)
 
 
 Linfslidec=gslider(from=0,to=100,by=.01,value=0)
-tmp = gframe("L infinity", container = Catchcurvelittle)
+tmp = gframe("L inf", container = Catchcurvelittle)
 add(tmp, Linfslidec, expand=TRUE)
 
 
@@ -305,7 +305,7 @@ write.matrix(temp,file=filename)
 visible(Catchcurvegraphic) <- TRUE #make correct picture  
  }
 
- addSpace(Catchcurvelittle,40,horizontal=FALSE)# Daniel wants the "plot" buttons spaced farther from the other buttons
+ #addSpace(Catchcurvelittle,40,horizontal=FALSE)# Daniel wants the "plot" buttons spaced farther from the other buttons
  plot=gbutton("Make plot",handler=plotnonseacatch)
  tmp=gframe("Plot",container=Catchcurvelittle)
  add(tmp, plot, expand=FALSE)
@@ -315,7 +315,7 @@ visible(Catchcurvegraphic) <- TRUE #make correct picture
 
 
 
-plotseacatch <- function(h,...){ 
+#plotseacatch <- function(h,...){ 
 visible(SeasonalCatchgraphic) <- TRUE #make correct picture
 temp<- plotseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Cslidec),svalue(TWslidec))
 Datatablemodified[] <- temp
@@ -325,7 +325,7 @@ visible(Catchcurvegraphic) <- TRUE #make correct picture
 
 
 
-plotrecruit <- function(h,...){ 
+#plotrecruit <- function(h,...){ 
 visible(RecruitmentPatterngraphic) <- TRUE #make correct picture
 temp<- plotseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Cslidec),svalue(TWslidec))
 Datatablemodified[] <- temp
@@ -334,9 +334,9 @@ visible(RecruitmentPatterngraphic) <- TRUE #make correct picture
  }
 
 
- plot=gbutton("Make plot",handler=plotseacatch)
- tmp=gframe("Plot",container=Catchcurvelittle)
- add(tmp, plot, expand=FALSE)
+ #plot=gbutton("Make plot",handler=plotseacatch)
+ #tmp=gframe("Plot",container=Catchcurvelittle)
+ #add(tmp, plot, expand=FALSE)
 
 
 
@@ -351,26 +351,126 @@ Catchcurvelogo <- ggroup(container=Catchcurvelittle,expand=FALSE,horizontal=FALS
 gimage("png/logo2.png",dirname=getwd(),container=Catchcurvelogo)
 
 
+
+### Seasonal catch curve tab (C.C.II)
+
 SeasonalCatch <- ggroup(container = nb,label="C.C. II", expand=TRUE,horizontal=TRUE)#make entry gr
 SeasonalCatchlittle <- ggroup(container=SeasonalCatch,expand=FALSE,horizontal=FALSE)# make little entry group
 SeasonalCatchpic<- gnotebook(container=SeasonalCatch,expand=TRUE)#create the Entry pic.
-SeasonalCatchgraphic<- ggraphics(container = SeasonalCatchpic,width=700,height=500,label="Catch Curve Plot Seasonal")
+SeasonalCatchgraphic<- ggraphics(container = SeasonalCatchpic,width=700,height=500,label="C.C. seasonal")
 
- plot=gbutton("Make the plots",handler=plotseacatch)
- tmp=gframe("Plot",container=SeasonalCatchlittle)
- add(tmp, plot, expand=TRUE)
+#Add ELEFAN in R logo at the top of the page
+gimage("png/logo1.png",dirname=getwd(),container=SeasonalCatchlittle)
+
+Klocslidec=gslider(from=0,to=1,by=.01,value=0)
+tmp = gframe("K", container = SeasonalCatchlittle)
+add(tmp, Klocslidec, expand=TRUE)
 
 
+Linfslidec=gslider(from=0,to=100,by=.01,value=0)
+tmp = gframe("L inf", container = SeasonalCatchlittle)
+add(tmp, Linfslidec, expand=TRUE)
+
+
+
+Cslidec=gslider(from=0,to=100,by=.01,value=0)
+tmp = gframe("C", container = SeasonalCatchlittle)
+add(tmp, Cslidec, expand=TRUE)
+
+
+TWslidec=gslider(from=0,to=100,by=.01,value=0)
+tmp = gframe("WP", container = SeasonalCatchlittle)
+add(tmp, TWslidec, expand=TRUE)
+
+
+
+Pointslidelc=gslider(from=0,to=10,by=1,value=0)
+tmp = gframe("First point", container = SeasonalCatchlittle)
+add(tmp, Pointslidelc, expand=TRUE)
+
+Pointslideuc=gslider(from=0,to=10,by=1,value=0)
+tmp = gframe("Last point", container = SeasonalCatchlittle)
+add(tmp, Pointslideuc, expand=TRUE)
+
+
+plot=gbutton("Make plot",handler=plotseacatch)
+tmp=gframe("Plot",container=SeasonalCatchlittle)
+add(tmp, plot, expand=FALSE)
+
+
+
+datetmp <- NA
+data <- NA
+
+#visible(nb[1]) <- TRUE
+
+#Add sponsors logo at the bottom of the page
+#addSpace(SeasonalCatchlittle,55,horizontal=FALSE)# spacing needs to be tuned for each slide
+SeasonalCatchlogo <- ggroup(container=SeasonalCatchlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+gimage("png/logo2.png",dirname=getwd(),container=SeasonalCatchlogo)
+
+
+
+
+
+###Recruitment tab
 
 RecruitmentPattern <- ggroup(container = nb,label="Recr.", expand=TRUE,horizontal=TRUE)#make entry gr
 
 RecruitmentPatternlittle <- ggroup(container=RecruitmentPattern,expand=FALSE,horizontal=FALSE)# make little entry group
 RecruitmentPatternpic<- gnotebook(container=RecruitmentPattern,expand=TRUE)#create the Entry pic.
-RecruitmentPatterngraphic<- ggraphics(container = RecruitmentPatternpic,width=700,height=500,label="Catch Curve Plot Seasonal")
+RecruitmentPatterngraphic<- ggraphics(container = RecruitmentPatternpic,width=700,height=500,label="Recr.")
 
- plot=gbutton("Make the plots",handler=plotrecruit)
- tmp=gframe("Plot",container=RecruitmentPatternlittle)
- add(tmp, plot, expand=TRUE)
+#Add ELEFAN in R logo at the top of the page
+gimage("png/logo1.png",dirname=getwd(),container=RecruitmentPatternlittle)
+
+Klocslidec=gslider(from=0,to=1,by=.01,value=0)
+tmp = gframe("K", container = RecruitmentPatternlittle)
+add(tmp, Klocslidec, expand=TRUE)
+
+
+Linfslidec=gslider(from=0,to=100,by=.01,value=0)
+tmp = gframe("L inf", container = RecruitmentPatternlittle)
+add(tmp, Linfslidec, expand=TRUE)
+
+
+
+Cslidec=gslider(from=0,to=100,by=.01,value=0)
+tmp = gframe("C", container = RecruitmentPatternlittle)
+add(tmp, Cslidec, expand=TRUE)
+
+
+TWslidec=gslider(from=0,to=100,by=.01,value=0)
+tmp = gframe("WP", container = RecruitmentPatternlittle)
+add(tmp, TWslidec, expand=TRUE)
+
+
+
+Pointslidelc=gslider(from=0,to=10,by=1,value=0)
+tmp = gframe("First point", container = RecruitmentPatternlittle)
+add(tmp, Pointslidelc, expand=TRUE)
+
+Pointslideuc=gslider(from=0,to=10,by=1,value=0)
+tmp = gframe("Last point", container = RecruitmentPatternlittle)
+add(tmp, Pointslideuc, expand=TRUE)
+
+
+plot=gbutton("Make plot",handler=plotrecruit)
+tmp=gframe("Plot",container=RecruitmentPatternlittle)
+add(tmp, plot, expand=FALSE)
+
+
+
+datetmp <- NA
+data <- NA
+
+#visible(nb[1]) <- TRUE
+
+#Add sponsors logo at the bottom of the page
+#addSpace(SeasonalCatchlittle,55,horizontal=FALSE)# spacing needs to be tuned for each slide
+RecruitmentPatternlogo <- ggroup(container=RecruitmentPatternlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+gimage("png/logo2.png",dirname=getwd(),container=RecruitmentPatternlogo)
+
 
 
 

@@ -19,7 +19,7 @@ rectplot <- function(ser,bins,xmin,xmax,ylim,barcol1,barcol2){
 
 
 rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c(min(time),max(time)), ylim = c(0, ceiling((max(bins)*1.1)+.2*(bins[2]-bins[1]))), barscale = 1, barcol1 = "black",barcol2="grey",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),title=" ",GF=0,birthday=0,...) {
-   ## This function makes the fancy graphs that seems central to the output of ELEFAN
+  ## This function makes the fancy graphs that seems central to the output of ELEFAN
    ## In particular it provides a way of plotting a growth curve over length frequancy data plots over time.
    ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
 #     print("LF datesloc")
@@ -39,7 +39,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
    #create axis for plots
    par(new = FALSE)
    plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,las=2,...)
-   title(main=title, col.main="red", font.main=1)
+   #title(main=title, col.main="red", font.main=1)
    #plot Rectangles
 
  #   print("MAXscale")
@@ -68,7 +68,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
 #   points(curves$c[,2]+as.numeric(datesloc$Date[1]),curves$c[,4],pch=1 ,cex=.02,col="pink")# make real growth curve!
                                         #      lines(curves$c[,2],curves$c[,3],col="red")
  }
-   abline(v=birthday+as.numeric(datesloc$Date[1]),col="red")
+   #abline(v=birthday+as.numeric(datesloc$Date[1]),col="red")
    print(c("birthday",birthday)) 
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
   if(GF!=0){ legend(x="topleft",legend=paste("gf=",GF))}
@@ -97,7 +97,8 @@ catchrqFreqPlot <- function(time,bins,freqs, sdate,sML,tzeros,curves1,curves2,ma
    #create axis for plots
    par(new = FALSE)
    plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,las=2,...)
-   title(main=title, col.main="red", font.main=1)
+   par(tck=0.01)
+   #title(main=title, col.main="red", font.main=1)
    #plot Rectangles
 
   
@@ -133,7 +134,7 @@ catchrqFreqPlot <- function(time,bins,freqs, sdate,sML,tzeros,curves1,curves2,ma
      points(timeblue+as.numeric(datesloc$Date[1]),maincurve,col="blue",pch=1,cex=.25)
      
 #}
-    abline(v=birthday+as.numeric(datesloc$Date[1]),col="red")
+    #abline(v=birthday+as.numeric(datesloc$Date[1]),col="red")
 
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
   if(GF!=0){ legend(x="topleft",legend=paste("gf=",GF))}
