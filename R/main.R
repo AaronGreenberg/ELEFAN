@@ -1,18 +1,17 @@
-## % This file organizes several other files to make ELEFAN a reality
-## %############################################################
-## %############################################################
-#%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#Preamble load required packages,source files and make gui.
-#%############################################################
-require(compiler)
-require(PBSmodelling);                  #nice software that makes making gui easier
+#' Minimal doc
+#' @import compiler PBSmodelling animation
+#' @description minimal documentation for roxygen purposes and could be added later 
+#' @export
+
+#require(compiler)
+#require(PBSmodelling);                  #nice software that makes making gui easier
 #library(animation)
-source("R/ASP.R")                         #load routines to compute peaks and available sum of peaks
-source("R/ESP.R")                         #load routines to compute Explained Sum of Peakz
-source("R/catchcurves.R")
-source("R/LF_plots.R")                    #load routines to make the special plots in particular rqFreqplot
-source("R/other_plots.R")                 #load routines that make other plots
-source("R/low_level.R")                   #load misc routines really mostly data proccessing     
+#source("R/ASP.R")                         #load routines to compute peaks and available sum of peaks
+#source("R/ESP.R")                         #load routines to compute Explained Sum of Peakz
+#source("R/catchcurves.R")
+#source("R/LF_plots.R")                    #load routines to make the special plots in particular rqFreqplot
+#source("R/other_plots.R")                 #load routines that make other plots
+#source("R/low_level.R")                   #load misc routines really mostly data proccessing     
 #createWin("main_gui.txt")
 
 
