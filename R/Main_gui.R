@@ -52,6 +52,8 @@ Datatable<- gtable(data,container=Entrypic,label="Data")
 datefileinh <- function(h,...){
   datefilein()
   datetmp <- date
+  print("gui Date")
+  print(date)
   datetmp[,1] <- as.character(date[,1])
   datetmp[,1] <- as.character(date[,1])
   visible(Datetable) <- FALSE
