@@ -2,7 +2,7 @@
 ## Just showing Danielle how pull requests work
 ## for relative paths to work.
 ### Change below:
-#setwd("../")
+setwd("../")
 library(gWidgets)
 library(MASS)
 library(Rcpp) # connects to c++ programs
@@ -323,7 +323,7 @@ Datatablemodified[] <- temp
 visible(Catchcurvegraphic) <- TRUE #make correct picture
  }
 
-<<<<<<< HEAD
+
 
 plotrecruit <- function(h,...){ 
 visible(RecruitmentPatterngraphic) <- TRUE #make correct picture
@@ -333,11 +333,11 @@ Datatablemodified[] <- temp
 visible(RecruitmentPatterngraphic) <- TRUE #make correct picture
  }
 
-=======
+
  plot=gbutton("Make plot",handler=plotseacatch)
  tmp=gframe("Plot",container=Catchcurvelittle)
  add(tmp, plot, expand=FALSE)
->>>>>>> 4a51ef408d13e7e194146072f576e46b69857da6
+
 
 
 datetmp <- NA
