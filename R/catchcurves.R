@@ -19,6 +19,7 @@ plotnonseacatchcurve <- function(Kloc=K,Linfloc=Linf,pointsupper,pointslower){
 #then I compute the time needed for the fish of a given length class to grow
 #through that length class
   width <- 2*(dataloc$ML[2]-dataloc$ML[1])/2 #assuming that the lengthfreq lengths are mid points.
+  print("catch curve ")
   print(width)
   delti <- -1/Kloc*log((Linfloc-(dataloc$ML+width))/(Linfloc-(dataloc$ML-width)))#-to
   ti <- -1/Kloc*log(1-(dataloc$ML)/Linfloc)
