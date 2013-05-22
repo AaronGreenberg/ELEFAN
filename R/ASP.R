@@ -107,7 +107,7 @@ availablesumpeaks <- function(x){
 
 main1 <- function(datain){#This function just puts things in order and returns a appropreate data structure
 datatmp <- NULL
-datatmp$OBS <-data
+datatmp$OBS <-datain
 datatmp$A <- ma5(datatmp$OBS)           #first moving average
 datatmp$B <- quotientsN_ma(datatmp$OBS,datatmp$A) #quotient rescale
 datatmp$C <- peaksmap(datatmp$B)                     #make peaks
