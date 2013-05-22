@@ -81,7 +81,7 @@ cgfcompute <- cmpfun(gfcompute)
 
 wetherall <- function(da=datain,points=3){
   data2 <- datain
-  data2$ML <- data$ML*0
+  data2$ML <- datain$ML*0
   z <- rowSums(data2)#sum up all the frequencies
   points <- points-1
   Li=Liprime=z*0

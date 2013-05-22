@@ -7,7 +7,8 @@
 plotpeak <- function(Linf,K,Cseasonal,tw,ptype,sdate,ML,scale){#function(d=days,dm=date,da=data,lfdata=lfdata,pd=peaks$out,curve=gcurve)
 goodfit <- NULL
 #getWinVal(scope="L")
-
+print("TEST:::")
+print(days)
 startdate <- as.Date(datein[sdate,1])
 print("start date")
 print(startdate)
@@ -21,7 +22,7 @@ lfdata<- fillgrowthdata(datein,datain,growthdata) #make data structure with leng
 peaks <- lfrestruc(lfdata)                  #create restructure lfdata into peaks and valleys.
 if(K!=0){
 
-gcurve <- curves_cpp(Linf,Cseasonal,tw,K,data$ML,days,startime,ML,BIRTHDAY) # compute growth curve this has index, day in growthcurve and properbin.
+gcurve <- curves_cpp(Linf,Cseasonal,tw,K,datain$ML,days,startime,ML,BIRTHDAY) # compute growth curve this has index, day in growthcurve and properbin.
 print(head(gcurve$c))
 print(length(gcurve$c[,1]))
 

@@ -21,33 +21,72 @@
 ## %############################################################
 ## %
 
-datefilein <- function(){
+
+
+datefilein <- function()
+{
+#this function reads in a single data file and returns datain, date in, and lfbin.
 fname1 <<- selectFile()
-datein<-read.table(fname1,head=TRUE,as.is=TRUE)  #read in datein key for the length frequency data This should probably be documented
-datein$Date=(as.Date(datein$Date,format="%d/%m/%y"))       #convert dates into the date class.
-datelength <- length(datein$Date)                                      #get number of days data was collected
+top <- scan(fname1,what="string",nlines=1)
+
+print(top)
+datain <- read.table(fname1,head=TRUE,as.is=TRUE)
+colnames(datain) <- top
+lfbin <<-length(datain$ML)
+datein <- top
+datein[1] <- NA
+
 print(datein)
+index <- 1:length(top)
+datein <- as.data.frame((cbind(datein,index)))
+
+colnames(datein)=c("Date","index")
+print(datein)
+
+print(lfbin)
+datein$Date=(as.Date(datein$Date,format="%d/%m/%Y"))       #convert dates into the date class.
+datelength <- length(datein$Date)                                      #get number of days data was collected
+
 yeartemp <- as.numeric(format(datein$Date[2],"%y")) #sort out birthday
-#date$Date[1] <- as.Date(paste("01/01/",yeartemp),format="%d/%m/%y")
+datein$Date[1] <- as.Date(paste("01/01/",yeartemp),format="%d/%m/%y")
 BIRTHDAY <<- as.numeric(julian(as.Date(paste("01/01/",yeartemp),format="%d/%m/%y"))-julian(datein$Date[1]))
 days<-as.numeric(julian(datein$Date[datelength])-julian(datein$Date[1])) #set default number of da
 moddays<- (365-days%%365)+days                                         #compute width of plot window in years...
 days<<-moddays
+print(datein)
 datein<<-datein
-## #print(c("BIRTHDAY_input",BIRTHDAY))
-## assign("BIRTHDAY", BIRTHDAY, envir = .GlobalEnv)
-## assign("date", date, envir = .GlobalEnv)
-## assign("days", moddays, envir = .GlobalEnv)
+datain<<-datain
+
 
 }
+
+## datefilein <- function(){
+## fname1 <<- selectFile()
+## datein<-read.table(fname1,head=TRUE,as.is=TRUE)  #read in datein key for the length frequency data This should probably be documented
+## datein$Date=(as.Date(datein$Date,format="%d/%m/%y"))       #convert dates into the date class.
+## datelength <- length(datein$Date)                                      #get number of days data was collected
+## print(datein)
+## yeartemp <- as.numeric(format(datein$Date[2],"%y")) #sort out birthday
+## #date$Date[1] <- as.Date(paste("01/01/",yeartemp),format="%d/%m/%y")
+## BIRTHDAY <<- as.numeric(julian(as.Date(paste("01/01/",yeartemp),format="%d/%m/%y"))-julian(datein$Date[1]))
+## days<-as.numeric(julian(datein$Date[datelength])-julian(datein$Date[1])) #set default number of da
+## moddays<- (365-days%%365)+days                                         #compute width of plot window in years...
+## days<<-moddays
+## datein<<-datein
+## }
 
 
 lffilein <- function(){
 fname2 <<- selectFile()
-datain<<-read.table(fname2,head=TRUE,as.is=TRUE)  #read in date key for the length frequency data This should probably be documented
-lfbin<<-length(data$ML)
-## assign("data", data, envir = .GlobalEnv)
-## assign("lfbin",length(data$ML),envir=.GlobalEnv)                   #get number of bins
+datain<-read.table(fname2,head=TRUE,as.is=TRUE)  #read in date key for the length frequency data This should probably be documented
+print(datain)
+print(datain$ML)
+print(length(datain$ML))
+datain<<-datain 
+tmp <- length(datain$ML)
+print(tmp)
+lfbin<<-tmp
+return(datain)
 }
 
 

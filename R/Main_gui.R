@@ -34,7 +34,7 @@ nb <- gnotebook(container=biggroup,expand=TRUE,horizontal=TRUE)
 #%############################################################
 #Make the Entry page!
 datetmp <- NA
-data <- NA
+datatmp <- NA
 #visible(nb[1]) <- TRUE
 Entry <- ggroup(container = nb,label="Tab. data", expand=TRUE,horizontal=TRUE)#make entry gr
 addSpace(biggroup,300,horizontal=FALSE)
@@ -45,7 +45,7 @@ gimage("png/logo1.png",dirname=my_path,container=Entrylittle)
 
 Entrypic<- gnotebook(container=Entry,expand=TRUE)#create the Entry pic.
 Datetable<- gtable(datetmp,container=Entrypic,label="Date")
-Datatable<- gtable(data,container=Entrypic,label="Data")
+Datatable<- gtable(datatmp,container=Entrypic,label="Data")
 
 #Load Data
 #I need handlers.
@@ -62,12 +62,16 @@ datefileinh <- function(h,...){
   stdate[] <- 1:length(datein[,2])
   stdatek[] <- 1:length(datein[,2])
   visible(Datetable) <- TRUE
-  }
-lffileinh <- function(h,...){
-  lffilein()
-  visible(Datatable) <- FALSE
+## #  }
+## #lffileinh <- function(h,...){
+##   print("so I am almost screwed")
+##   datain<<-lffilein()
+##   print("gui data")
+##   print(datain)
+
   Datatable[] <- datain
   Datatable[] <- datain
+  #visible(Datatable) <- FALSE
   visible(Datatable) <- TRUE
   Linfslide[] <- seq(0,1.2*max(datain$ML),length.out=100)
   Linfslidek[] <- seq(0,1.2*max(datain$ML),length.out=100)
@@ -85,11 +89,11 @@ lffileinh <- function(h,...){
 
 
 readdatefile=gbutton("Date file",handler=datefileinh)
-readlengthfile=gbutton("Length file",handler=lffileinh)
+#readlengthfile=gbutton("Length file",handler=lffileinh)
 tmp = gframe("Read in date file", container = Entrylittle)
 add(tmp, readdatefile, expand=TRUE)
-tmp = gframe("Read in length file", container = Entrylittle)
-add(tmp, readlengthfile, expand=TRUE)
+#tmp = gframe("Read in length file", container = Entrylittle)
+#add(tmp, readlengthfile, expand=TRUE)
 
 #Add sponsors logo at the bottom of the page
 addSpace(Entrylittle,460,horizontal=FALSE)# spacing needs to be tuned for each slide
@@ -177,7 +181,7 @@ add(tmp, Pointslide, expand=TRUE)
  
 plotweth <- function(h,...){ 
 visible(Wetherallgraphic) <- TRUE #make correct picture  
- wetherall(data,svalue(Pointslide))
+ wetherall(datain,svalue(Pointslide))
  }
 
 
@@ -266,7 +270,7 @@ Catchcurveplot <- ggroup(container = nb,label="C.C. I", expand=TRUE,horizontal=T
 Catchcurvelittle <- ggroup(container=Catchcurveplot,expand=FALSE,horizontal=FALSE,with=200)# make little entry group
 Catchcurvepic<- gnotebook(container=Catchcurveplot,expand=TRUE)#create the Entry pic.
 Catchcurvegraphic<- ggraphics(container = Catchcurvepic,width=700,height=500,label="C.C. non seasonal")
-Datatablemodified<- gtable(data,container=Catchcurvepic,label="Modified data")
+Datatablemodified<- gtable(datatmp,container=Catchcurvepic,label="Modified data")
 
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=Catchcurvelittle)
@@ -353,7 +357,7 @@ visible(RecruitmentPatterngraphic) <- TRUE #make correct picture
 
 
 datetmp <- NA
-data <- NA
+datatmp <- NA
 
 #visible(nb[1]) <- TRUE
 
