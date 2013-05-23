@@ -98,7 +98,9 @@ wetherall <- function(da=datain,points=3){
   print(z)
   print(z$coefficients)
   Linfest <- -z$coefficients[1]/(z$coefficients[2]-1)#compute Linf 
-  plot(Li,Liprime,xlim=c(0,max(Li,Linfest)*1.22),ylim=c(0,max(Liprime,Linfest)*1.22),xlab="Cutoff Length L'",ylab=expression(paste("Mean length above cutoff  ", bar((L)) )))
+  plot(Li,Liprime,xlim=c(0,max(Li,Linfest)*1.22),ylim=c(0,max(Liprime,Linfest)*1.22),xlab="Cutoff length L'",ylab=expression(paste("Mean length above cutoff  ",bar(L))),yaxt="n",xaxt="n")
+  axis(2,tck=0.02,las=2)
+  axis(1,tck=0.02)
   points(Lip,Lipoints,col="black",pch=19)
   points(Linfest,z$coefficients[1]+z$coefficients[2]*Linfest,col="black",pch=19,cex=.5)
   abline(a=0,b=1,col="grey")
@@ -111,11 +113,11 @@ wetherall <- function(da=datain,points=3){
   text(Li,Liprime+.4*log(max(Liprime)),as.character(sort(1:(length(Li)),decreasing=TRUE)))
   text(Linfest*1.0,min(1,.01*(z$coefficients[1]+z$coefficients[2]*Linfest)),l1)
   temp2 <-bquote(paste("L",infinity==.(temp),"  ",
-                       bar(L), "=",.(signif(z$coefficients[1],3)),"+",.(signif(z$coefficients[2],3)),"L'",
-                       "  ",R^2,"=",.(signif(summary(z)$r.squared,2))))
+                       bar(L)," = ",.(signif(z$coefficients[1],3)),"+",.(signif(z$coefficients[2],3)),".L'",
+                       "  ",R^2," = ",.(signif(summary(z)$r.squared,2))))
   print(temp2)
   
-  legend(x="topleft",legend=temp2)
+  legend(x="topleft",inset=0.02,legend=temp2)
   return(Linfest)
 }
 
