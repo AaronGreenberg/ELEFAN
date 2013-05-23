@@ -81,6 +81,8 @@ datefileinh <- function(h,...){
   Pointslide[] <- 2:length(datain$ML)
   Pointslideuc[] <- 1:length(datain$ML)
   Pointslidelc[] <- 1:length(datain$ML)
+  Pointslideuc2[] <- 1:length(datain$ML)
+  Pointslidelc2[] <- 1:length(datain$ML)
   midlength[] <- datain$ML
   midlengthk[] <- datain$ML
   }
@@ -98,7 +100,7 @@ add(tmp, readdatefile, expand=FALSE)
 #add(tmp, readlengthfile, expand=TRUE)
 
 #Add sponsors logo at the bottom of the page
-addSpace(Entrylittle,334,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(Entrylittle,381,horizontal=FALSE)# spacing needs to be tuned for each slide
 #addSpring(Entrylittle)
 Entrylogo <- ggroup(container=Entrylittle,expand=TRUE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Entrylogo)
@@ -295,16 +297,30 @@ gimage("png/logo2.png",dirname=my_path,container=Kscanplotlogo)
 
 
 
-## ## ## ## Make Catch curve wind-points-pointsow
+## ## ## ## Make Catch curve and Corr.L/F wind-points-pointsow
 
 Catchcurveplot <- ggroup(container = nb,label="C.C. I", expand=TRUE,horizontal=TRUE)#make entry group
-Catchcurvelittle <- ggroup(container=Catchcurveplot,expand=FALSE,horizontal=FALSE,with=200)# make little entry group
+Catchcurvelittle <- ggroup(container=Catchcurveplot,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 Catchcurvepic<- gnotebook(container=Catchcurveplot,expand=TRUE)#create the Entry pic.
 Catchcurvegraphic<- ggraphics(container = Catchcurvepic,width=700,height=500,label="C.C. non seasonal")
-Datatablemodified<- gtable(datatmp,container=Catchcurvepic,label="Modified data")
 
+<<<<<<< HEAD
 #Add ELEFAN in R logo at the top of the page
+=======
+CorrLFplot <- ggroup(container = nb,label="Corr. L/F", expand=TRUE,horizontal=TRUE)
+CorrLFlittle <- ggroup(container=CorrLFplot,expand=FALSE,horizontal=FALSE,width=200)
+CorrLFpic <- gnotebook(container=CorrLFplot,expand=TRUE)
+Datatablemodified<- gtable(datatmp,container=CorrLFpic,label="Modified data")
+
+
+#Add ELEFAN in R logo at the top of the pages
+>>>>>>> a0c810c88045169fea33566debe69151e3718334
 gimage("png/logo1.png",dirname=my_path,container=Catchcurvelittle)
+gimage("png/logo1.png",dirname=my_path,container=CorrLFlittle)
+
+Linfslidec=gslider(from=0,to=100,by=.01,value=0)
+tmp = gframe("Linf", container = Catchcurvelittle)
+add(tmp, Linfslidec, expand=TRUE)
 
 
 Klocslidec=gslider(from=0,to=1,by=.01,value=0)
@@ -312,12 +328,15 @@ tmp = gframe("K", container = Catchcurvelittle)
 add(tmp, Klocslidec, expand=TRUE)
 
 
+<<<<<<< HEAD
 Linfslidec=gslider(from=0,to=100,by=.01,value=0)
 tmp = gframe("Linf", container = Catchcurvelittle)
 add(tmp, Linfslidec, expand=TRUE)
 
 
 
+=======
+>>>>>>> a0c810c88045169fea33566debe69151e3718334
 Pointslidelc=gslider(from=0,to=10,by=1,value=0)
 tmp = gframe("First point", container = Catchcurvelittle)
 add(tmp, Pointslidelc, expand=TRUE)
@@ -353,27 +372,35 @@ visible(Catchcurvegraphic) <- TRUE #make correct picture
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(Catchcurvelittle,21,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(Catchcurvelittle,139,horizontal=FALSE)# spacing needs to be tuned for each slide
 Catchcurvelogo <- ggroup(container=Catchcurvelittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Catchcurvelogo)
 
 
 
-SeasonalCatchplot <- ggroup(container = nb,label="C.C. I", expand=TRUE,horizontal=TRUE)#make entry group
-SeasonalCatchlittle <- ggroup(container=SeasonalCatchplot,expand=FALSE,horizontal=FALSE,with=200)# make little entry group
-SeasonalCatchpic<- gnotebook(container=SeasonalCatchplot,expand=TRUE)#create the Entry pic.
-SeasonalCatchgraphic<- ggraphics(container = SeasonalCatchpic,width=700,height=500,label="C.C. non seasonal")
-Datatablemodified<- gtable(datatmp,container=SeasonalCatchpic,label="Modified data")
+## ## ## ## ## Seasonal catch curve tab (C.C.II)
+
+SeasonalCatch <- ggroup(container = nb,label="C.C. II", expand=TRUE,horizontal=TRUE)#make entry gr
+SeasonalCatchlittle <- ggroup(container=SeasonalCatch,expand=FALSE,horizontal=FALSE)# make little entry group
+SeasonalCatchpic<- gnotebook(container=SeasonalCatch,expand=TRUE)#create the Entry pic.
+SeasonalCatchgraphic<- ggraphics(container = SeasonalCatchpic,width=700,height=500,label="C.C. seasonal")
+
+
+#Add ELEFAN in R logo at the top of the page
+gimage("png/logo1.png",dirname=my_path,container=SeasonalCatchlittle)
+
+
+
+Linfslidec2=gslider(from=0,to=100,by=.01,value=0)
+tmp = gframe("Linf", container = SeasonalCatchlittle)
+add(tmp, Linfslidec2, expand=TRUE)
+
 
 
 Klocslidec2=gslider(from=0,to=1,by=.01,value=0)
 tmp = gframe("K", container = SeasonalCatchlittle)
 add(tmp, Klocslidec2, expand=TRUE)
 
-
-Linfslidec2=gslider(from=0,to=100,by=.01,value=0)
-tmp = gframe("Linf", container = SeasonalCatchlittle)
-add(tmp, Linfslidec2, expand=TRUE)
 
 
 Cslidec2=gslider(from=0,to=1.1,by=.01,value=0)
@@ -384,6 +411,19 @@ add(tmp, Cslidec2, expand=TRUE)
 TWslidec2=gslider(from=0,to=1,by=.01,value=0)
 tmp = gframe("WP", container = SeasonalCatchlittle)
 add(tmp, TWslidec2, expand=TRUE)
+
+
+
+Pointslidelc2=gslider(from=0,to=10,by=1,value=0)
+tmp = gframe("First point", container = SeasonalCatchlittle)
+add(tmp, Pointslidelc2, expand=TRUE)
+
+
+Pointslideuc2=gslider(from=0,to=10,by=1,value=0)
+tmp = gframe("Last point", container = SeasonalCatchlittle)
+add(tmp, Pointslideuc2, expand=TRUE)
+
+
 
 plotseacatch <- function(h,...){ 
   visible(SeasonalCatchgraphic) <- TRUE #make correct picture
