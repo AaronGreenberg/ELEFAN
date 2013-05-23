@@ -1,7 +1,7 @@
 #' Minimal doc
 #' @description minimal documentation for roxygen purposes and could be added later 
 #' @export
-ESP <- function(data2=peaks,asp=datafreq$asp,ML=data$ML,dm=date){ #this needs rework.
+ESP <- function(data2=peaks,asp=datafreq$asp,ML=datain$ML,dm=datein){ #this needs rework.
   getWinVal(scope="L");                 #reads in from gui
   countesp=0;
   ctest <- (curves(dm,Linf,c,tw,K))
@@ -65,7 +65,7 @@ ESP <- function(data2=peaks,asp=datafreq$asp,ML=data$ML,dm=date){ #this needs re
 
 
 
-ESPplot <- function(data2=peaks,asp=datafreq$asp,ML=data$ML,dm=date){ #this needs rework.
+ESPplot <- function(data2=peaks,asp=datafreq$asp,ML=datain$ML,dm=datein){ #this needs rework.
   getWinVal(scope="L");                 #reads in from gui
   
   lopper <- function(Kin){

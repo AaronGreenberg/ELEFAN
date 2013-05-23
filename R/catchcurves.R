@@ -8,7 +8,7 @@ plotnonseacatchcurve <- function(Kloc=K,Linfloc=Linf,pointsupper,pointslower){
   print(Kloc)
   print(Linfloc)
   print(points)
-  dataloc <- data
+  dataloc <- datain
   size <- length(dataloc[1,]) #
   
   if(size>2){
@@ -19,6 +19,7 @@ plotnonseacatchcurve <- function(Kloc=K,Linfloc=Linf,pointsupper,pointslower){
 #then I compute the time needed for the fish of a given length class to grow
 #through that length class
   width <- 2*(dataloc$ML[2]-dataloc$ML[1])/2 #assuming that the lengthfreq lengths are mid points.
+  print("catch curve ")
   print(width)
   delti <- -1/Kloc*log((Linfloc-(dataloc$ML+width))/(Linfloc-(dataloc$ML-width)))#-to
   ti <- -1/Kloc*log(1-(dataloc$ML)/Linfloc)
@@ -42,12 +43,12 @@ temp2 <-bquote(paste("log(N)/",Delta,"T"," = ",.(signif(z$coefficients[1],4)),.(
 legend(x="topright",legend=temp2)  
 print(z)
 selectivity <- list()
-selectivity$prob <- 1:length(data[,1])*0+1
+selectivity$prob <- 1:length(datain[,1])*0+1
 selectivity$index <- 1:pointslower
 selectivity$prob[1:pointslower]<- (sumsample[1:(pointslower)]/delti[1:(pointslower)])/exp(z$coefficients[1]+z$coefficients[2]*ti[1:(pointslower)])#compute selectivity probability
 print(selectivity)
-dataout <- data#initialize
-for(i in 2:length(data[1,])){dataout[,i] <-data[,i]*selectivity$prob} 
+dataout <- datain#initialize
+for(i in 2:length(datain[1,])){dataout[,i] <-datain[,i]*selectivity$prob} 
   
 return(dataout)  
 }
@@ -59,7 +60,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   print("Hi")
   # initialize data structure
   growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-  lfdata<- fillgrowthdata(date,data,growthdata) #make data structure with length frequency data
+  lfdata<- fillgrowthdata(datein,datain,growthdata) #make data structure with length frequency data
   print("so")
   
   #--1--compute oldest and youngest
@@ -69,18 +70,18 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   print("hum")
   # compute growth curve that goes through oldest and youngest
 
-  gcurve1 <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,youngest,data$ML[1],BIRTHDAY)#compute growth curve that goes through oldest
-  gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,oldest,data$ML[length(data$ML)],BIRTHDAY)#compute growth curve that goes through youngest
+  gcurve1 <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,youngest,datain$ML[1],BIRTHDAY)#compute growth curve that goes through oldest
+  gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,oldest,datain$ML[length(datain$ML)],BIRTHDAY)#compute growth curve that goes through youngest
   index <-which(colSums(lfdata)>0)
   print("index where lfdata not equal zero")
   print(index)
- tzero <- (seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(data$ML)))
+ tzero <- (seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(datain$ML)))
 # gcurvemain <- 0*lfdata
  count=1
-  pointscurve <- matrix(0,ncol=4,nrow=days*data$ML)
+  pointscurve <- matrix(0,ncol=4,nrow=days*datain$ML)
   
   for(i in 1:14){
-  tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,data$ML,days,tzero[i],0,BIRTHDAY)$c
+  tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,tzero[i],0,BIRTHDAY)$c
   print(index)
   for( j in index){
       gcurvemain <- as.vector(tempered[,3])
@@ -108,7 +109,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
 
 print(pointscurve)
   
-catchrqFreqPlot(1:days,data$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(data$ML[1],data$ML[length(data$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,pointscurve,timeblue,date,barscale=1,GF=0)
+catchrqFreqPlot(1:days,datain$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(datain$ML[1],datain$ML[length(datain$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,pointscurve,timeblue,datein,barscale=1,GF=0)
 
 
 }

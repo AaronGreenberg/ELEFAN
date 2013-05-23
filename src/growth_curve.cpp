@@ -1,9 +1,10 @@
+
 #include <Rcpp.h>
 using namespace Rcpp;// This set of cpp routines speeds up computing growth curves.
 // The main routines are almost directly ported from the R routines
 // however it is important to compute growth curves very quickly.
 
-
+// [[Rcpp::export]]
 double cgrowth_rootf(double x,double K,double Linf,double locperiodC,double TW,double age){
 //makes computing tstart and time when length is .95%Linf easy.
   const double pi=3.141592653589793116;// need to define pi.
