@@ -359,7 +359,7 @@ gimage("png/logo2.png",dirname=my_path,container=Catchcurvelogo)
 
 
 
-SeasonalCatchplot <- ggroup(container = nb,label="C.C. I", expand=TRUE,horizontal=TRUE)#make entry group
+SeasonalCatchplot <- ggroup(container = nb,label="C.C. II", expand=TRUE,horizontal=TRUE)#make entry group
 SeasonalCatchlittle <- ggroup(container=SeasonalCatchplot,expand=FALSE,horizontal=FALSE,with=200)# make little entry group
 SeasonalCatchpic<- gnotebook(container=SeasonalCatchplot,expand=TRUE)#create the Entry pic.
 SeasonalCatchgraphic<- ggraphics(container = SeasonalCatchpic,width=700,height=500,label="C.C. non seasonal")
@@ -393,9 +393,17 @@ visible(SeasonalCatchgraphic) <- TRUE #make correct picture
 
  }
 
+
+ #addSpace(Catchcurvelittle,40,horizontal=FALSE)# Daniel wants the "plot" buttons spaced farther from the other buttons
+ plot=gbutton("Make plot",handler=plotseacatch)
+ tmp=gframe("Plot",container=SeasonalCatchlittle)
+ add(tmp, plot, expand=FALSE)
+
+
 addSpace(SeasonalCatchlittle,21,horizontal=FALSE)# spacing needs to be tuned for each slide
 SeasonalCatchlogo <- ggroup(container=SeasonalCatchlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=SeasonalCatchlogo)
+
 
 
 ## ## ## ## Yield per recruit tab
