@@ -17,7 +17,7 @@
 ELEFAN_gui <- function(){
 
 my_path <- paste(.libPaths()[1],"/ELEFAN",sep="")
-sourceCpp(paste(my_path, "/source/growth_curve.cpp",sep="")) #compiles and sources. 
+#sourceCpp(paste(my_path, "/source/growth_curve.cpp",sep="")) #compiles and sources. 
 
 size=1000
 window = gwindow("ELEFAN in R",height=size,width=1.618*size,visible=TRUE)
@@ -44,14 +44,15 @@ Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE,height=30)# 
 gimage("png/logo1.png",dirname=my_path,container=Entrylittle)
 
 Entrypic<- gnotebook(container=Entry,expand=TRUE)#create the Entry pic.
-Datetable<- gtable(datetmp,container=Entrypic,label="Date")
-Datatable<- gtable(datatmp,container=Entrypic,label="Data")
+Datetable<- gtable(datetmp,container=Entrypic,label="Dates")
+Datatable<- gtable(datatmp,container=Entrypic,label="Lengths")
 
 #Load Data
 #I need handlers.
 datefileinh <- function(h,...){
   datefilein()
   datetmp <- datein
+  options(digits=3)
   print("gui Date")
   print(datein)
   datetmp[,1] <- as.character(datein[,1])
@@ -76,6 +77,7 @@ datefileinh <- function(h,...){
   Linfslide[] <- seq(0,1.2*max(datain$ML),length.out=100)
   Linfslidek[] <- seq(0,1.2*max(datain$ML),length.out=100)
   Linfslidec[] <- seq(0,1.22*max(datain$ML),length.out=100)
+  Linfslidec2[] <- seq(0,1.22*max(datain$ML),length.out=100)
   Pointslide[] <- 2:length(datain$ML)
   Pointslideuc[] <- 1:length(datain$ML)
   Pointslidelc[] <- 1:length(datain$ML)
@@ -88,10 +90,10 @@ datefileinh <- function(h,...){
 
 
 
-readdatefile=gbutton("Date file",handler=datefileinh)
+readdatefile=gbutton("Load file",handler=datefileinh)
 #readlengthfile=gbutton("Length file",handler=lffileinh)
-tmp = gframe("Read in date file", container = Entrylittle)
-add(tmp, readdatefile, expand=TRUE)
+tmp = gframe("Data", container = Entrylittle)
+add(tmp, readdatefile, expand=FALSE)
 #tmp = gframe("Read in length file", container = Entrylittle)
 #add(tmp, readlengthfile, expand=TRUE)
 
@@ -108,7 +110,7 @@ gimage("png/logo2.png",dirname=my_path,container=Entrylogo)
 LFplot <- ggroup(container = nb,label="L/F", expand=TRUE,horizontal=TRUE)#make entry group
 LFplotlittle <- ggroup(container=LFplot,expand=FALSE,horizontal=FALSE,width=200)# make little entry group  
 LFpic<- gnotebook(container=LFplot,expand=TRUE)#create the Entry pic.
-histgraphic<- ggraphics(container = LFpic,width=700,height=500,label="L/F")
+histgraphic<- ggraphics(container = LFpic,width=700,height=500,label="Orig. L/F")
 refactorgraphic<- ggraphics(container = LFpic,width=700,height=500,label="Restruct. L/F")
 
 
@@ -117,16 +119,16 @@ gimage("png/logo1.png",dirname=my_path,container=LFplotlittle)
 
 
 Linfslide = gslider(from=1,to=10,length.out=100,value=2)
-tmp = gframe("L inf", container = LFplotlittle)
+tmp = gframe("Linf", container = LFplotlittle)
 add(tmp, Linfslide, expand=TRUE)
 
 
-Kslide = gslider(from=0,to=10,by=.001,value=0)
+Kslide = gslider(from=0,to=1,by=.001,value=0)
 tmp = gframe("K", container = LFplotlittle)
 add(tmp, Kslide, expand=TRUE)
 
 
-Cslide= gslider(from=0,to=2,by=.01,value=0)
+Cslide= gslider(from=0,to=1.1,by=.01,value=0)
 tmp = gframe("C", container = LFplotlittle)
 add(tmp, Cslide, expand=TRUE)
 
@@ -223,11 +225,11 @@ gimage("png/logo1.png",dirname=my_path,container=Kscanplotlittle)
 
 
 Linfslidek = gslider(from=1,to=10,length.out=100,value=2)
-tmp = gframe("L inf", container = Kscanplotlittle)
+tmp = gframe("Linf", container = Kscanplotlittle)
 add(tmp, Linfslidek, expand=TRUE)
 
 
-Cslidek= gslider(from=0,to=2,by=.01,value=0)
+Cslidek= gslider(from=0,to=1.1,by=.01,value=0)
 tmp = gframe("C", container = Kscanplotlittle)
 add(tmp, Cslidek, expand=TRUE)
 
@@ -312,18 +314,8 @@ add(tmp, Klocslidec, expand=TRUE)
 
 
 Linfslidec=gslider(from=0,to=100,by=.01,value=0)
-tmp = gframe("L inf", container = Catchcurvelittle)
+tmp = gframe("Linf", container = Catchcurvelittle)
 add(tmp, Linfslidec, expand=TRUE)
-
-
-Cslidec=gslider(from=0,to=100,by=.01,value=0)
-tmp = gframe("C", container = Catchcurvelittle)
-add(tmp, Cslidec, expand=TRUE)
-
-
-TWslidec=gslider(from=0,to=100,by=.01,value=0)
-tmp = gframe("WP", container = Catchcurvelittle)
-add(tmp, TWslidec, expand=TRUE)
 
 
 Pointslidelc=gslider(from=0,to=10,by=1,value=0)
@@ -376,22 +368,22 @@ Datatablemodified<- gtable(datatmp,container=SeasonalCatchpic,label="Modified da
 gimage("png/logo1.png",dirname=my_path,container=SeasonalCatchlittle)
 
 
-Klocslidec=gslider(from=0,to=1,by=.01,value=0)
+Klocslidec2=gslider(from=0,to=1,by=.01,value=0)
 tmp = gframe("K", container = SeasonalCatchlittle)
 add(tmp, Klocslidec, expand=TRUE)
 
 
-Linfslidec=gslider(from=0,to=100,by=.01,value=0)
-tmp = gframe("L inf", container = SeasonalCatchlittle)
+Linfslidec2=gslider(from=0,to=100,by=.01,value=0)
+tmp = gframe("Linf", container = SeasonalCatchlittle)
 add(tmp, Linfslidec, expand=TRUE)
 
 
-Cslidec=gslider(from=0,to=100,by=.01,value=0)
+Cslidec2=gslider(from=0,to=1.1,by=.01,value=0)
 tmp = gframe("C", container = SeasonalCatchlittle)
 add(tmp, Cslidec, expand=TRUE)
 
 
-TWslidec=gslider(from=0,to=100,by=.01,value=0)
+TWslidec2=gslider(from=0,to=1,by=.01,value=0)
 tmp = gframe("WP", container = SeasonalCatchlittle)
 add(tmp, TWslidec, expand=TRUE)
 
@@ -445,7 +437,7 @@ gimage("png/logo2.png",dirname=my_path,container=SeasonalCatchlogo)
 
 
 ## Linfslidec=gslider(from=0,to=100,by=.01,value=0)
-## tmp = gframe("L inf", container = RecruitmentPatternlittle)
+## tmp = gframe("Linf", container = RecruitmentPatternlittle)
 ## add(tmp, Linfslidec, expand=TRUE)
 
 
@@ -508,7 +500,7 @@ gimage("png/logo2.png",dirname=my_path,container=SeasonalCatchlogo)
 
 
 ## Linfslidec=gslider(from=0,to=100,by=.01,value=0)
-## tmp = gframe("L inf", container = YieldperRecruitlittle)
+## tmp = gframe("Linf", container = YieldperRecruitlittle)
 ## add(tmp, Linfslidec, expand=TRUE)
 
 
@@ -563,7 +555,7 @@ gimage("png/logo2.png",dirname=my_path,container=SeasonalCatchlogo)
 
 
 ## Linfslidec=gslider(from=0,to=100,by=.01,value=0)
-## tmp = gframe("L inf", container = BiomassperRecruitlittle)
+## tmp = gframe("Linf", container = BiomassperRecruitlittle)
 ## add(tmp, Linfslidec, expand=TRUE)
 
 
