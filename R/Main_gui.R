@@ -125,7 +125,7 @@ tmp = gframe("Linf", container = LFplotlittle)
 add(tmp, Linfslide, expand=TRUE)
 
 
-Kslide = gslider(from=0,to=10,by=.001,value=0)
+Kslide = gslider(from=0,to=10,by=.01,value=0)
 tmp = gframe("K", container = LFplotlittle)
 add(tmp, Kslide, expand=TRUE)
 

@@ -114,7 +114,7 @@ wetherall <- function(da=datain,points=3){
   text(Linfest*1.0,min(1,.01*(z$coefficients[1]+z$coefficients[2]*Linfest)),l1)
   temp2 <-bquote(paste("L",infinity==.(signif(temp,3))," ; ",
                        bar(L)," = ",.(signif(z$coefficients[1],3)),"+",.(signif(z$coefficients[2],3)),"*L'",
-                       " ; ",R^2," = ",.(signif(summary(z)$r.squared,3))))
+                       " ; ",r^2," = ",.(signif(summary(z)$r.squared,3))))
   print(temp2)
   
   legend(x="topleft",inset=0.02,legend=temp2)
