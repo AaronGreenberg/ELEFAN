@@ -101,7 +101,19 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
     }
     }
      }
-  
+
+
+  #okay time to sum things up!
+  #
+   pointscurve2 <- pointscurve[order(pointscurve[,2])]
+  head(pointscurve)
+  head(pointscurve2)
+#  for(j in index){
+      
+
+
+
+ # }
  timeblue <- as.vector(tempered[,1])
   
 
