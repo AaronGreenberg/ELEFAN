@@ -119,12 +119,12 @@ tmp = gframe("Linf", container = LFplotlittle)
 add(tmp, Linfslide, expand=TRUE)
 
 
-Kslide = gslider(from=0,to=1,by=.001,value=0)
+Kslide = gslider(from=0,to=10,by=.01,value=0)
 tmp = gframe("K", container = LFplotlittle)
 add(tmp, Kslide, expand=TRUE)
 
 
-Cslide= gslider(from=0,to=1.1,by=.01,value=0)
+Cslide= gslider(from=0,to=1.2,by=.01,value=0)
 tmp = gframe("C", container = LFplotlittle)
 add(tmp, Cslide, expand=TRUE)
 
@@ -145,7 +145,7 @@ add(tmp, scaleslide, expand=TRUE)
 
 
   midlength <- gdroplist(list(1:20*0))
-  tmp <- gframe("ML",container=LFplotlittle)
+  tmp <- gframe("SL",container=LFplotlittle)
   add(tmp,midlength, expand=FALSE) 
 
 
@@ -225,7 +225,7 @@ tmp = gframe("Linf", container = Kscanplotlittle)
 add(tmp, Linfslidek, expand=TRUE)
 
 
-Cslidek= gslider(from=0,to=1.1,by=.01,value=0)
+Cslidek= gslider(from=0,to=1.2,by=.01,value=0)
 tmp = gframe("C", container = Kscanplotlittle)
 add(tmp, Cslidek, expand=TRUE)
 
@@ -246,7 +246,7 @@ add(tmp,stdatek, expand=FALSE)
 
 
 midlengthk <- gdroplist(list(1:20*0))
-tmp <- gframe("ML",container=Kscanplotlittle)
+tmp <- gframe("SL",container=Kscanplotlittle)
 add(tmp,midlengthk, expand=FALSE) 
 
 
@@ -299,32 +299,18 @@ Catchcurvepic<- gnotebook(container=Catchcurveplot,expand=TRUE)#create the Entry
 Catchcurvegraphic<- ggraphics(container = Catchcurvepic,width=700,height=500,label="C.C. non seasonal")
 
 
-CorrLFplot <- ggroup(container = nb,label="Corr. L/F", expand=TRUE,horizontal=TRUE)
-CorrLFlittle <- ggroup(container=CorrLFplot,expand=FALSE,horizontal=FALSE,width=200)
-CorrLFpic <- gnotebook(container=CorrLFplot,expand=TRUE)
-Datatablemodified<- gtable(datatmp,container=CorrLFpic,label="Modified data")
-
-
-
+#Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=Catchcurvelittle)
-gimage("png/logo1.png",dirname=my_path,container=CorrLFlittle)
 
-Linfslidec=gslider(from=0,to=100,by=.01,value=0)
+
+Linfslidec=gslider(from=1,to=10,length.out=100,value=2)
 tmp = gframe("Linf", container = Catchcurvelittle)
 add(tmp, Linfslidec, expand=TRUE)
 
 
-Klocslidec=gslider(from=0,to=1,by=.01,value=0)
+Klocslidec=gslider(from=0,to=10,by=.01,value=0)
 tmp = gframe("K", container = Catchcurvelittle)
 add(tmp, Klocslidec, expand=TRUE)
-
-
-
-Linfslidec=gslider(from=0,to=100,by=.01,value=0)
-tmp = gframe("Linf", container = Catchcurvelittle)
-add(tmp, Linfslidec, expand=TRUE)
-
-
 
 
 Pointslidelc=gslider(from=0,to=10,by=1,value=0)
@@ -337,11 +323,21 @@ tmp = gframe("Last point", container = Catchcurvelittle)
 add(tmp, Pointslideuc, expand=TRUE)
 
 
+CorrLFplot <- ggroup(container = nb,label="Corr. L/F", expand=TRUE,horizontal=TRUE)#make entry group
+CorrLFlittle <- ggroup(container=CorrLFplot,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+CorrLFpic <- gnotebook(container=CorrLFplot,expand=TRUE)#create the Entry pic.
+Datatablemodified<- gtable(datatmp,container=CorrLFpic,label="Modified data")
+
+
+#Add ELEFAN in R logo at the top of the page
+gimage("png/logo1.png",dirname=my_path,container=CorrLFlittle)
+
+
 plotnonseacatch <- function(h,...){ 
 visible(Catchcurvegraphic) <- TRUE #make correct picture
 temp<- plotnonseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Pointslideuc),svalue(Pointslidelc))
-Datatablemodified[] <- temp$data
-Datatablemodified[] <- temp$data
+Datatablemodified[] <- (signif(temp$data,3))
+Datatablemodified[] <- (signif(temp$data,3))
 YieldProbs <<- temp$prob
 print("probs")
 print(YieldProbs)
@@ -362,15 +358,22 @@ visible(Catchcurvegraphic) <- TRUE #make correct picture
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(Catchcurvelittle,139,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(Catchcurvelittle,141,horizontal=FALSE)# spacing needs to be tuned for each slide
 Catchcurvelogo <- ggroup(container=Catchcurvelittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Catchcurvelogo)
 
 
+#Add sponsors logo at the bottom of the page
+addSpace(CorrLFlittle,428,horizontal=FALSE)# spacing needs to be tuned for each slide
+CorrLFlogo <- ggroup(container=CorrLFlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+gimage("png/logo2.png",dirname=my_path,container=CorrLFlogo)
 
+
+
+## ## ## ## Seasonal Catch curve tab
 
 SeasonalCatch <- ggroup(container = nb,label="C.C. II", expand=TRUE,horizontal=TRUE)#make entry gr
-SeasonalCatchlittle <- ggroup(container=SeasonalCatch,expand=FALSE,horizontal=FALSE)# make little entry group
+SeasonalCatchlittle <- ggroup(container=SeasonalCatch,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 SeasonalCatchpic<- gnotebook(container=SeasonalCatch,expand=TRUE)#create the Entry pic.
 SeasonalCatchgraphic<- ggraphics(container = SeasonalCatchpic,width=700,height=500,label="C.C. seasonal")
 
@@ -379,20 +382,17 @@ SeasonalCatchgraphic<- ggraphics(container = SeasonalCatchpic,width=700,height=5
 gimage("png/logo1.png",dirname=my_path,container=SeasonalCatchlittle)
 
 
-
-Linfslidec2=gslider(from=0,to=100,by=.01,value=0)
+Linfslidec2=gslider(from=1,to=10,length.out=100,value=2)
 tmp = gframe("Linf", container = SeasonalCatchlittle)
 add(tmp, Linfslidec2, expand=TRUE)
 
 
-
-Klocslidec2=gslider(from=0,to=1,by=.01,value=0)
+Klocslidec2=gslider(from=0,to=10,by=.01,value=0)
 tmp = gframe("K", container = SeasonalCatchlittle)
 add(tmp, Klocslidec2, expand=TRUE)
 
 
-
-Cslidec2=gslider(from=0,to=1.1,by=.01,value=0)
+Cslidec2=gslider(from=0,to=1.2,by=.01,value=0)
 tmp = gframe("C", container = SeasonalCatchlittle)
 add(tmp, Cslidec2, expand=TRUE)
 
@@ -400,7 +400,6 @@ add(tmp, Cslidec2, expand=TRUE)
 TWslidec2=gslider(from=0,to=1,by=.01,value=0)
 tmp = gframe("WP", container = SeasonalCatchlittle)
 add(tmp, TWslidec2, expand=TRUE)
-
 
 
 Pointslidelc2=gslider(from=0,to=10,by=1,value=0)
@@ -413,7 +412,6 @@ tmp = gframe("Last point", container = SeasonalCatchlittle)
 add(tmp, Pointslideuc2, expand=TRUE)
 
 
-
 plotseacatch <- function(h,...){ 
   visible(SeasonalCatchgraphic) <- TRUE #make correct picture
 temp<- plotseacatchcurve(svalue(Klocslidec2),svalue(Linfslidec2),svalue(Cslidec2),svalue(TWslidec2))
@@ -421,7 +419,6 @@ temp<- plotseacatchcurve(svalue(Klocslidec2),svalue(Linfslidec2),svalue(Cslidec2
 visible(SeasonalCatchgraphic) <- TRUE #make correct picture
 
  }
-
 
  #addSpace(Catchcurvelittle,40,horizontal=FALSE)# Daniel wants the "plot" buttons spaced farther from the other buttons
  plot=gbutton("Make plot",handler=plotseacatch)
@@ -438,10 +435,9 @@ gimage("png/logo2.png",dirname=my_path,container=SeasonalCatchlogo)
 ## ## ## ## Yield per recruit tab
 
 YieldperRecruit <- ggroup(container = nb,label="Y/R", expand=TRUE,horizontal=TRUE)#make entry gr
-YieldperRecruitlittle <- ggroup(container=YieldperRecruit,expand=FALSE,horizontal=FALSE)# make little entry group
+YieldperRecruitlittle <- ggroup(container=YieldperRecruit,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 YieldperRecruitpic<- gnotebook(container=YieldperRecruit,expand=TRUE)#create the Entry pic.
 YieldperRecruitgraphic<- ggraphics(container = YieldperRecruitpic,width=700,height=500,label="Y/R")
-
 
 
 #Add ELEFAN in R logo at the top of the page
@@ -453,13 +449,9 @@ tmp = gframe("M", container = YieldperRecruitlittle)
 add(tmp, M, expand=TRUE)
 
 
-
-
-Kypr=gslider(from=0,to=1,by=.01,value=0)
+Kypr=gslider(from=0,to=10,by=.01,value=0)
 tmp = gframe("K", container = YieldperRecruitlittle)
 add(tmp, Kypr, expand=TRUE)
-
-
 
 
 Lc=gslider(from=0,to=5,by=.01,value=0)
@@ -470,7 +462,6 @@ add(tmp, Lc, expand=TRUE)
 Linfypr=gslider(from=0,to=5,by=.01,value=0)
 tmp = gframe("Linf", container = YieldperRecruitlittle)
 add(tmp, Linfypr, expand=TRUE)
-
 
 
 plotyperr <- function(h,...){ 
@@ -485,9 +476,9 @@ visible(YieldperRecruitgraphic) <- TRUE #make correct picture
  tmp=gframe("Plot",container=YieldperRecruitlittle)
  add(tmp, plot, expand=FALSE)
 
-#Add sponsors logo at the bottom of the page
 
-addSpace(YieldperRecruitlittle,21,horizontal=FALSE)# spacing needs to be tuned for each slide
+#Add sponsors logo at the bottom of the page
+addSpace(YieldperRecruitlittle,221,horizontal=FALSE)# spacing needs to be tuned for each slide
 YieldperRecruitlogo <- ggroup(container=YieldperRecruitlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=YieldperRecruitlogo)
 
