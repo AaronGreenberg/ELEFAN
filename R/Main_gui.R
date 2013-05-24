@@ -304,17 +304,14 @@ Catchcurvelittle <- ggroup(container=Catchcurveplot,expand=FALSE,horizontal=FALS
 Catchcurvepic<- gnotebook(container=Catchcurveplot,expand=TRUE)#create the Entry pic.
 Catchcurvegraphic<- ggraphics(container = Catchcurvepic,width=700,height=500,label="C.C. non seasonal")
 
-<<<<<<< HEAD
-#Add ELEFAN in R logo at the top of the page
-=======
+
 CorrLFplot <- ggroup(container = nb,label="Corr. L/F", expand=TRUE,horizontal=TRUE)
 CorrLFlittle <- ggroup(container=CorrLFplot,expand=FALSE,horizontal=FALSE,width=200)
 CorrLFpic <- gnotebook(container=CorrLFplot,expand=TRUE)
 Datatablemodified<- gtable(datatmp,container=CorrLFpic,label="Modified data")
 
 
-#Add ELEFAN in R logo at the top of the pages
->>>>>>> a0c810c88045169fea33566debe69151e3718334
+
 gimage("png/logo1.png",dirname=my_path,container=Catchcurvelittle)
 gimage("png/logo1.png",dirname=my_path,container=CorrLFlittle)
 
@@ -328,15 +325,14 @@ tmp = gframe("K", container = Catchcurvelittle)
 add(tmp, Klocslidec, expand=TRUE)
 
 
-<<<<<<< HEAD
+
 Linfslidec=gslider(from=0,to=100,by=.01,value=0)
 tmp = gframe("Linf", container = Catchcurvelittle)
 add(tmp, Linfslidec, expand=TRUE)
 
 
 
-=======
->>>>>>> a0c810c88045169fea33566debe69151e3718334
+
 Pointslidelc=gslider(from=0,to=10,by=1,value=0)
 tmp = gframe("First point", container = Catchcurvelittle)
 add(tmp, Pointslidelc, expand=TRUE)
@@ -378,15 +374,6 @@ gimage("png/logo2.png",dirname=my_path,container=Catchcurvelogo)
 
 
 
-<<<<<<< HEAD
-SeasonalCatchplot <- ggroup(container = nb,label="C.C. II", expand=TRUE,horizontal=TRUE)#make entry group
-SeasonalCatchlittle <- ggroup(container=SeasonalCatchplot,expand=FALSE,horizontal=FALSE,with=200)# make little entry group
-SeasonalCatchpic<- gnotebook(container=SeasonalCatchplot,expand=TRUE)#create the Entry pic.
-SeasonalCatchgraphic<- ggraphics(container = SeasonalCatchpic,width=700,height=500,label="C.C. non seasonal")
-Datatablemodified<- gtable(datatmp,container=SeasonalCatchpic,label="Modified data")
-=======
-## ## ## ## ## Seasonal catch curve tab (C.C.II)
->>>>>>> dknip-master
 
 SeasonalCatch <- ggroup(container = nb,label="C.C. II", expand=TRUE,horizontal=TRUE)#make entry gr
 SeasonalCatchlittle <- ggroup(container=SeasonalCatch,expand=FALSE,horizontal=FALSE)# make little entry group
