@@ -40,7 +40,8 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
    dateaxis <-as.Date(datesloc$Date[1]+X)#place things right location
    #create axis for plots
    par(new = FALSE)
-   plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,las=2,...)
+   plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n", yaxt="n", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,las=2,...)
+   axis(2,tck=0.02,las=2)
    #title(main=title, col.main="red", font.main=1)
    #plot Rectangles
 
@@ -60,7 +61,9 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
                 count=count+1
 		rectplot(-ser,bins,xmin,xmax,ylim,barcol1,barcol2)#make bar plot
                 #abline(h=bins,col="gray60",lty=1,cex=.001)
-                text(cbind((time[i]+as.numeric(datesloc$Date[1])),max(bins)+((count%%2)*.7+1.1)*min(c((bins[2]-bins[1]),1))),label=as.character(datesloc$Date[count+1],format="%d/%m/%Y"),cex=.75,col="black")#add datesloc to things
+
+                text(cbind((time[i]+as.numeric(datesloc$Date[1])),max(bins)+((count%%2)*.7+1.1)*min(c((bins[2]-bins[1]),1))),label=as.character(datesloc$Date[count+1],format="%d/%m/%y"),cex=.75,col="black")#add datesloc to things
+
               }
 	}
     #print(bins)
@@ -73,9 +76,10 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
    #abline(v=birthday+as.numeric(datesloc$Date[1]),col="red")
    print(c("birthday",birthday)) 
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
-  if(GF!=0){ legend(x="topleft",legend=paste("gf=",GF))}
- }
 
+  if(GF!=0){ legend(x="topleft",inset=0.02,legend=paste("Rn =",signif(GF,4)))}
+
+ }
 
 
 
