@@ -475,7 +475,7 @@ add(tmp, Linfypr, expand=TRUE)
 
 plotyperr <- function(h,...){ 
 visible(YieldperRecruitgraphic) <- TRUE #make correct picture
-Yieldbiomass <- yield_biomass_per_recruit(svalue(M),svalue(Kypr),svalue(Lc),svalue(Linfypr),Pi=(1-YieldProbs),pas=NULL,pas2=NULL)
+Yieldbiomass <- yield_biomass_per_recruit(svalue(M),svalue(Kypr),svalue(Lc),svalue(Linfypr),Pi=(1-YieldProbs),pas=NULL)
 plot_yield_biomass_per_recruit(Yieldbiomass)
 visible(YieldperRecruitgraphic) <- TRUE #make correct picture  
  }

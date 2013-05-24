@@ -31,7 +31,8 @@ widthvec2 <-0:pointslower
 z <- lm(log(sumsample[widthvec]/delti[widthvec])~ti[widthvec])
 par(1,las=1,bty='n')
 plot(x=ti[widthvec2],y=(z$coefficients[1]+z$coefficients[2]*ti[widthvec2]),type="l",
-     col="black",xlab="Age", ylab=bquote(paste("ln(N)/",Delta,"T")),xlim=c(-0.5,ceiling(max(ti))),ylim=c(0,ceiling(1.1*max(log(sumsample/delti)))))#make the line that does not count  
+     col="black",xlab="Age", ylab=bquote(paste("ln(N)/",Delta,"T")),xlim=c(-0.5,ceiling(max(ti))),ylim=c(0,ceiling(1.1*max(log(sumsample/delti)))))
+                                        #make the line that does not count  
 points(ti,log(sumsample/delti))
 text(ti,log(sumsample/delti)+.2*log(max(log(sumsample/delti))),as.character(1:length(ti)))
 points(ti[widthvec],log(sumsample[widthvec]/delti[widthvec]),pch=19,col="black")
@@ -87,15 +88,11 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
       gcurvemain <- as.vector(tempered[,3])
       if(j>tzero[i]){
       int <- which(tempered[,1]==j)
-      print("int")
-      print(int)
-      print(tempered[int,1])
       if(int>=1){
       pointscurve[count,1] <- i #determine curve
       pointscurve[count,2] <- tempered[int,2]#get index of location x axis.date...
       pointscurve[count,3] <- tempered[int,3]#get index of location y axis. size at date...
       pointscurve[count,4] <- tempered[int,4]#get index of location bin probably not needed...
-     # print(pointscurve)
        count=count+1
     }
     }
@@ -105,10 +102,11 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
 
   #okay time to sum things up!
   #
-   pointscurve2 <- pointscurve[order(pointscurve[,2])]
-  head(pointscurve)
-  head(pointscurve2)
-#  for(j in index){
+  pointscurve2 <- pointscurve[order(pointscurve[,2],pointscurve[,3]),]
+  print(head(pointscurve))
+  print("-------------------") 
+  print((pointscurve2))
+  #for(j in index){
       
 
 
@@ -119,7 +117,6 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
 
  
 
-print(pointscurve)
   
 catchrqFreqPlot(1:days,datain$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(datain$ML[1],datain$ML[length(datain$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,pointscurve,timeblue,datein,barscale=1,GF=0)
 
