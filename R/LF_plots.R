@@ -77,7 +77,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
    print(c("birthday",birthday)) 
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
 
-  if(GF!=0){ legend(x="topleft",inset=0.02,legend=paste("Rn =",signif(GF,4)))}
+  if(GF!=0){ legend(x="topleft",inset=0.02,legend=paste("Rn =",signif(GF,3)))}
 
  }
 

@@ -342,8 +342,8 @@ gimage("png/logo1.png",dirname=my_path,container=CorrLFlittle)
 plotnonseacatch <- function(h,...){ 
 visible(Catchcurvegraphic) <- TRUE #make correct picture
 temp<- plotnonseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Pointslideuc),svalue(Pointslidelc))
-Datatablemodified[] <- temp$data
-Datatablemodified[] <- temp$data
+Datatablemodified[] <- (signif(temp$data,3))
+Datatablemodified[] <- (signif(temp$data,3))
 YieldProbs <<- temp$prob
 print("probs")
 print(YieldProbs)
