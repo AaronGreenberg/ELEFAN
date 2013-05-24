@@ -6,7 +6,7 @@
 #setwd("../")
 #library(gWidgets)
 #library(MASS)
-library(Rcpp) # connects to c++ programs
+#library(Rcpp) # connects to c++ programs
 #options("guiToolkit"="RGtk2")
 #source("R/main.R")
 #sourceCpp("src/growth_curve.cpp") #compiles and sources. 
@@ -63,12 +63,6 @@ datefileinh <- function(h,...){
   stdate[] <- 1:length(datein[,2])
   stdatek[] <- 1:length(datein[,2])
   visible(Datetable) <- TRUE
-## #  }
-## #lffileinh <- function(h,...){
-##   print("so I am almost screwed")
-##   datain<<-lffilein()
-##   print("gui data")
-##   print(datain)
 
   Datatable[] <- datain
   Datatable[] <- datain
@@ -422,7 +416,7 @@ add(tmp, Pointslideuc2, expand=TRUE)
 
 plotseacatch <- function(h,...){ 
   visible(SeasonalCatchgraphic) <- TRUE #make correct picture
-temp<- plotseacatchcurve(svalue(Klocslidec2),svalue(Linfslidec2),svalue(Cslidec2),svalue(TWslidec))
+temp<- plotseacatchcurve(svalue(Klocslidec2),svalue(Linfslidec2),svalue(Cslidec2),svalue(TWslidec2))
 
 visible(SeasonalCatchgraphic) <- TRUE #make correct picture
 
