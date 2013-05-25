@@ -7,12 +7,12 @@
 plotpeak <- function(Linf,K,Cseasonal,tw,ptype,sdate,ML,scale){#function(d=days,dm=date,da=data,lfdata=lfdata,pd=peaks$out,curve=gcurve)
 goodfit <- NULL
 #getWinVal(scope="L")
-print("TEST:::")
-print(days)
+#print("TEST:::")
+#print(days)
 startdate <- as.Date(datein[sdate,1])
-print("start date")
-print(startdate)
-print(c(Linf,Cseasonal,K))
+#print("start date")
+#print(startdate)
+#print(c(Linf,Cseasonal,K))
 startime <- as.numeric(startdate-datein[1,1])
 ML <- as.numeric(ML)
 #need to convert start date to dime.
@@ -23,21 +23,21 @@ peaks <- lfrestruc(lfdata)                  #create restructure lfdata into peak
 if(K!=0){
 
 gcurve <- curves_cpp(Linf,Cseasonal,tw,K,datain$ML,days,startime,ML,BIRTHDAY) # compute growth curve this has index, day in growthcurve and properbin.
-print(head(gcurve$c))
-print(length(gcurve$c[,1]))
+#print(head(gcurve$c))
+#print(length(gcurve$c[,1]))
 
 
 asp <- aspcompute(peaks)                      #compute asp
 esp <- espcompute(gcurve,peaks$out,days,datain$ML)               #compute esp
 gf <- gfcompute(asp,esp)
-print("goodfit")
-print(gf)
+#print("goodfit")
+#print(gf)
 }else{
 gf <- 0
 gcurve <- matrix(0,4,ncol=4)        #initalize growth curve data structure
 gcurve$c <- matrix(0,4,ncol=4)
 }
-print(datein)
+#print(datein)
 if(ptype=="Peaks"){
 #  png("lfplot1.png",width=1000,height=1000)
   rqFreqPlot(1:days,datain$ML,peaks$out,startime,ML,gcurve,datein,barscale=scale,GF=signif(gf,4),birthday=BIRTHDAY)
@@ -67,10 +67,10 @@ kscanplot <- function(window=window,z=zkscan){
     text(z[which.max(z[,1]),2],z[which.max(z[,1]),1]+0.01,as.character(signif(z[which.max(z[,1]),2],2)))
     points(z[which.max(ma),2],ma[which.max(ma)],col="blue",cex=.8,pch=19)     
     text(z[which.max(ma),2],ma[which.max(ma)]+0.01,as.character(signif(z[which.max(ma),2],2)))     
-    print(max(z[nzero,1]))#gf
-    print(z[which.max(z[,1]),2]) #K
-    print(z[which.max(z[,1]),3]) #ml
-    print(z[which.max(z[,1]),4])#date
+    #print(max(z[nzero,1]))#gf
+    #print(z[which.max(z[,1]),2]) #K
+    #print(z[which.max(z[,1]),3]) #ml
+    #print(z[which.max(z[,1]),4])#date
 
   }
 

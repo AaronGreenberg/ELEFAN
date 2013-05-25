@@ -24,8 +24,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
   ## This function makes the fancy graphs that seems central to the output of ELEFAN
    ## In particular it provides a way of plotting a growth curve over length frequancy data plots over time.
    ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
-#     print("LF datesloc")
-#   print(datesloc)
+
    X <- time                         #store time
    xlim <- c(min(time+as.numeric(datesloc$Date[1])),max(time+as.numeric(datesloc$Date[1])))
    temp <- vector()
@@ -45,8 +44,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
    #title(main=title, col.main="red", font.main=1)
    #plot Rectangles
 
- #   print("MAXscale")
- #   print(maxscale)
+
 
    count=0
    lengthtime=length(time)
@@ -66,15 +64,13 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
 
               }
 	}
-    #print(bins)
+
    if(sum(curves$c[,2])!=0){
    points(sdate+as.numeric(datesloc$Date[1]),sML,col="blue",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
    points(curves$c[,2]+as.numeric(datesloc$Date[1]),curves$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
-#   points(curves$c[,2]+as.numeric(datesloc$Date[1]),curves$c[,4],pch=1 ,cex=.02,col="pink")# make real growth curve!
-                                        #      lines(curves$c[,2],curves$c[,3],col="red")
+
  }
-   #abline(v=birthday+as.numeric(datesloc$Date[1]),col="red")
-   print(c("birthday",birthday)) 
+
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
 
   if(GF!=0){ legend(x="topleft",inset=0.02,legend=paste("Rn =",signif(GF,3)))}
@@ -104,8 +100,6 @@ catchrqFreqPlot <- function(time,bins,freqs, sdate,sML,tzeros,curves1,curves2,ma
    par(new = FALSE)
    plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n",yaxt="n", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,las=2,...)
    axis(2,tck=0.02,las=2)
-   #par(tck=0.01)
-   #title(main=title, col.main="red", font.main=1)
    #plot Rectangles
 
   
@@ -122,11 +116,11 @@ catchrqFreqPlot <- function(time,bins,freqs, sdate,sML,tzeros,curves1,curves2,ma
                 if(sum(ser) != 0){          #if there is lf data at time i make plot
                 count=count+1
 		rectplot(-ser,bins,xmin,xmax,ylim,barcol1,barcol2)#make bar plot
-                #abline(h=bins,col="gray60",lty=1,cex=.001)
+
                 text(cbind((time[i]+as.numeric(datesloc$Date[1])),max(bins)+((count%%2)*.2+1.1)*min(c((bins[2]-bins[1]),1))),label=as.character(datesloc$Date[count+1],format="%d/%m/%y"),cex=.75,col="black")#add datesloc to things
               }
 	}
-    #print(bins)
+
 
       points(tzeros+as.numeric(datesloc$Date[1]),tzeros*0,pch=19,cex=1.8,col="orange")
    for(i in 1:length(sdate)){
@@ -138,12 +132,10 @@ catchrqFreqPlot <- function(time,bins,freqs, sdate,sML,tzeros,curves1,curves2,ma
    points(curves2$c[,1]+as.numeric(datesloc$Date[1]),curves2$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
       points(timeblue+as.numeric(datesloc$Date[1]),maincurve,pch=1 ,cex=.2,col="purple")# make real growth curve!
 
-   #for(i in 1:length(bins)){
+
      points(pointscurve[,2]+as.numeric(datesloc$Date[1]),pointscurve[,3],col="blue",pch=1,cex=1.95)
     points(pointscurve[,2],pointscurve[,3],col="red",pch=2,cex=1.95)
      
-#}
-    #abline(v=birthday+as.numeric(datesloc$Date[1]),col="red")
 
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
   if(GF!=0){ legend(x="topleft",inset=0.02,legend=paste("Rn =",signif(GF,3)))}
