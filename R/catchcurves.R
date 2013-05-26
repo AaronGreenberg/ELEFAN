@@ -59,11 +59,11 @@ return(nonseasonal=list(data=dataout,prob=selectivity$prob))
 
 
 plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
-  print("Hi")
+
   # initialize data structure
   growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
   lfdata<- fillgrowthdata(datein,datain,growthdata) #make data structure with length frequency data
-  print("so")
+  print(head(lfdata)) 
   
   #--1--compute oldest and youngest
   #locate the oldest and youngest fish.
@@ -101,19 +101,48 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
      }
 
 
-  movingsum <- function(dayindex,curveindex,pointsc=pointcurve2,lf=lfdata){1}
+  movingsum <- function(dayindex,pointsc=pointscurve2,lf=lfdata){
+  #this function takes the moving average
+  binwidth <- datain$ML[2]-datain$ML[1]#this gets the width of the bin.
+  index1 <- which(pointsc[,2]==dayindex) #gets which points in #
+  curvelength <- pointsc[index1,3]
+  curvebin <- which(datain$ML==pointsc[index1,4])#get bin that growth curve goes through
+  print("curvelength")
+  print(curvelength)
+  print("binlength")
+  print(pointsc[index1,4])
+  print("index")
+  print(curvebin)
+  
+  out <- datain$ML*0
+  ## for(j in 1:(length(index1)-1))
+##     {
+      
+##       print(j)
+##       print(dayindex)
+##       print(curvebin[j])
+##       print(lfdata[curvebin[j],dayindex])
+##       print(curvebin[j+1])
+##       print(lfdata[curvebin[j+1],dayindex])
+## #      out[j] <- (lfdata[curvebin[j],dayindex]+lfdata[curvebin[j+1],dayindex])/binwidth
+##       print("out")
+##       print(out[j])
+##     }
+  out <- out+1
+  return(out)
+  }
   #okay time to sum things up!
   #
   pointscurve2 <- pointscurve[order(pointscurve[,2],pointscurve[,3]),]
   print(head(pointscurve))
   print("-------------------") 
   print((pointscurve2))
+  #curve #day #value #bin
   storagesum <- tzero*0#make vector that stores data
   for(i in index){ #for each day that the data is defined
-      for(j in 1:length(datain$ML))
-        {
-    storagesum[j] <-storagesum[j]+movingsum(i,j)
-    }
+    #add up intervals
+    storagesum <-storagesum+movingsum(i)
+ 
 
     }
  timeblue <- as.vector(tempered[,1])
