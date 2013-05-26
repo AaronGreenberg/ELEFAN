@@ -101,22 +101,25 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
      }
 
 
+  movingsum <- function(dayindex,curveindex,pointsc=pointcurve2,lf=lfdata){1}
   #okay time to sum things up!
   #
   pointscurve2 <- pointscurve[order(pointscurve[,2],pointscurve[,3]),]
   print(head(pointscurve))
   print("-------------------") 
   print((pointscurve2))
-  #for(j in index){
-      
+  storagesum <- tzero*0#make vector that stores data
+  for(i in index){ #for each day that the data is defined
+      for(j in 1:length(datain$ML))
+        {
+    storagesum[j] <-storagesum[j]+movingsum(i,j)
+    }
 
-
-
- # }
+    }
  timeblue <- as.vector(tempered[,1])
-  
 
- 
+print("STORAGESUM")
+  print(storagesum)
 
   
 catchrqFreqPlot(1:days,datain$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(datain$ML[1],datain$ML[length(datain$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,pointscurve,timeblue,datein,barscale=1,GF=0)
