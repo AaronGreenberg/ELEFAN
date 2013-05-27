@@ -30,10 +30,10 @@ print(ti)
 widthvec2 <-0:pointslower
 z <- lm(log(sumsample[widthvec]/delti[widthvec])~ti[widthvec])
 par(1,las=1,bty='n')
-plot(x=ti[widthvec2],y=(z$coefficients[1]+z$coefficients[2]*ti[widthvec2]),type="l",
-     col="black",xlab="Relative age (t-to)", ylab="Relative abundance (ln(N))",yaxt="n",xaxt="n",xlim=c(-0.5,ceiling(max(ti))),ylim=c(0,ceiling(1.1*max(log(sumsample/delti)))))#make the line that does not count
+plot(x=ti[widthvec2],y=(z$coefficients[1]+z$coefficients[2]*ti[widthvec2]),type="l",col="black",xlab="Relative age (t-to)", ylab="Relative abundance (ln(N))",yaxt="n",xaxt="n",xlim=c(-0.5,ceiling(max(ti))),ylim=c(0,ceiling(1.1*max(log(sumsample/delti)))))#make the line that does not count
 axis(2,tck=0.02,las=2)
 axis(1,tck=0.02)
+
 points(ti,log(sumsample/delti))
 text(ti,log(sumsample/delti)+.2*log(max(log(sumsample/delti))),as.character(1:length(ti)))
 points(ti[widthvec],log(sumsample[widthvec]/delti[widthvec]),pch=19,col="black")
@@ -59,11 +59,11 @@ return(nonseasonal=list(data=dataout,prob=selectivity$prob))
 
 
 plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
-  print("Hi")
+
   # initialize data structure
   growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
   lfdata<- fillgrowthdata(datein,datain,growthdata) #make data structure with length frequency data
-  print("so")
+
   
   #--1--compute oldest and youngest
   #locate the oldest and youngest fish.
@@ -77,7 +77,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   index <-which(colSums(lfdata)>0)
   print("index where lfdata not equal zero")
   print(index)
- tzero <- (seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(datain$ML)))
+ tzero <- sort((seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(datain$ML))),decreasing=TRUE)
 # gcurvemain <- 0*lfdata
  count=1
   pointscurve <- matrix(0,ncol=4,nrow=days*datain$ML)
@@ -88,28 +88,48 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   for( j in index){
       gcurvemain <- as.vector(tempered[,3])
       if(j>tzero[i]){
+      
       int <- which(tempered[,1]==j)
       print("int")
       print(int)
-      print(tempered[int,1])
-      if(int>=1){
+      print(length(int))
+      if(length(int)!=0){
       pointscurve[count,1] <- i #determine curve
       pointscurve[count,2] <- tempered[int,2]#get index of location x axis.date...
       pointscurve[count,3] <- tempered[int,3]#get index of location y axis. size at date...
       pointscurve[count,4] <- tempered[int,4]#get index of location bin probably not needed...
-     # print(pointscurve)
        count=count+1
     }
     }
     }
-     }
+ }
+  #sort things by day and length
+  pointscurve2 <- pointscurve[order(pointscurve[,2],pointscurve[,3]),]
+  movingsum <- function(upper,lower,dcount){
+    #upper is 
+  return(1)
+  }
   
+   print((pointscurve2))
+  #curve #day #value #bin
+  storagesum <- tzero*0#make vector that stores data
+  for(i in 1:length(index)){ #for each day that the data is defined
+       dateindex <- which(pointscurve2[,2]==index[i]) #subset by date
+     for (j in (length(tzero)):2)#sweep from top to bottom
+       {# for each curve
+         curveindex <- which(pointscurve2[dateindex,1]==j)
+         print(c("Hi",j))
+         print(c(pointscurve2[curveindex,3],pointscurve2[curveindex-1,3],curveindex,index[i],i))
+    storagesum[j] <-storagesum[j]+movingsum(pointscurve2[curveindex+1,3],pointscurve2[curveindex,3],i)#for each curve for each day add lf data
+      }
+}
  timeblue <- as.vector(tempered[,1])
-  
-
- 
-
-print(pointscurve)
+print(datain)
+print("STORAGESUM")
+  print(storagesum)
+#plot long vs slow.
+ plot(1:length(datain$ML),storagesum)
+x11()
   
 catchrqFreqPlot(1:days,datain$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(datain$ML[1],datain$ML[length(datain$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,pointscurve,timeblue,datein,barscale=1,GF=0)
 

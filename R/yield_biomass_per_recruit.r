@@ -3,11 +3,11 @@
 #' @description minimal documentation for roxygen purposes and could be added later 
 #' @export
 
-yield_biomass_per_recruit <- function (M,K,Lc,Linf,Pi,pas=NULL,pas2=NULL)
+yield_biomass_per_recruit <- function (M,K,Lc,Linf,Pi,pas=NULL)
 {
-
+#print("HI I am in ypr to party!")
 if (is.null(pas)) pas <- 0.05
-if (is.null(pas2)) pas2 <- 1
+#if (is.null(pas2)) pas2 <- 1
 
 # Y/R Knife-edge
 
@@ -19,10 +19,22 @@ m <- (1-E)/(M/K)
 YR_ke <- (E*(U^m))*(1-((3*U)/(1+m))+((3*(U^2))/(1+(2*m)))-((U^3)/(1+(3*m))))
 
 # Y/R Not Knife-edge
-l1 <- seq(from=0, to=(Linf-pas2), by=pas2)
-l2 <- seq(from=pas2, to=Linf, by=pas2)
+#l1 <- seq(from=0, to=(Linf-pas2), by=pas2)
+#l2 <- seq(from=pas2, to=Linf, by=pas2)
+l1 <- datain$ML-(datain$ML[2]-datain$ML[1])/2
+l2 <- datain$ML+(datain$ML[2]-datain$ML[1])/2
 U1 <- 1-(l1/Linf)
 U2 <- 1-(l2/Linf)
+#print("l1!")
+#print(l1)
+#print("l2!")
+#print(l2)
+#print("Pi")
+#print(Pi)
+#print("U1")
+#print(U1)
+#print("U2")
+#print(U2)
 
 YR_nke <- c()
 for (i in 1:length(E))
@@ -39,8 +51,16 @@ t1 <- c()
 t2 <- c()
 t1[1] <- NA
 t2[1] <- NA
+#print("HI I am about to loop!")
+
 for (k in 2:length(U1))
 {
+#print("t1[k]")
+#print(t1[k])
+#print("Gi[k-1]*yr1[k]")
+#print(Gi[k-1]*yr1[k])
+#print(k)
+
 t1[k] <- Gi[k-1]*yr1[k]
 t2[k] <- Gi[k]*yr2[k]
 }
@@ -89,6 +109,13 @@ t1[1] <- NA
 t2[1] <- NA
 for (k in 2:length(U1))
 {
+  
+#print("t1[k]")
+#print(t1[k])
+#print("Gi[k-1]*yr1[k]")
+#print(Gi[k-1]*yr1[k])
+#print(k)
+
 t1[k] <- Gi[k-1]*br1[k]
 t2[k] <- Gi[k]*br2[k]
 }

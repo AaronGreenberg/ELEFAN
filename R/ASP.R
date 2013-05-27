@@ -66,7 +66,7 @@ deemph <- function(q,nz){
 
 spv <- function(unw){           #rescale according to Routine F in Manual page 63
   y <- ifelse(unw==(-1),0,unw)
-  print(y)
+  #print(y)
   negi <- which(unw<0)
   posi <- which(unw>0)
   psum <- sum(unw[posi])
@@ -83,13 +83,13 @@ availablesumpeaks <- function(x){
   ytemp <- ifelse(x<0,0,x)
   m <- vector()
   partition <- which(ytemp==0 )# find the places where it is zero
-  print(partition)
+  #print(partition)
   m1 <- max(ytemp[1:partition[1]])#get lower limit
-  print(m1)
+  #print(m1)
   mend <- max(ytemp[length(partition+1):length(ytemp)])# get upper limit
-  print(mend)
+  #print(mend)
   for(i in 1:(length(partition)-1)){
-    print(ytemp[partition[i]:partition[i+1]])
+    #print(ytemp[partition[i]:partition[i+1]])
    m[i] <- max(ytemp[partition[i]:partition[i+1]])
   }
   ## print("m and good stuff")
@@ -115,8 +115,8 @@ datatmp$D <- isolate(datatmp$C,datatmp$OBS)       #isolate peaks
 datatmp$E <- deemph(datatmp$C,datatmp$D)          #deemph according to manual (SERIOUSLY see manual...)
 #datatmp$F <- spv(datatmp$E/((1+2/datatmp$OBS)^.5))                       #final rescale
 datatmp$F <- spv(datatmp$E)                       #final rescale
-print("data restructure")
-print(datatmp$F)
+#print("data restructure")
+#print(datatmp$F)
 return(as.vector(datatmp$F))
 }
 
@@ -137,14 +137,14 @@ lfrestruc<- function(ldata){            #puts main1 and main2 together to
      if(sum(ldata[,j])==0){
        ldata[,j]=ldata[,j]}
      else{
-     print("lf restructure counter")
-     print(j)
-     print(count)
+     #print("lf restructure counter")
+     #print(j)
+     #print(count)
      ret$out[,j] <- main1(ldata[,j])     #applying main1
      ret$asp[count] <-  main2(ret$out[,j])  #applying main2
-     print("partial asp")
-     print(ret$asp)
-     print(sum(ret$asp))
+     #print("partial asp")
+     #print(ret$asp)
+     #print(sum(ret$asp))
      count=count+1
      }
    }

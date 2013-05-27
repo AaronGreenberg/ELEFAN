@@ -6,7 +6,7 @@
 #setwd("../")
 #library(gWidgets)
 #library(MASS)
-library(Rcpp) # connects to c++ programs
+#library(Rcpp) # connects to c++ programs
 #options("guiToolkit"="RGtk2")
 #source("R/main.R")
 #sourceCpp("src/growth_curve.cpp") #compiles and sources. 
@@ -50,11 +50,10 @@ Datatable<- gtable(datatmp,container=Entrypic,label="Lengths")
 #Load Data
 #I need handlers.
 datefileinh <- function(h,...){
+  #this function sets correct limits for sliders.
   datefilein()
   datetmp <- datein
   options(digits=3)
-  print("gui Date")
-  print(datein)
   datetmp[,1] <- as.character(datein[,1])
   datetmp[,1] <- as.character(datein[,1])
   visible(Datetable) <- FALSE
@@ -63,16 +62,8 @@ datefileinh <- function(h,...){
   stdate[] <- 1:length(datein[,2])
   stdatek[] <- 1:length(datein[,2])
   visible(Datetable) <- TRUE
-## #  }
-## #lffileinh <- function(h,...){
-##   print("so I am almost screwed")
-##   datain<<-lffilein()
-##   print("gui data")
-##   print(datain)
-
   Datatable[] <- datain
   Datatable[] <- datain
-  #visible(Datatable) <- FALSE
   visible(Datatable) <- TRUE
   Linfslide[] <- seq(0,1.2*max(datain$ML),length.out=100)
   Linfslidek[] <- seq(0,1.2*max(datain$ML),length.out=100)
@@ -93,11 +84,8 @@ datefileinh <- function(h,...){
 
 
 readdatefile=gbutton("Load file",handler=datefileinh)
-#readlengthfile=gbutton("Length file",handler=lffileinh)
 tmp = gframe("Data", container = Entrylittle)
 add(tmp, readdatefile, expand=FALSE)
-#tmp = gframe("Read in length file", container = Entrylittle)
-#add(tmp, readlengthfile, expand=TRUE)
 
 #Add sponsors logo at the bottom of the page
 addSpace(Entrylittle,381,horizontal=FALSE)# spacing needs to be tuned for each slide
@@ -166,7 +154,6 @@ plotlf <- function(h,...){
  plotpeak(svalue(Linfslide),svalue(Kslide),svalue(Cslide),svalue(twslide),ptype="Peaks",sdate,ML,svalue(scaleslide))
  }
 
- #addSpace(LFplotlittle,40,horizontal=FALSE)# Daniel wants the "plot" buttons spaced farther from the other buttons
  plot=gbutton("Make plot",handler=plotlf)
  tmp=gframe("Plot",container=LFplotlittle)
  add(tmp, plot, expand=FALSE)
@@ -260,7 +247,7 @@ computefullkscan <- function(h,...){
 ckscan(Linf=svalue(Linfslidek),c=svalue(Cslidek),tw=svalue(twslidek))
 }
 computefixedkscan <- function(h,...){
-print(svalue(stdatek))
+
 cfixedkscan(sdate=svalue(stdatek),ML=svalue(midlengthk),Linf=svalue(Linfslidek),C=svalue(Cslidek),tw=svalue(twslidek))
 }
 plotfullkscan <- function(h,...){ 
@@ -272,7 +259,7 @@ visible(Kscangraphic) <- TRUE #make correct picture
 fixedkscanplot(window=svalue(movingaveragek))
  }
 
-#addSpace(Kscanplotlittle,40,horizontal=FALSE)# Daniel wants the "plot" buttons spaced farther from the other buttons
+
 Kscanplotlittlebutton<-ggroup(container=Kscanplotlittle,expand=FALSE,horizontal=TRUE,width=200)
 compute=gbutton("Start full scan",handler=computefullkscan)
 tmp=gframe("K-scan",container=Kscanplotlittlebutton)
@@ -345,10 +332,9 @@ temp<- plotnonseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Pointsl
 Datatablemodified[] <- (signif(temp$data,3))
 Datatablemodified[] <- (signif(temp$data,3))
 YieldProbs <<- temp$prob
-print("probs")
-print(YieldProbs)
+
 filename <- (paste(fname1,"corrected.dat",sep="_"))
-print(temp)
+
 if(file.exists(filename)){file.remove(filename)}#remove file
 write.matrix(temp,file=filename)
 
@@ -426,7 +412,7 @@ visible(SeasonalCatchgraphic) <- TRUE #make correct picture
 
  }
 
- #addSpace(Catchcurvelittle,40,horizontal=FALSE)# Daniel wants the "plot" buttons spaced farther from the other buttons
+
  plot=gbutton("Make plot",handler=plotseacatch)
  tmp=gframe("Plot",container=SeasonalCatchlittle)
  add(tmp, plot, expand=FALSE)
@@ -472,12 +458,12 @@ add(tmp, Linfypr, expand=TRUE)
 
 plotyperr <- function(h,...){ 
 visible(YieldperRecruitgraphic) <- TRUE #make correct picture
-Yieldbiomass <- yield_biomass_per_recruit(svalue(M),svalue(Kypr),svalue(Lc),svalue(Linfypr),Pi=(1-YieldProbs),pas=NULL,pas2=NULL)
+Yieldbiomass <- yield_biomass_per_recruit(svalue(M),svalue(Kypr),svalue(Lc),svalue(Linfypr),Pi=(1-YieldProbs),pas=NULL)
 plot_yield_biomass_per_recruit(Yieldbiomass)
 visible(YieldperRecruitgraphic) <- TRUE #make correct picture  
  }
 
- #addSpace(SeasonalCatchlittle,40,horizontal=FALSE)# Daniel wants the "plot" buttons spaced farther from the other buttons
+
  plot=gbutton("Make plot",handler=plotyperr)
  tmp=gframe("Plot",container=YieldperRecruitlittle)
  add(tmp, plot, expand=FALSE)
@@ -489,10 +475,7 @@ YieldperRecruitlogo <- ggroup(container=YieldperRecruitlittle,expand=FALSE,horiz
 gimage("png/logo2.png",dirname=my_path,container=YieldperRecruitlogo)
 
 
-
-
-
-
+#change to correct starting window.
 svalue(nb)=1
 visible(window) <- TRUE
 
