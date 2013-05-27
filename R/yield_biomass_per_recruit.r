@@ -3,8 +3,11 @@
 #' @description minimal documentation for roxygen purposes and could be added later 
 #' @export
 
-yield_biomass_per_recruit <- function (M,K,Lc,Linf,Pi,pas=NULL)
+yield_biomass_per_recruit <- function (M,K,Littlec,Linf,Pi,pas=NULL)
 {
+
+Lc=Littlec*Linf #convert from little c to Lc 
+M=M*K #convert from M/K to M
 #print("HI I am in ypr to party!")
 if (is.null(pas)) pas <- 0.05
 #if (is.null(pas2)) pas2 <- 1
