@@ -63,7 +63,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   # initialize data structure
   growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
   lfdata<- fillgrowthdata(datein,datain,growthdata) #make data structure with length frequency data
-  print(head(lfdata)) 
+
   
   #--1--compute oldest and youngest
   #locate the oldest and youngest fish.
@@ -88,8 +88,12 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   for( j in index){
       gcurvemain <- as.vector(tempered[,3])
       if(j>tzero[i]){
+      
       int <- which(tempered[,1]==j)
-      if(int>=1){
+      print("int")
+      print(int)
+      print(length(int))
+      if(length(int)!=0){
       pointscurve[count,1] <- i #determine curve
       pointscurve[count,2] <- tempered[int,2]#get index of location x axis.date...
       pointscurve[count,3] <- tempered[int,3]#get index of location y axis. size at date...
@@ -98,21 +102,12 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
     }
     }
     }
-     }
+ }
 
 
   movingsum <- function(dayindex,pointsc=pointscurve2,lf=lfdata){
   #this function takes the moving average
   binwidth <- datain$ML[2]-datain$ML[1]#this gets the width of the bin.
-  index1 <- which(pointsc[,2]==dayindex) #gets which points in #
-  curvelength <- pointsc[index1,3]
-  curvebin <- which(datain$ML==pointsc[index1,4])#get bin that growth curve goes through
-  print("curvelength")
-  print(curvelength)
-  print("binlength")
-  print(pointsc[index1,4])
-  print("index")
-  print(curvebin)
   
   out <- datain$ML*0
   ## for(j in 1:(length(index1)-1))
@@ -141,15 +136,18 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   storagesum <- tzero*0#make vector that stores data
   for(i in index){ #for each day that the data is defined
     #add up intervals
-    storagesum <-storagesum+movingsum(i)
+    
+    storagesum <-storagesum+1#movingsum(i)
  
 
     }
  timeblue <- as.vector(tempered[,1])
-
+print(datain)
 print("STORAGESUM")
   print(storagesum)
 
+  hist(rnorm(10000),100)
+x11()
   
 catchrqFreqPlot(1:days,datain$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(datain$ML[1],datain$ML[length(datain$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,pointscurve,timeblue,datein,barscale=1,GF=0)
 
