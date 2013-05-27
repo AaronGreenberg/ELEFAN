@@ -77,7 +77,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   index <-which(colSums(lfdata)>0)
   print("index where lfdata not equal zero")
   print(index)
- tzero <- (seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(datain$ML)))
+ tzero <- sort((seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(datain$ML))),decreasing=TRUE)
 # gcurvemain <- 0*lfdata
  count=1
   pointscurve <- matrix(0,ncol=4,nrow=days*datain$ML)
@@ -103,50 +103,32 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
     }
     }
  }
-
-
-  movingsum <- function(dayindex,pointsc=pointscurve2,lf=lfdata){
-  #this function takes the moving average
-  binwidth <- datain$ML[2]-datain$ML[1]#this gets the width of the bin.
-  
-  out <- datain$ML*0
-  ## for(j in 1:(length(index1)-1))
-##     {
-      
-##       print(j)
-##       print(dayindex)
-##       print(curvebin[j])
-##       print(lfdata[curvebin[j],dayindex])
-##       print(curvebin[j+1])
-##       print(lfdata[curvebin[j+1],dayindex])
-## #      out[j] <- (lfdata[curvebin[j],dayindex]+lfdata[curvebin[j+1],dayindex])/binwidth
-##       print("out")
-##       print(out[j])
-##     }
-  out <- out+1
-  return(out)
-  }
-  #okay time to sum things up!
-  #
+  #sort things by day and length
   pointscurve2 <- pointscurve[order(pointscurve[,2],pointscurve[,3]),]
-  print(head(pointscurve))
-  print("-------------------") 
-  print((pointscurve2))
+  movingsum <- function(upper,lower,dcount){
+    #upper is 
+  return(1)
+  }
+  
+   print((pointscurve2))
   #curve #day #value #bin
   storagesum <- tzero*0#make vector that stores data
-  for(i in index){ #for each day that the data is defined
-    #add up intervals
-    
-    storagesum <-storagesum+1#movingsum(i)
- 
-
-    }
+  for(i in 1:length(index)){ #for each day that the data is defined
+       dateindex <- which(pointscurve2[,2]==index[i]) #subset by date
+     for (j in (length(tzero)):2)#sweep from top to bottom
+       {# for each curve
+         curveindex <- which(pointscurve2[dateindex,1]==j)
+         print(c("Hi",j))
+         print(c(pointscurve2[curveindex,3],pointscurve2[curveindex-1,3],curveindex,index[i],i))
+    storagesum[j] <-storagesum[j]+movingsum(pointscurve2[curveindex+1,3],pointscurve2[curveindex,3],i)#for each curve for each day add lf data
+      }
+}
  timeblue <- as.vector(tempered[,1])
 print(datain)
 print("STORAGESUM")
   print(storagesum)
-
-  hist(rnorm(10000),100)
+#plot long vs slow.
+ plot(1:length(datain$ML),storagesum)
 x11()
   
 catchrqFreqPlot(1:days,datain$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(datain$ML[1],datain$ML[length(datain$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,pointscurve,timeblue,datein,barscale=1,GF=0)
