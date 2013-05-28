@@ -1,15 +1,10 @@
 #' Minimal doc
-#' @import gWidgets MASS Rcpp
+#' @import gWidgets MASS Rcpp RGtk2 cairoDevice
 #' @description minimal documentation for roxygen purposes and could be added later 
 #' @export
 
-#setwd("../")
-#library(gWidgets)
-#library(MASS)
-#library(Rcpp) # connects to c++ programs
-#options("guiToolkit"="RGtk2")
-#source("R/main.R")
-#sourceCpp("src/growth_curve.cpp") #compiles and sources. 
+
+options("guiToolkit"="RGtk2")
 
 #create the Main window.
 
@@ -17,7 +12,6 @@
 ELEFAN_gui <- function(){
 
 my_path <- paste(.libPaths()[1],"/ELEFAN",sep="")
-#sourceCpp(paste(my_path, "/source/growth_curve.cpp",sep="")) #compiles and sources. 
 
 size=1000
 window = gwindow("ELEFAN in R",height=size,width=1.618*size,visible=TRUE)
