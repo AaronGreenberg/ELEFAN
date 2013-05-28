@@ -33,6 +33,7 @@ nb <- gnotebook(container=biggroup,expand=TRUE,horizontal=TRUE)
 
 #%############################################################
 #Make the Entry page!
+YieldProbs<<-NA
 datetmp <- NA
 datatmp <- NA
 #visible(nb[1]) <- TRUE

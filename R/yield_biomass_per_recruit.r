@@ -3,9 +3,10 @@
 #' @description minimal documentation for roxygen purposes and could be added later 
 #' @export
 
-yield_biomass_per_recruit <- function (M,K,Littlec,Linf,Pi,pas=NULL)
+yield_biomass_per_recruit <- function (M,K,Littlec,Linf,Pi=YieldProbs,pas=NULL)
 {
 
+  
 Lc=Littlec*Linf #convert from little c to Lc 
 M=M*K #convert from M/K to M
 #print("HI I am in ypr to party!")
@@ -20,7 +21,9 @@ U <- 1-small_c
 m <- (1-E)/(M/K)
 
 YR_ke <- (E*(U^m))*(1-((3*U)/(1+m))+((3*(U^2))/(1+(2*m)))-((U^3)/(1+(3*m))))
-
+print(sum(Pi))
+if(!is.na(sum(Pi))){
+  
 # Y/R Not Knife-edge
 #l1 <- seq(from=0, to=(Linf-pas2), by=pas2)
 #l2 <- seq(from=pas2, to=Linf, by=pas2)
@@ -80,6 +83,7 @@ cum_yr[l] <- cum_yr[l-1]+yr[l]
 
 YR_nke[i] <- cum_yr[length(cum_yr)]
 }
+}
 
 # B/R Knife-edge
 
@@ -88,6 +92,7 @@ D <- 1-(3*U/(1+m_prim))+(3*U^2/(1+(2*m_prim)))-(U^3/(1+(3*m_prim)))
 N <- (1-E)*(1-((3*U)/(1+m))+((3*U^2)/(1+(2*m)))-(U^3/(1+(3*m))))
 BR_ke <- N/D
 
+if(!is.na(sum(Pi))){
 # B/R Not Knife-edge
 m_prim2 <- m/(1-E)
 BR_nke <- c()
@@ -141,7 +146,11 @@ cum_bri <- (1-E[i])*(N1/D1)
 
 BR_nke[i] <- cum_bri[length(cum_bri)]
 }
-
+}
+if(is.na(sum(Pi)))
+  { #make things = na
+    YR_nke <- BR_nke <- NA
+  }
 tab_names <- c('YR_ke','YR_nke','BR_ke','BR_nke')
 tab_final <- array(dim=c(length(E),4),dimnames=(list(E,tab_names)))
 tab_final[,1] <- YR_ke
