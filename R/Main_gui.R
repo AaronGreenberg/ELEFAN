@@ -66,10 +66,11 @@ datefileinh <- function(h,...){
   Datatable[] <- datain
   Datatable[] <- datain
   visible(Datatable) <- TRUE
-  Linfslide[] <- seq(0,1.2*max(datain$ML),length.out=100)
-  Linfslidek[] <- seq(0,1.2*max(datain$ML),length.out=100)
-  Linfslidec[] <- seq(0,1.22*max(datain$ML),length.out=100)
-  Linfslidec2[] <- seq(0,1.22*max(datain$ML),length.out=100)
+  Linfslide[] <- seq(0,1.5*max(datain$ML),length.out=100)
+  Linfslidek[] <- seq(0,1.5*max(datain$ML),length.out=100)
+  Linfslidec[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=100)
+  Linfslidec2[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=100)
+  Linfypr[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=100)
   Pointslide[] <- 2:length(datain$ML)
   Pointslideuc[] <- 1:length(datain$ML)
   Pointslidelc[] <- 1:length(datain$ML)
@@ -437,7 +438,7 @@ YieldperRecruitgraphic<- ggraphics(container = YieldperRecruitpic,width=700,heig
 gimage("png/logo1.png",dirname=my_path,container=YieldperRecruitlittle)
 
 
-M=gslider(from=0,to=1,by=.01,value=0)
+M=gslider(from=0.5,to=3,by=.01,value=0)
 tmp = gframe("M", container = YieldperRecruitlittle)
 add(tmp, M, expand=TRUE)
 
@@ -447,12 +448,12 @@ tmp = gframe("K", container = YieldperRecruitlittle)
 add(tmp, Kypr, expand=TRUE)
 
 
-Lc=gslider(from=0,to=5,by=.01,value=0)
+Lc=gslider(from=0.1,to=0.9,by=.01,value=0)
 tmp = gframe("Lc", container = YieldperRecruitlittle)
 add(tmp, Lc, expand=TRUE)
 
 
-Linfypr=gslider(from=0,to=5,by=.01,value=0)
+Linfypr=gslider(from=1,to=10,length.out=100,value=2)
 tmp = gframe("Linf", container = YieldperRecruitlittle)
 add(tmp, Linfypr, expand=TRUE)
 
