@@ -50,7 +50,7 @@ selectivity$index <- 1:pointslower
 selectivity$prob[1:pointslower]<- (sumsample[1:(pointslower)]/delti[1:(pointslower)])/exp(z$coefficients[1]+z$coefficients[2]*ti[1:(pointslower)])#compute selectivity probability
 print(selectivity)
 dataout <- datain#initialize
-for(i in 2:length(datain[1,])){dataout[,i] <-datain[,i]*selectivity$prob} 
+for(i in 2:length(datain[1,])){dataout[,i] <-datain[,i]/selectivity$prob} 
   
 return(nonseasonal=list(data=dataout,prob=selectivity$prob))  
 }
@@ -82,7 +82,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
  count=1
   pointscurve <- matrix(0,ncol=4,nrow=days*datain$ML)
   
-  for(i in 1:14){
+  for(i in 1:length(data$ML)){
   tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,tzero[i],0,BIRTHDAY)$c
   print(index)
   for( j in index){
