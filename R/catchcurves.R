@@ -30,7 +30,7 @@ print(ti)
 widthvec2 <-0:pointslower
 z <- lm(log(sumsample[widthvec]/delti[widthvec])~ti[widthvec])
 par(1,las=1,bty='n')
-plot(x=ti[widthvec2],y=(z$coefficients[1]+z$coefficients[2]*ti[widthvec2]),type="l",col="black",xlab="Relative age (t-to)", ylab=expression(paste("Relative abundance (ln(N)/",Delta(t),")")),yaxt="n",xaxt="n",xlim=c(-0.5,ceiling(max(ti))),ylim=c(0,ceiling(1.1*max(log(sumsample/delti)))))#make the line that does not count
+plot(x=ti[widthvec2],y=(z$coefficients[1]+z$coefficients[2]*ti[widthvec2]),type="l",col="black",xlab=bquote(paste("Relative age (t-t"[o],")")), ylab=expression(paste("Relative abundance (ln(N)/",Delta(t),")")),yaxt="n",xaxt="n",xlim=c(-0.5,ceiling(max(ti))),ylim=c(0,ceiling(1.1*max(log(sumsample/delti)))))#make the line that does not count
 axis(2,tck=0.02,las=2)
 axis(1,tck=0.02)
 
