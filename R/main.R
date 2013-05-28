@@ -47,8 +47,8 @@ print(lfbin)
 datein$Date=(as.Date(datein$Date,format="%d/%m/%Y"))       #convert dates into the date class.
 datelength <- length(datein$Date)                                      #get number of days data was collected
 
-yeartemp <- as.numeric(format(datein$Date[2],"%y")) #sort out birthday
-datein$Date[1] <- as.Date(paste("01/01/",yeartemp),format="%d/%m/%y")
+yeartemp <- as.numeric(format(datein$Date[2],"%Y")) #sort out birthday
+datein$Date[1] <- as.Date(paste("01/01/",yeartemp),format="%d/%m/%Y")
 BIRTHDAY <<- as.numeric(julian(as.Date(paste("01/01/",yeartemp),format="%d/%m/%y"))-julian(datein$Date[1]))
 days<-as.numeric(julian(datein$Date[datelength])-julian(datein$Date[1])) #set default number of da
 moddays<- (365-days%%365)+days                                         #compute width of plot window in years...
