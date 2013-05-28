@@ -8,15 +8,16 @@ par(mfrow=c(2,1), mar=c(4,4,0.5,0.5), oma=c(0,1,5,0))
 is.na(tab_final) <- is.na(tab_final)
 
 ylim <- c(0,max(tab_final[,1:2],na.rm=TRUE))
-plot(rownames(tab_final),tab_final[,1],type="l",ylab="Y/R",xlab="E",col=1,ylim=ylim)
+plot(rownames(tab_final),tab_final[,1],type="l",xaxt="n",yaxt="n",ylab="Relative yield per recruit",col=1,ylim=ylim)
 lines(rownames(tab_final),tab_final[,2],type="l",lty=2,col=1)
-
+axis(1,tck=0.02)
+axis(2,tck=0.02,las=2)
 
 ylim <- c(0,max(tab_final[,3:4],na.rm=TRUE))
-plot(rownames(tab_final),tab_final[,3],type="l",ylab="B/R",xlab="E",col=1,ylim=ylim)
+plot(rownames(tab_final),tab_final[,3],type="l",xaxt="n",yaxt="n",ylab="Relative biomass per recruit",xlab="Exploitation rate (E = F/Z)",col=1,ylim=ylim)
 lines(rownames(tab_final),tab_final[,4],type="l",lty=2,col=1)
+axis(1,tck=0.02)
+axis(2,tck=0.02,las=2)
 
-mtext("Plots of Yield per recruit (Y/R) and Biomass per recruit (B/R)
-in function of the exploitation rate (E):
-Knife-edge method (full lines), not Knife-edge (dashed lines)",NORTH<-3, line=0,outer=TRUE)
+
 }
