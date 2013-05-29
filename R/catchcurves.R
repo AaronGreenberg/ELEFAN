@@ -77,12 +77,12 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   index <-which(colSums(lfdata)>0)
   print("index where lfdata not equal zero")
   print(index)
- tzero <- sort((seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(datain$ML))),decreasing=TRUE)
+ tzero <- (seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=(length(datain$ML)+1)))
 # gcurvemain <- 0*lfdata
  count=1
   pointscurve <- matrix(0,ncol=4,nrow=days*datain$ML)
   
-  for(i in 1:length(data$ML)){
+  for(i in 1:length(datain$ML)){
   tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,tzero[i],0,BIRTHDAY)$c
   print(index)
   for( j in index){
@@ -90,9 +90,9 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
       if(j>tzero[i]){
       
       int <- which(tempered[,1]==j)
-      print("int")
-      print(int)
-      print(length(int))
+#      print("int")
+#      print(int)
+#      print(length(int))
       if(length(int)!=0){
       pointscurve[count,1] <- i #determine curve
       pointscurve[count,2] <- tempered[int,2]#get index of location x axis.date...
@@ -103,27 +103,52 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
     }
     }
  }
+  abundancein <- matrix(0,nrow=length(tzero),ncol=length(index))
   #sort things by day and length
+  binwidth <- datain$ML[2]-datain$ML[1]
   pointscurve2 <- pointscurve[order(pointscurve[,2],pointscurve[,3]),]
-  movingsum <- function(upper,lower,dcount){
-    #upper is 
-  return(1)
-  }
+print(head(pointscurve2))
+  LFdata <- datain
+  for(i in 1:(length(index))) {#loop over days
+   cindex=which(pointscurve2[,2]==index[i]) #get index for correct day
+  for(j in 1:(length(tzero)-1)){ #loop over pointscurve2
+    #get lp
+     lp=c(pointscurve2[cindex[j],3],pointscurve2[cindex[j],4])
+     #get up
+     up=c(pointscurve2[cindex[j+1],3],pointscurve2[cindex[j+1],4])
+      print("Day and curve")
+      print(c(i,j))
+     LFindex=which(LFdata[,1]>=lp[2]&LFdata[,1]<=up[2])
   
-   print((pointscurve2))
-  #curve #day #value #bin
-  storagesum <- tzero*0#make vector that stores data
-  for(i in 1:length(index)){ #for each day that the data is defined
-       dateindex <- which(pointscurve2[,2]==index[i]) #subset by date
-     for (j in (length(tzero)):2)#sweep from top to bottom
-       {# for each curve
-         curveindex <- which(pointscurve2[dateindex,1]==j)
-         print(c("Hi",j))
-         print(c(pointscurve2[curveindex,3],pointscurve2[curveindex-1,3],curveindex,index[i],i))
-    storagesum[j] <-storagesum[j]+movingsum(pointscurve2[curveindex+1,3],pointscurve2[curveindex,3],i)#for each curve for each day add lf data
-      }
+     top=(up[2]+.5*binwidth-up[1])/(binwidth)*LFdata[LFindex[1],i]
+     bottom=1#make sure that curve is in data
+     if(lp[1]>(lp[2]-.5*binwidth)){
+     bottom= 1-(lp[2]+.5*binwidth-lp[1])/(binwidth)*LFdata[LFindex[length(LFindex)],i]
+   }
+     print("Edges")
+     print(top)
+     print(bottom)
+     
+     if(length(LFindex)>2){
+      print("LFindex")
+      print("okay?")
+      print(LFindex)
+     print(LFindex[2:(length(LFindex)-1)])
+
+     abundancein[j,i]=sum(LFdata[LFindex[2:(length(LFindex)-1)],i])+top+bottom
+     }else{
+       print("LFindex")
+      print("okay2?")
+      print(LFindex)
+       abundancein[j,i]=top+bottom
+     }
+  }
+
 }
- timeblue <- as.vector(tempered[,1])
+storagesum <- rowSums(abundancein)
+
+
+  timeblue <- as.vector(tempered[,1])
 print(datain)
 print("STORAGESUM")
   print(storagesum)
