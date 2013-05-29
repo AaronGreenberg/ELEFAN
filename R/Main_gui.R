@@ -38,6 +38,7 @@ Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE,height=30)# 
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=Entrylittle)
 
+
 Entrypic<- gnotebook(container=Entry,expand=TRUE)#create the Entry pic.
 Datetable<- gtable(datetmp,container=NULL,label="Dates")
 Datatable<- gtable(datatmp,container=Entrypic,label="Lengths")
@@ -417,6 +418,24 @@ visible(SeasonalCatchgraphic) <- TRUE #make correct picture
 addSpace(SeasonalCatchlittle,21,horizontal=FALSE)# spacing needs to be tuned for each slide
 SeasonalCatchlogo <- ggroup(container=SeasonalCatchlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=SeasonalCatchlogo)
+
+
+
+## ## ## ## Recruitment tab
+
+Recruit <- ggroup(container = nb,label="Recr.", expand=TRUE,horizontal=TRUE)#make entry gr
+Recruitlittle <- ggroup(container=Recruit,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+Recruitpic<- gnotebook(container=Recruit,expand=TRUE)#create the Entry pic.
+Recruitgraphic<- ggraphics(container = Recruitpic,width=700,height=500,label="Recr.")
+
+
+#Add ELEFAN in R logo at the top of the page
+gimage("png/logo1.png",dirname=my_path,container=Recruitlittle)
+
+
+addSpace(Recruitlittle,321,horizontal=FALSE)# spacing needs to be tuned for each slide
+Recruitlogo <- ggroup(container=Recruitlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+gimage("png/logo2.png",dirname=my_path,container=Recruitlogo)
 
 
 
