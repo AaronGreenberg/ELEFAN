@@ -66,14 +66,14 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
 	}
 
    if(sum(curves$c[,2])!=0){
-   points(sdate+as.numeric(datesloc$Date[1]),sML,col="blue",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
+   points(sdate+as.numeric(datesloc$Date[1]),sML,col="red",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
    points(curves$c[,2]+as.numeric(datesloc$Date[1]),curves$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
 
  }
 
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
-
-  if(GF!=0){ legend(x="topleft",inset=0.02,legend=paste("Rn =",signif(GF,3)))}
+  b<-bquote()
+  if(GF!=0){ legend(x="topleft",inset=0.02,legend=bquote(paste("R"[n] == .(signif(GF,3)))))}
 
  }
 

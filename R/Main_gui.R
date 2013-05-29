@@ -1,15 +1,10 @@
 #' Minimal doc
-#' @import gWidgets MASS Rcpp
+#' @import gWidgets MASS Rcpp RGtk2 cairoDevice
 #' @description minimal documentation for roxygen purposes and could be added later 
 #' @export
 
-#setwd("../")
-#library(gWidgets)
-#library(MASS)
-#library(Rcpp) # connects to c++ programs
 options("guiToolkit"="RGtk2")
-#source("R/main.R")
-#sourceCpp("src/growth_curve.cpp") #compiles and sources. 
+
 
 #create the Main window.
 
@@ -17,7 +12,6 @@ options("guiToolkit"="RGtk2")
 ELEFAN_gui <- function(){
 
 my_path <- paste(.libPaths()[1],"/ELEFAN",sep="")
-#sourceCpp(paste(my_path, "/source/growth_curve.cpp",sep="")) #compiles and sources. 
 
 size=1000
 window = gwindow("ELEFAN in R",height=size,width=1.618*size,visible=TRUE)
@@ -44,8 +38,9 @@ Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE,height=30)# 
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=Entrylittle)
 
+
 Entrypic<- gnotebook(container=Entry,expand=TRUE)#create the Entry pic.
-Datetable<- gtable(datetmp,container=Entrypic,label="Dates")
+Datetable<- gtable(datetmp,container=NULL,label="Dates")
 Datatable<- gtable(datatmp,container=Entrypic,label="Lengths")
 
 #Load Data
@@ -426,6 +421,24 @@ gimage("png/logo2.png",dirname=my_path,container=SeasonalCatchlogo)
 
 
 
+## ## ## ## Recruitment tab
+
+Recruit <- ggroup(container = nb,label="Recr.", expand=TRUE,horizontal=TRUE)#make entry gr
+Recruitlittle <- ggroup(container=Recruit,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+Recruitpic<- gnotebook(container=Recruit,expand=TRUE)#create the Entry pic.
+Recruitgraphic<- ggraphics(container = Recruitpic,width=700,height=500,label="Recr.")
+
+
+#Add ELEFAN in R logo at the top of the page
+gimage("png/logo1.png",dirname=my_path,container=Recruitlittle)
+
+
+addSpace(Recruitlittle,321,horizontal=FALSE)# spacing needs to be tuned for each slide
+Recruitlogo <- ggroup(container=Recruitlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+gimage("png/logo2.png",dirname=my_path,container=Recruitlogo)
+
+
+
 ## ## ## ## Yield per recruit tab
 
 YieldperRecruit <- ggroup(container = nb,label="Y/R", expand=TRUE,horizontal=TRUE)#make entry gr
@@ -439,7 +452,7 @@ gimage("png/logo1.png",dirname=my_path,container=YieldperRecruitlittle)
 
 
 M=gslider(from=0.5,to=3,by=.01,value=0)
-tmp = gframe("M", container = YieldperRecruitlittle)
+tmp = gframe("M/K", container = YieldperRecruitlittle)
 add(tmp, M, expand=TRUE)
 
 
@@ -449,7 +462,7 @@ add(tmp, Kypr, expand=TRUE)
 
 
 Lc=gslider(from=0.1,to=0.9,by=.01,value=0)
-tmp = gframe("Lc", container = YieldperRecruitlittle)
+tmp = gframe("Lc/Linf", container = YieldperRecruitlittle)
 add(tmp, Lc, expand=TRUE)
 
 
@@ -472,7 +485,7 @@ visible(YieldperRecruitgraphic) <- TRUE #make correct picture
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(YieldperRecruitlittle,221,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(YieldperRecruitlittle,141,horizontal=FALSE)# spacing needs to be tuned for each slide
 YieldperRecruitlogo <- ggroup(container=YieldperRecruitlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=YieldperRecruitlogo)
 
@@ -481,5 +494,13 @@ gimage("png/logo2.png",dirname=my_path,container=YieldperRecruitlogo)
 svalue(nb)=1
 visible(window) <- TRUE
 
+
+
+## ## ## ## L/F manip. tab
+
+LFmanip <- ggroup(container = nb,label="L/F manip.", expand=TRUE,horizontal=TRUE)#make entry gr
+LFmaniplittle <- ggroup(container=LFmanip,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+LFmanippic<- gnotebook(container=LFmanip,expand=TRUE)#create the Entry pic.
+LFmanipgraphic<- ggraphics(container = LFmanippic,width=700,height=500,label="L/F manip.")
 
 }
