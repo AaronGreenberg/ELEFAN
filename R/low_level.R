@@ -87,7 +87,7 @@ wetherall <- function(da=datain,points=3){
 
   Lipoints=Liprime[(length(Liprime)-points):length(Liprime)]
   Lip=Li[(length(Liprime)-points):length(Liprime)]
-  par(las=1,bty='n')
+  par(las=1,bty='n',oma=c(0,1,1,1))
   z=lm(Lipoints~Lip)
   Linfest <- -z$coefficients[1]/(z$coefficients[2]-1)#compute Linf 
   plot(Li,Liprime,xlim=c(0,max(Li,Linfest)*1.22),ylim=c(0,max(Liprime,Linfest)*1.22),xlab="Cutoff length (L')",ylab=expression(paste("Mean length above cutoff (",bar(L),")")),yaxt="n",xaxt="n")
