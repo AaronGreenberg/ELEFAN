@@ -38,7 +38,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
    maxscale<- max(freqs)/min(temp3)*1.1
    dateaxis <-as.Date(datesloc$Date[1]+X)#place things right location
    #create axis for plots
-   par(new = FALSE)
+   par(new = FALSE,oma=c(0,1,1,1))
    plot(0,0, type = "l" , lty = lty, col = 1, lwd = 2, bty = "l", xaxt="n", yaxt="n", xlim = xlim, ylim = ylim, xlab=xlab1,ylab = ylab1, axes=TRUE,las=2,...)
    axis(2,tck=0.02,las=2)
    #title(main=title, col.main="red", font.main=1)
