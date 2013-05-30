@@ -126,9 +126,20 @@ kscan <- function(Linf=Linf,cloc=cloc,tw=tw){
   asp <- aspcompute(peaks)                      #compute asp
   K <- exp(seq(log(.1),log(10),length.out=100))
   zkscan <- matrix(0,nrow=length(K),ncol=4)
+  if(Sys.info()['sysname']!="Linux"){
+  pb <- winProgressBar(title = "Scanning for K", min = 0, max = length(K), width = 500)
+}else{
+  pb <- txtProgressBar(min = 0, max = length(K), style = 3)
+}
  for(i in 1:length(K)){
         index <- 1
         inside <- matrix(0,nrow=length(dat$ML)*d,ncol=3)#
+    if(Sys.info()['sysname']!="Linux"){
+    setWinProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
+  }else{
+    setTxtProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
+  }
+        
    for(j in 1:(length(dat$ML))){
       for(sdate in 1:d){
         if(peaks$out[j,sdate]>0 & lfdata[j,sdate]>0){
@@ -148,6 +159,7 @@ kscan <- function(Linf=Linf,cloc=cloc,tw=tw){
 
   zkscan<<-zkscan
   return(zkscan)
+  close(pb)
 }                                      
 
 ckscan <- cmpfun(kscan)
