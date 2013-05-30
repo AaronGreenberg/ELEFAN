@@ -42,7 +42,7 @@ if(ptype=="LF"){
 kscanplot <- function(window=window,z=zkscan){
     nzero <- which(z[,1]>0)
     #par(las=1,bty="n",xaxs="i",yaxs="i")
-    par(las=1,bty="n",oma=c(0,1,1,1))
+    par(las=1,bty="n",mar=c(5.1,6,4.1,2.1),mpg=c(4,1,0),oma=c(0,1,1,1))
     ma <- movingAverage(z[nzero,1],window)
     plot(z[nzero,2],z[nzero,1],type="l",xlab=bquote(paste("K-parameter (year"^"-1",")")),ylab=bquote(paste("Goodness of fit (R"[n],")")),xaxt="n",yaxt="n",log="x",ylim=c(0,max(z[,1])*1.1),col="grey")
     axis(1,pos=0,tck=0.02)
@@ -69,7 +69,7 @@ kscanplot <- function(window=window,z=zkscan){
 fixedkscanplot <- function(window=window,z=fixzkscan){
     nzero <- which(z[,1]>0)
     #par(las=1,bty="n",xaxs="i",yaxs="i")
-    par(las=1,bty="n",oma=c(0,1,1,1))
+    par(las=1,bty="n",mar=c(5.1,6,4.1,2.1),mpg=c(4,1,0),oma=c(0,1,1,1))
     ma <- movingAverage(z[nzero,1],window)
     plot(z[nzero,2],z[nzero,1],type="l",xlab=bquote(paste("K-parameter (year"^"-1",")")),ylab=bquote(paste("Goodness of fit (R"[n],")")),xaxt="n",yaxt="n",log="x",ylim=c(0,max(z[,1])*1.1),col="grey",pch=.8)
     axis(1,pos=0,tck=0.02)
