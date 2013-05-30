@@ -52,8 +52,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
 		par(new = TRUE)
 		xmin <- (time[i]+as.numeric(datesloc$Date[1]))         #at time i
 		xmax <- xlim[2] - (time[i]+as.numeric(datesloc$Date[1]))       #got to find two points for 
-		ser <- as.vector(freqs[,i]) #putting right and left sides of rectangles
-                
+		ser <- as.vector(freqs[,i])   #putting right and left sides of rectangles
 		ser <-ser/maxscale*barscale      #scaleing... sometimes it is nice make things bigger or smaller
                 if(sum(ser) != 0){          #if there is lf data at time i make plot
                 count=count+1
@@ -61,6 +60,8 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
                 #abline(h=bins,col="gray60",lty=1,cex=.001)
 
                 text(cbind((time[i]+as.numeric(datesloc$Date[1])),max(bins)+((count%%2)*.7+1.1)*min(c((bins[2]-bins[1]),1))),label=as.character(datesloc$Date[count+1],format="%d/%m/%y"),cex=.75,col="black")#add datesloc to things
+             
+                text(cbind(time[i]+as.numeric(datesloc$Date[1]+10),min(bins)-((count%%2)*.7+1.1)*min(c((bins[2]-bins[1]),1))),label=as.character( sum(datain[,count+1]),cex=.35,col="black")) # add frequency counts
 
               }
 	}

@@ -334,6 +334,7 @@ YieldProbs <<- temp$prob
 filename <- (paste(fname1,"corrected.dat",sep="_"))
 
 if(file.exists(filename)){file.remove(filename)}#remove file
+print(temp$data)
 write.matrix(temp,file=filename)
 
 
