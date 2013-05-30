@@ -3,8 +3,8 @@
 #' @description minimal documentation for roxygen purposes and could be added later 
 #' @export
 
-
 options("guiToolkit"="RGtk2")
+
 
 #create the Main window.
 

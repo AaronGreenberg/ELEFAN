@@ -12,7 +12,7 @@ double cgrowth_rootf(double x,double K,double Linf,double locperiodC,double TW,d
   double out;
   double w;
   w = 1.0/365.0;
-  period = (locperiodC*K)/(2.0*pi*w)*(sin(2.0*pi*w*(age-TW-.5*365.0))-sin(2.0*pi*w*(x-TW-.5*365.0)));
+  period = (locperiodC*K)/(2.0*pi*w)*(sin(2.0*pi*w*(age-TW))-sin(2.0*pi*w*(x-TW)));
   out = Linf*(1.0-exp(-K*(age-x)+period));
   return out;
 }
@@ -45,7 +45,7 @@ double cgrowth_rootf2 (double x,double K,double Linf,double locperiodC,double TW
   double w;
    const double pi=3.141592653589793116;// need to define pi.
   w = 1.0/365.0;
-  period = (locperiodC*K)/(2.0*pi*w)*(sin(2.0*pi*w*(x-(TW-age)-.5*365.0))-sin(2.0*pi*w*(ts-TW-.5*365.0)));
+  period = (locperiodC*K)/(2.0*pi*w)*(sin(2.0*pi*w*(x-(TW-age)))-sin(2.0*pi*w*(ts-TW)));
   out = Linf*(1.0-exp(-K*(x-(ts-age))+period));
   return out ;
 }
@@ -113,7 +113,7 @@ List curves_cpp(double Linf,double locperiodC,double tw,double K,NumericVector M
   double period;
   int intsdate;
   intsdate=sdate;
-  period = (locperiodC*K)/(2.0*pi*w)*(sin(2.0*pi*w*(time(i)-(TW-age)-.5*365.0))-sin(2.0*pi*w*(timestart-TW-.5*365.0)));
+  period = (locperiodC*K)/(2.0*pi*w)*(sin(2.0*pi*w*(time(i)-(TW-age)))-sin(2.0*pi*w*(timestart-TW)));
   cur(i,0) =(time(i)+intsdate);//keep real time
   //Rcout<<"cur"<<cur(i,0)<<"::"<<i<<"###"<<-1.0*downwind+upwind<<"\n";
   if(((time(i)+intsdate)%int(modday))>0)
