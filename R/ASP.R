@@ -60,6 +60,9 @@ isolate <- function(x,freq){            #Identify isolated peaks
 
 deemph <- function(q,nz){
   y <- ifelse(nz>0,q*.5^(nz),q)         #soften up the peaks
+  lengthy <- length(y)
+  y[lengthy] <- ifelse(y[lengthy]<0,0,y[lengthy])
+  y[lengthy-1] <- ifelse(y[lengthy-1]<0,y[lengthy]*.5,y[lengthy])
   return(y)
 }
 
@@ -115,8 +118,9 @@ datatmp$D <- isolate(datatmp$C,datatmp$OBS)       #isolate peaks
 datatmp$E <- deemph(datatmp$C,datatmp$D)          #deemph according to manual (SERIOUSLY see manual...)
 #datatmp$F <- spv(datatmp$E/((1+2/datatmp$OBS)^.5))                       #final rescale
 datatmp$F <- spv(datatmp$E)                       #final rescale
-#print("data restructure")
+print("data restructure")
 #print(datatmp$F)
+print(datatmp)
 return(as.vector(datatmp$F))
 }
 
