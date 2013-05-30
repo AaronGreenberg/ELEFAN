@@ -10,7 +10,7 @@ fillgrowthdata <- function(datein,datain,growthdata){
     interval[i]=datein$Date[i+1]-datein$Date[1]
   }
   for(i in 1:(length(datein$Date)-1)){    #assign length frequency data to big array of date length frequency data
-    growthdata[,interval[i]]=datain[,i+1]#/sum(datain[,i+1])
+    growthdata[,interval[i]]=datain[,i+1]/sum(datain[,i+1])
   }
   return(growthdata)# return data structure with either zeros or length frequency data by day
 }
@@ -126,9 +126,20 @@ kscan <- function(Linf=Linf,cloc=cloc,tw=tw){
   asp <- aspcompute(peaks)                      #compute asp
   K <- exp(seq(log(.1),log(10),length.out=100))
   zkscan <- matrix(0,nrow=length(K),ncol=4)
+  if(Sys.info()['sysname']!="Linux"){
+  pb <- winProgressBar(title = "Scanning for K", min = 0, max = length(K), width = 500)
+}else{
+  pb <- txtProgressBar(min = 0, max = length(K), style = 3)
+}
  for(i in 1:length(K)){
         index <- 1
         inside <- matrix(0,nrow=length(dat$ML)*d,ncol=3)#
+  if(Sys.info()['sysname']!="Linux"){
+    setWinProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
+  }else{
+    setTxtProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
+  }
+        
    for(j in 1:(length(dat$ML))){
       for(sdate in 1:d){
         if(peaks$out[j,sdate]>0 & lfdata[j,sdate]>0){
@@ -143,11 +154,12 @@ kscan <- function(Linf=Linf,cloc=cloc,tw=tw){
     }
   }
     zkscan[i,] <- c(max(inside[,1]),K[i],inside[which.max(inside[,1]),2],inside[which.max(inside[,1]),3])
-       print(i/length(K))
+       
   }
 
   zkscan<<-zkscan
   return(zkscan)
+  close(pb)
 }                                      
 
 ckscan <- cmpfun(kscan)
@@ -168,12 +180,22 @@ fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,C=C,tw=tw){
   asp <- aspcompute(peaks)                      #compute asp
   K <- exp(seq(log(.1),log(10),length.out=250))
   fixzkscan <- matrix(0,nrow=length(K),ncol=2)
+  if(Sys.info()['sysname']!="Linux"){
+    pb <- winProgressBar(title = "Scanning for K", min = 0, max = length(K), width = 500)
+  }else{
+    pb <- txtProgressBar(title = "Scanning for K", min = 0, max = length(K), width = 500)
+  }
  for(i in 1:length(K)){
- 
+   if(Sys.info()['sysname']!="Linux"){
+    setWinProgressBar(pb, i, label=paste(round(i/length(K)*100, 0),"% done"))
+     }else{
+    setTxtProgressBar(pb, i, label=paste(round(i/length(K)*100, 0),"% done"))
+   }
+       
         gcurve <- curves_cpp(Linf,C,tw,K[i],dat$ML,days,sdate,ML,BIRTHDAY)      # compute growth curve this has index, day in growthcurve and properbin.
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
         gf <- gfcompute(asp,esp)
-        print(i/length(K))
+        #print(i/length(K))
         fixzkscan[i,] <- c(gf,K[i])
       }
 
