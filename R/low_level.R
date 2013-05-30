@@ -181,21 +181,21 @@ fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,C=C,tw=tw){
   K <- exp(seq(log(.1),log(10),length.out=250))
   fixzkscan <- matrix(0,nrow=length(K),ncol=2)
   if(Sys.info()['sysname']!="Linux"){
-    setWinProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
+    pb <- winProgressBar(title = "Scanning for K", min = 0, max = length(K), width = 500)
   }else{
-    setTxtProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
+    pb <- txtProgressBar(title = "Scanning for K", min = 0, max = length(K), width = 500)
   }
  for(i in 1:length(K)){
    if(Sys.info()['sysname']!="Linux"){
-    setWinProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
+    setWinProgressBar(pb, i, label=paste(round(i/length(K)*100, 0),"% done"))
      }else{
-    setTxtProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
+    setTxtProgressBar(pb, i, label=paste(round(i/length(K)*100, 0),"% done"))
    }
        
         gcurve <- curves_cpp(Linf,C,tw,K[i],dat$ML,days,sdate,ML,BIRTHDAY)      # compute growth curve this has index, day in growthcurve and properbin.
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
         gf <- gfcompute(asp,esp)
-        print(i/length(K))
+        #print(i/length(K))
         fixzkscan[i,] <- c(gf,K[i])
       }
 
