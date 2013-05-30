@@ -56,8 +56,8 @@ datefileinh <- function(h,...){
   visible(Datetable) <- FALSE
   Datetable[] <- datetmp
   Datetable[] <- datetmp
-  stdate[] <- 1:length(datein[,2])
-  stdatek[] <- 1:length(datein[,2])
+  stdate[] <- 1:(length(datein[,2])-1)
+  stdatek[] <- 1:(length(datein[,2])-1)
   visible(Datetable) <- TRUE
   Datatable[] <- datain
   Datatable[] <- datain
@@ -66,6 +66,7 @@ datefileinh <- function(h,...){
   Linfslidek[] <- seq(0,1.5*max(datain$ML),length.out=100)
   Linfslidec[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=100)
   Linfslidec2[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=100)
+  Linfslider[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=100)
   Linfypr[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=100)
   Pointslide[] <- 2:length(datain$ML)
   Pointslideuc[] <- 1:length(datain$ML)
@@ -434,7 +435,33 @@ Recruitgraphic<- ggraphics(container = Recruitpic,width=700,height=500,label="Re
 gimage("png/logo1.png",dirname=my_path,container=Recruitlittle)
 
 
-addSpace(Recruitlittle,321,horizontal=FALSE)# spacing needs to be tuned for each slide
+Linfslider=gslider(from=1,to=10,length.out=100,value=2)
+tmp = gframe("Linf", container = Recruitlittle)
+add(tmp, Linfslider, expand=TRUE)
+
+
+Klocslider=gslider(from=0,to=10,by=.01,value=0)
+tmp = gframe("K", container = Recruitlittle)
+add(tmp, Klocslider, expand=TRUE)
+
+
+Cslider=gslider(from=0,to=1.2,by=.01,value=0)
+tmp = gframe("C", container = Recruitlittle)
+add(tmp, Cslider, expand=TRUE)
+
+
+TWslider=gslider(from=0,to=1,by=.01,value=0)
+tmp = gframe("WP", container = Recruitlittle)
+add(tmp, TWslider, expand=TRUE)
+
+
+
+plot=gbutton("Make plot",handler=NULL)
+tmp=gframe("Plot",container=Recruitlittle)
+add(tmp, plot, expand=FALSE)
+
+
+addSpace(Recruitlittle,141,horizontal=FALSE)# spacing needs to be tuned for each slide
 Recruitlogo <- ggroup(container=Recruitlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Recruitlogo)
 
