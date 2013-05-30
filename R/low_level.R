@@ -10,7 +10,7 @@ fillgrowthdata <- function(datein,datain,growthdata){
     interval[i]=datein$Date[i+1]-datein$Date[1]
   }
   for(i in 1:(length(datein$Date)-1)){    #assign length frequency data to big array of date length frequency data
-    growthdata[,interval[i]]=datain[,i+1]/sum(datain[,i+1])
+    growthdata[,interval[i]]=datain[,i+1]#/sum(datain[,i+1])
   }
   return(growthdata)# return data structure with either zeros or length frequency data by day
 }

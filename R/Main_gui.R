@@ -491,10 +491,6 @@ YieldperRecruitlogo <- ggroup(container=YieldperRecruitlittle,expand=FALSE,horiz
 gimage("png/logo2.png",dirname=my_path,container=YieldperRecruitlogo)
 
 
-#change to correct starting window.
-svalue(nb)=1
-visible(window) <- TRUE
-
 
 
 ## ## ## ## L/F manip. tab
@@ -503,5 +499,10 @@ LFmanip <- ggroup(container = nb,label="L/F manip.", expand=TRUE,horizontal=TRUE
 LFmaniplittle <- ggroup(container=LFmanip,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 LFmanippic<- gnotebook(container=LFmanip,expand=TRUE)#create the Entry pic.
 LFmanipgraphic<- ggraphics(container = LFmanippic,width=700,height=500,label="L/F manip.")
+
+#change to correct starting window.
+svalue(nb)=1
+visible(window) <- TRUE
+
 
 }
