@@ -62,12 +62,12 @@ datefileinh <- function(h,...){
   Datatable[] <- datain
   Datatable[] <- datain
   visible(Datatable) <- TRUE
-  Linfslide[] <- seq(0,1.5*max(datain$ML),length.out=100)
-  Linfslidek[] <- seq(0,1.5*max(datain$ML),length.out=100)
-  Linfslidec[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=100)
-  Linfslidec2[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=100)
-  Linfslider[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=100)
-  Linfypr[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=100)
+  Linfslide[] <- seq(0,1.5*max(datain$ML),length.out=1000)
+  Linfslidek[] <- seq(0,1.5*max(datain$ML),length.out=1000)
+  Linfslidec[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=1000)
+  Linfslidec2[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=1000)
+  Linfslider[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=1000)
+  Linfypr[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=1000)
   Pointslide[] <- 2:length(datain$ML)
   Pointslideuc[] <- 1:length(datain$ML)
   Pointslidelc[] <- 1:length(datain$ML)
@@ -107,7 +107,7 @@ refactorgraphic<- ggraphics(container = LFpic,width=700,height=500,label="Restru
 gimage("png/logo1.png",dirname=my_path,container=LFplotlittle)
 
 
-Linfslide = gslider(from=1,to=10,length.out=100,value=2)
+Linfslide = gslider(from=1,to=10,length.out=1000,value=2)
 tmp = gframe("Linf", container = LFplotlittle)
 add(tmp, Linfslide, expand=TRUE)
 
@@ -212,7 +212,7 @@ Kscangraphic<- ggraphics(container = Kscanplotpic,width=700,height=500,label="K-
 gimage("png/logo1.png",dirname=my_path,container=Kscanplotlittle)
 
 
-Linfslidek = gslider(from=1,to=10,length.out=100,value=2)
+Linfslidek = gslider(from=1,to=10,length.out=1000,value=2)
 tmp = gframe("Linf", container = Kscanplotlittle)
 add(tmp, Linfslidek, expand=TRUE)
 
@@ -295,7 +295,7 @@ Catchcurvegraphic<- ggraphics(container = Catchcurvepic,width=700,height=500,lab
 gimage("png/logo1.png",dirname=my_path,container=Catchcurvelittle)
 
 
-Linfslidec=gslider(from=1,to=10,length.out=100,value=2)
+Linfslidec=gslider(from=1,to=10,length.out=1000,value=2)
 tmp = gframe("Linf", container = Catchcurvelittle)
 add(tmp, Linfslidec, expand=TRUE)
 
@@ -374,7 +374,7 @@ SeasonalCatchgraphic<- ggraphics(container = SeasonalCatchpic,width=700,height=5
 gimage("png/logo1.png",dirname=my_path,container=SeasonalCatchlittle)
 
 
-Linfslidec2=gslider(from=1,to=10,length.out=100,value=2)
+Linfslidec2=gslider(from=1,to=10,length.out=1000,value=2)
 tmp = gframe("Linf", container = SeasonalCatchlittle)
 add(tmp, Linfslidec2, expand=TRUE)
 
@@ -436,7 +436,7 @@ Recruitgraphic<- ggraphics(container = Recruitpic,width=700,height=500,label="Re
 gimage("png/logo1.png",dirname=my_path,container=Recruitlittle)
 
 
-Linfslider=gslider(from=1,to=10,length.out=100,value=2)
+Linfslider=gslider(from=1,to=10,length.out=1000,value=2)
 tmp = gframe("Linf", container = Recruitlittle)
 add(tmp, Linfslider, expand=TRUE)
 
@@ -495,7 +495,7 @@ tmp = gframe("Lc/Linf", container = YieldperRecruitlittle)
 add(tmp, Lc, expand=TRUE)
 
 
-Linfypr=gslider(from=1,to=10,length.out=100,value=2)
+Linfypr=gslider(from=1,to=10,length.out=1000,value=2)
 tmp = gframe("Linf", container = YieldperRecruitlittle)
 add(tmp, Linfypr, expand=TRUE)
 
