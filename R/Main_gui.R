@@ -42,6 +42,7 @@ gimage("png/logo1.png",dirname=my_path,container=Entrylittle)
 Entrypic<- gnotebook(container=Entry,expand=TRUE)#create the Entry pic.
 Datetable<- gtable(datetmp,container=NULL,label="Dates")
 Datatable<- gtable(datatmp,container=Entrypic,label="Lengths")
+names(Datatable) <- "ML"
 
 #Load Data
 #I need handlers.
@@ -317,7 +318,7 @@ CorrLFplot <- ggroup(container = nb,label="Corr. L/F", expand=TRUE,horizontal=TR
 CorrLFlittle <- ggroup(container=CorrLFplot,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 CorrLFpic <- gnotebook(container=CorrLFplot,expand=TRUE)#create the Entry pic.
 Datatablemodified<- gtable(datatmp,container=CorrLFpic,label="Modified data")
-
+names(Datatablemodified) <- "ML"
 
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=CorrLFlittle)
