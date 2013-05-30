@@ -118,7 +118,7 @@ catchrqFreqPlot(1:days,datain$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,y
   for(i in 1:(length(index))) {#loop over days
    cindex=which(pointscurve2[,2]==index[i]) #get index for correct day
    tempcount <- 1
-  for(j in 1:(length(tzero)-2)){ #loop over pointscurve2
+  for(j in 1:(length(tzero))){ #loop over pointscurve2
     #get lp
      if(j<min(pointscurve2[cindex,1]))
        {
@@ -188,7 +188,7 @@ print(datain)
 print("STORAGESUM")
   print(storagesum)
 #plot long vs slow.
- plot(1:length(datain$ML),storagesum)
+ plot(1:(length(datain$ML)+1),storagesum)
 
 
 }
