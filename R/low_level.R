@@ -134,7 +134,7 @@ kscan <- function(Linf=Linf,cloc=cloc,tw=tw){
  for(i in 1:length(K)){
         index <- 1
         inside <- matrix(0,nrow=length(dat$ML)*d,ncol=3)#
-    if(Sys.info()['sysname']!="Linux"){
+  if(Sys.info()['sysname']!="Linux"){
     setWinProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
   }else{
     setTxtProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
@@ -154,7 +154,7 @@ kscan <- function(Linf=Linf,cloc=cloc,tw=tw){
     }
   }
     zkscan[i,] <- c(max(inside[,1]),K[i],inside[which.max(inside[,1]),2],inside[which.max(inside[,1]),3])
-       print(i/length(K))
+       
   }
 
   zkscan<<-zkscan
@@ -180,8 +180,18 @@ fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,C=C,tw=tw){
   asp <- aspcompute(peaks)                      #compute asp
   K <- exp(seq(log(.1),log(10),length.out=250))
   fixzkscan <- matrix(0,nrow=length(K),ncol=2)
+  if(Sys.info()['sysname']!="Linux"){
+    setWinProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
+  }else{
+    setTxtProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
+  }
  for(i in 1:length(K)){
- 
+   if(Sys.info()['sysname']!="Linux"){
+    setWinProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
+     }else{
+    setTxtProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
+   }
+       
         gcurve <- curves_cpp(Linf,C,tw,K[i],dat$ML,days,sdate,ML,BIRTHDAY)      # compute growth curve this has index, day in growthcurve and properbin.
         esp <- espcompute(gcurve,peaks$out,days,dat$ML)               #compute esp
         gf <- gfcompute(asp,esp)
