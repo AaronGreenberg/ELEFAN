@@ -42,7 +42,7 @@ lines(x=ti[widthvec],y=(z$coefficients[1]+z$coefficients[2]*ti[widthvec]),col="b
 
   
 temp2 <-bquote(paste("ln(N/",Delta,"t) = ",.(signif(z$coefficients[1],3)),.(signif(z$coefficients[2],3)),"*age"," ; ",r^2," = ",.(signif(summary(z)$r.squared,3))))  
-legend(x="topleft",legend=temp2,inset=0.02)  
+legend(x="topright",legend=temp2,inset=0.02)  
 print(z)
 selectivity <- list()
 selectivity$prob <- 1:length(datain[,1])*0+1
