@@ -332,11 +332,11 @@ Datatablemodified[] <- (signif(temp$data,3))
 Datatablemodified[] <- (signif(temp$data,3))
 YieldProbs <<- temp$prob
 
-filename <- (paste(fname1,"corrected.dat",sep="_"))
+filename <- (paste(substr(fname1,start=1,stop=(nchar(fname1)-4)),"corrected.csv",sep="_"))
 
 if(file.exists(filename)){file.remove(filename)}#remove file
 print(temp$data)
-write.matrix(temp,file=filename)
+write.csv(temp$data,file=filename,row.names=F)
 
 
 visible(Catchcurvegraphic) <- TRUE #make correct picture
