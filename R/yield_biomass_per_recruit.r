@@ -10,9 +10,9 @@ print(YieldProbs)
 Lc=Littlec*Linf #convert from little c to Lc 
 M=M*K #convert from M/K to M
 
-#print("HI I am in ypr to party!")
+
 if (is.null(pas)) pas <- 0.05
-#if (is.null(pas2)) pas2 <- 1
+
 
 # Y/R Knife-edge
 
@@ -22,7 +22,7 @@ U <- 1-small_c
 m <- (1-E)/(M/K)
 
 YR_ke <- (E*(U^m))*(1-((3*U)/(1+m))+((3*(U^2))/(1+(2*m)))-((U^3)/(1+(3*m))))
-print(sum(Pi))
+
 if(!is.na(sum(Pi))){
   
 # Y/R Not Knife-edge
