@@ -120,7 +120,7 @@ datatmp$E <- deemph(datatmp$C,datatmp$D)          #deemph according to manual (S
 datatmp$F <- spv(datatmp$E)                       #final rescale
 print("data restructure")
 #print(datatmp$F)
-print(datatmp)
+#print(datatmp)
 return(as.vector(datatmp$F))
 }
 

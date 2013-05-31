@@ -51,21 +51,21 @@ kscanplot <- function(window=window,z=zkscan){
     lines(z[nzero,2],ma,col="black",cex=.8)
     correctedx= z[max(which(z[,1]==max(z[,1]))),2]#get maximum of plateau... 
     points(correctedx,z[which.max(z[,1]),1],col="red",cex=.8,pch=19)
-    print("correctedx")
-    print(correctedx)
+    #print("correctedx")
+    #print(correctedx)
     correctedx=which.max(z[,1])
     text(correctedx,z[which.max(z[,1]),1]+0.01,as.character(signif(z[which.max(z[,1]),2],2)))
     #text(z[which.max(z[,1]),2],z[which.max(z[,1]),1]+0.01,as.character(signif(z[which.max(z[,1]),2],2)))
     points(z[which.max(ma),2],ma[which.max(ma)],col="blue",cex=.8,pch=19)     
     text(z[which.max(ma),2],ma[which.max(ma)]+0.01,as.character(signif(z[which.max(ma),2],2)))     
-    print(max(z[nzero,1]))#gf
+    #print(max(z[nzero,1]))#gf
     ss=which(datein[,1]==as.Date(z[correctedx,4],origin=datein$Date[1]))-1 #get correct start sample
     #make legend
     legend("topright",legend=bquote(paste("K=",.(signif(z[correctedx,2],4)),"    ML=",.(z[correctedx,3]),"  Sample=",.(ss))),bty="n")
     
-    print(z[which.max(z[,1]),2]) #K
-    print(z[which.max(z[,1]),3]) #ml
-    print(z[which.max(z[,1]),4])#date
+    #print(z[which.max(z[,1]),2]) #K
+    #print(z[which.max(z[,1]),3]) #ml
+    #print(z[which.max(z[,1]),4])#date
 
   }
 
