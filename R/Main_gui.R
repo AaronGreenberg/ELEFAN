@@ -93,7 +93,6 @@ Entrylogo <- ggroup(container=Entrylittle,expand=TRUE,horizontal=FALSE,width=200
 gimage("png/logo2.png",dirname=my_path,container=Entrylogo)
 
 
-
 ## ## ## ## Make Length Frequency plot window.
 
 LFplot <- ggroup(container = nb,label="L/F", expand=TRUE,horizontal=TRUE)#make entry group
@@ -336,7 +335,9 @@ filename <- (paste(substr(fname1,start=1,stop=(nchar(fname1)-4)),"corrected.csv"
 
 if(file.exists(filename)){file.remove(filename)}#remove file
 print(temp$data)
-write.csv(temp$data,file=filename,row.names=F)
+write(noquote(as.character(colnames(datain))),file=filename,sep=",",ncolumns=length(colnames(datain)))
+
+write.csv(round(temp$data,4),file=filename,row.names=FALSE,col.names=FALSE,append=TRUE)
 
 
 visible(Catchcurvegraphic) <- TRUE #make correct picture

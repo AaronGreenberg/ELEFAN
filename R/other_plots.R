@@ -60,7 +60,9 @@ kscanplot <- function(window=window,z=zkscan){
     text(z[which.max(ma),2],ma[which.max(ma)]+0.01,as.character(signif(z[which.max(ma),2],2)))     
     print(max(z[nzero,1]))#gf
     ss=which(datein[,1]==as.Date(z[correctedx,4],origin=datein$Date[1]))-1 #get correct start sample
-    legend("topright",legend=bquote(paste("K=",.(signif(z[correctedx,2],4)),"    ML=",(z[correctedx,3]),"  Sample=",(ss))),bty="n")
+    #make legend
+    legend("topright",legend=bquote(paste("K=",.(signif(z[correctedx,2],4)),"    ML=",.(z[correctedx,3]),"  Sample=",.(ss))),bty="n")
+    
     print(z[which.max(z[,1]),2]) #K
     print(z[which.max(z[,1]),3]) #ml
     print(z[which.max(z[,1]),4])#date
