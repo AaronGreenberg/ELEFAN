@@ -131,10 +131,10 @@ catchrqFreqPlot <- function(time,bins,freqs, sdate,sML,tzeros,curves1,curves2,ma
 
    points(curves1$c[,1]+as.numeric(datesloc$Date[1]),curves1$c[,3],pch=1 ,cex=.2,col="red")# make real growth curve!
    points(curves2$c[,1]+as.numeric(datesloc$Date[1]),curves2$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
-      points(timeblue+as.numeric(datesloc$Date[1]),maincurve,pch=1 ,cex=.2,col="purple")# make real growth curve!
+   points(timeblue+as.numeric(datesloc$Date[1]),maincurve,pch=1 ,cex=.2,col="purple")# make real growth curve!
 
 
-     points(pointscurve[,2]+as.numeric(datesloc$Date[1]),pointscurve[,3],col="blue",pch=1,cex=1.95)
+     points(pointscurve[,2]+as.numeric(datesloc$Date[1]),pointscurve[,3],col="blue",cex=1.95)
     points(pointscurve[,2],pointscurve[,3],col="red",pch=2,cex=1.95)
      
 
