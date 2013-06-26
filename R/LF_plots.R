@@ -80,7 +80,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
 
 
 
-catchrqFreqPlot <- function(time,bins,freqs, sdate,sML,tzeros,curves1,curves2,maincurve, pointscurve,timeblue,datesloc=dates,xlim = c(min(time),max(time)), ylim = c(0, ceiling((max(bins)*1.1)+.2*(bins[2]-bins[1]))), barscale = 1, barcol1 = "black",barcol2="grey",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),title=" ",GF=0,birthday=BIRTHDAY,...) {
+catchrqFreqPlot <- function(time,bins,freqs, sdate,sML,tzeros,curves1,curves2,maincurve, pointscurve,timeblue,datesloc=dates,xlim = c(min(time),max(time)), ylim = c(0, 2*ceiling((max(bins)*1.1)+.2*(bins[2]-bins[1]))), barscale = 1, barcol1 = "black",barcol2="grey",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),title=" ",GF=0,birthday=BIRTHDAY,...) {
    ## This function makes the fancy graphs that seems central to the output of ELEFAN
    ## In particular it provides a way of plotting a growth curve over length frequancy data plots over time.
    ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
@@ -134,7 +134,8 @@ catchrqFreqPlot <- function(time,bins,freqs, sdate,sML,tzeros,curves1,curves2,ma
    points(timeblue+as.numeric(datesloc$Date[1]),maincurve,pch=1 ,cex=.2,col="purple")# make real growth curve!
 
 
-     points(pointscurve[,2]+as.numeric(datesloc$Date[1]),pointscurve[,3],col="blue",cex=1.95)
+    points(pointscurve[,2]+as.numeric(datesloc$Date[1]),pointscurve[,3],col="blue",cex=1.95)
+    lines(pointscurve[,2]+as.numeric(datesloc$Date[1]),pointscurve[,3],col="green")
     points(pointscurve[,2],pointscurve[,3],col="red",pch=2,cex=1.95)
      
 

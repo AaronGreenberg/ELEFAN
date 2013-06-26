@@ -86,19 +86,22 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,oldest,datain$ML[length(datain$ML)],BIRTHDAY)#compute growth curve that goes through youngest
   #index <-which(colSums(lfdata)>0)
   
-  tzero <- sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=(length(datain$ML)+1)),decreasing=TRUE)
+  tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=(length(datain$ML)+1)),decreasing=TRUE))
 # gcurvemain <- 0*lfdata
  count=1
   pointscurve <- matrix(0,ncol=4,nrow=length(tzero)*length(index))
   
-  for(i in 1:length(datain$ML)){
+  for(i in 1:length(tzero)){
   tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,tzero[i],0,BIRTHDAY)$c
   #print(index)
-  for( j in index){
+  for( j in 1:length(index)){
       gcurvemain <- as.vector(tempered[,3])
       if(j>tzero[i]){
       
-      int <- which(tempered[,1]==j)
+      int <- which(tempered[,1]==index[j])
+      print(int)
+      print(j)
+      print(pointscurve)
       if(length(int)!=0){
       pointscurve[count,1] <- i #determine curve
       pointscurve[count,2] <- tempered[int,2]#get index of location x axis.date...
@@ -109,12 +112,33 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
     }
     }
  }
-
+#The above makes the table.
+  
+  pointcurve <- as.data.frame(pointscurve)
+  colnames(pointcurve) <- c("curve","day","length","bin")
+  print(pointcurve)
+  pointsout <- matrix(0,nrow=length(tzero),ncol=length(index))
+  #loop over days
+  for(i in 1:2){#length(index)){
+    
+   print(i)
+   
+  #loop over correct number of curves and fill in table.
+   subday=subset(pointcurve, day==index[i]) #get part that is correct day.
+   print(subday)
+   print(index[i])
+   #get bins between curves
+   for(j in subday$curve[1:2]){#(length(datain$ML)-1))a
+    curvebin <- which(subday$length>datain$ML[j] &subday$length<datain$ML[j+1])
+    print(curvebin)
+  #row sums are sum of points inside curves.
+  }
+ }
 
   x11()
   timeblue <- as.vector(tempered[,1])  
 catchrqFreqPlot(1:days,datain$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(datain$ML[1],datain$ML[length(datain$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,pointscurve,timeblue,datein,barscale=1,GF=0)
-  print(pointscurve)
+  
   
 
 }
