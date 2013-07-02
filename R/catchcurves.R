@@ -119,7 +119,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   print(pointcurve)
   pointsout <- matrix(0,nrow=length(tzero),ncol=length(index))
   #loop over days
-  for(i in 1:2){#length(index)){
+  for(i in 1:length(index)){
     
    print(i)
    
@@ -129,16 +129,23 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
    print(index[i])
    print(datain$ML)
    #get bins between curves
-   for(j in 1:3){#(length(datain$ML)-1))a
+   for(j in 1:(length(datain$ML)-1)){
 
     curvebin <- which(datain$ML >= floor(subday$length[j]) &datain$ML <= ceiling(subday$length[j+1]))
     print(paste("the vector of bins between curve", j, "and",j+1))
     print(curvebin)
     print(datain$ML[curvebin])
-    
+    pointsout[j,i] <- sum(datain[curvebin,i+1])#add up all things
   #row sums are sum of points inside curves.
   }
  }
+  #pointsout <- prop.table(pointsout,2)
+  ages <- vector()
+  for(i in 1:length(tzero)){#loop over curves
+  tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,tzero[i],0,BIRTHDAY)
+  ages[i] <- tempered$c[max(index),1]+tempered$tzero
+  }
+  plot(ages/365,log(sort(rowSums(pointsout),decreasing=FALSE)))
 
   x11()
 
