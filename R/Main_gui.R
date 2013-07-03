@@ -481,9 +481,9 @@ YieldperRecruitgraphic<- ggraphics(container = YieldperRecruitpic,width=700,heig
 gimage("png/logo1.png",dirname=my_path,container=YieldperRecruitlittle)
 
 
-M=gslider(from=0.5,to=3,by=.01,value=0)
-tmp = gframe("M/K", container = YieldperRecruitlittle)
-add(tmp, M, expand=TRUE)
+Linfypr=gslider(from=1,to=10,length.out=1000,value=2)
+tmp = gframe("Linf", container = YieldperRecruitlittle)
+add(tmp, Linfypr, expand=TRUE)
 
 
 Kypr=gslider(from=0,to=10,by=.01,value=0)
@@ -496,9 +496,9 @@ tmp = gframe("Lc/Linf", container = YieldperRecruitlittle)
 add(tmp, Lc, expand=TRUE)
 
 
-Linfypr=gslider(from=1,to=10,length.out=1000,value=2)
-tmp = gframe("Linf", container = YieldperRecruitlittle)
-add(tmp, Linfypr, expand=TRUE)
+M=gslider(from=0.5,to=3,by=.01,value=0)
+tmp = gframe("M/K", container = YieldperRecruitlittle)
+add(tmp, M, expand=TRUE)
 
 
 plotyperr <- function(h,...){ 
