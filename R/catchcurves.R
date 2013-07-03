@@ -67,129 +67,91 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   
   #--1--compute oldest and youngest
   #locate the oldest and youngest fish.
-  youngest <- max(which(lfdata[1,]>0))            #get oldest fish
-  oldest <- min(which(lfdata[length(lfdata[,1]),]>0)) #get youngest fish.
+  index <-which(colSums(lfdata)>0)
+  print("index where lfdata not equal zero")
+  print(index)
+  print(colSums(lfdata)[index])
+  print(max(index))
+  print(min(index))
+  print(lfdata[,max(index)])
+  print(lfdata[,min(index)])
+  youngest <- max(index)#lfdata[1,max(index)]
+  oldest <- min(index)#lfdata[length(datain$ML),min(index)]
+  #youngest <- max(which(lfdata[1,]>0))            
+  #oldest <- max(which(lfdata[length(lfdata[,1]),]>0)) 
   print("hum")
   # compute growth curve that goes through oldest and youngest
 
   gcurve1 <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,youngest,datain$ML[1],BIRTHDAY)#compute growth curve that goes through oldest
   gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,oldest,datain$ML[length(datain$ML)],BIRTHDAY)#compute growth curve that goes through youngest
-  index <-which(colSums(lfdata)>0)
-  print("index where lfdata not equal zero")
-  print(index)
-  tzero <- sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=(length(datain$ML)+1)),decreasing=TRUE)
+  #index <-which(colSums(lfdata)>0)
+  
+  tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=(length(datain$ML)+1)),decreasing=TRUE))
 # gcurvemain <- 0*lfdata
  count=1
-  pointscurve <- matrix(0,ncol=4,nrow=days*datain$ML)
-  
-  for(i in 1:length(datain$ML)){
-  tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,tzero[i],0,BIRTHDAY)$c
-  print(index)
-  for( j in index){
-      gcurvemain <- as.vector(tempered[,3])
-      if(j>tzero[i]){
-      
-      int <- which(tempered[,1]==j)
-#      print("int")
-#      print(int)
-#      print(length(int))
+  pointscurve <- matrix(0,ncol=4,nrow=length(tzero)*length(index))
+  gcurvemain <- vector()
+  timeblue <- vector()
+  for(i in 1:length(tzero)){#loop over curves
+  tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,tzero[i],0,BIRTHDAY)
+  #print(index)
+  for( j in 1:length(index)){ #loop over days
+      gcurvemain <- c(gcurvemain,as.vector(tempered$c[,3]))
+      timeblue <- c(timeblue,as.vector(tempered$c[,1]))
+      int <- which(tempered$c[,1]==index[j])
+      print(int)
+      print(j)
+      print(pointscurve)
       if(length(int)!=0){
       pointscurve[count,1] <- i #determine curve
-      pointscurve[count,2] <- tempered[int,2]#get index of location x axis.date...
-      pointscurve[count,3] <- tempered[int,3]#get index of location y axis. size at date...
-      pointscurve[count,4] <- tempered[int,4]#get index of location bin probably not needed...
+      pointscurve[count,2] <- tempered$c[int,1]#+tempered$tzero#get index of location x axis.date...
+      pointscurve[count,3] <- tempered$c[int,3]#get index of location y axis. size at date...
+      pointscurve[count,4] <- tempered$c[int,4]#get index of location bin probably not needed...
        count=count+1
-    }
+
     }
     }
  }
+#The above makes the table.
+  
+  pointcurve <- as.data.frame(pointscurve)
+  colnames(pointcurve) <- c("curve","day","length","bin")
+  print(pointcurve)
+  pointsout <- matrix(0,nrow=length(tzero),ncol=length(index))
+  #loop over days
+  for(i in 1:length(index)){
+    
+   print(i)
+   
+  #loop over correct number of curves and fill in table.
+   subday=subset(pointcurve, day==index[i]) #get part that is correct day.
+   print(subday)
+   print(index[i])
+   print(datain$ML)
+   #get bins between curves
+   for(j in 1:(length(datain$ML)-1)){
 
+    curvebin <- which(datain$ML >= floor(subday$length[j]) &datain$ML <= ceiling(subday$length[j+1]))
+    print(paste("the vector of bins between curve", j, "and",j+1))
+    print(curvebin)
+    print(datain$ML[curvebin])
+    pointsout[j,i] <- sum(datain[curvebin,i+1])#add up all things
+  #row sums are sum of points inside curves.
+  }
+ }
+  #pointsout <- prop.table(pointsout,2)
+  ages <- vector()
+  for(i in 1:length(tzero)){#loop over curves
+  tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,tzero[i],0,BIRTHDAY)
+  ages[i] <- tempered$c[max(index),1]+tempered$tzero
+  }
+  plot(ages/365,log(sort(rowSums(pointsout),decreasing=FALSE)))
 
   x11()
-  timeblue <- as.vector(tempered[,1])  
+
 catchrqFreqPlot(1:days,datain$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(datain$ML[1],datain$ML[length(datain$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,pointscurve,timeblue,datein,barscale=1,GF=0)
-
-  abundancein <- matrix(0,ncol=length(tzero),nrow=length(index))
-  #sort things by day and length
-  binwidth <- datain$ML[2]-datain$ML[1]
-  pointscurve2 <- pointscurve[order(pointscurve[,2],pointscurve[,3]),]
-  print((pointscurve2))
-  LFdata <- datain
-  for(i in 1:(length(index))) {#loop over days
-   cindex=which(pointscurve2[,2]==index[i]) #get index for correct day
-   tempcount <- 1
-  for(j in 1:(length(tzero))){ #loop over pointscurve2
-    #get lp
-     if(j<min(pointscurve2[cindex,1]))
-       {
-         #print(c("min",j,pointscurve2[cindex,1]))
-         abundancein[i,j]=0
-
-       }
-     else{
-      print(c("tempcount",tempcount))  
-     print(cindex)  
-
-     print(pointscurve2[cindex[tempcount],])  
-     lp=c(pointscurve2[cindex[tempcount],3],pointscurve2[cindex[tempcount],4])
-     #get up
-     up=c(pointscurve2[cindex[tempcount+1],3],pointscurve2[cindex[tempcount+1],4])
-     print(tempcount)
-     print(up)
-     print(lp)
-
-      print("Day and curve")
-      print(c(index[i],tempcount))
-           LFindex=which(LFdata[,1]>=lp[2]&LFdata[,1]<=up[2])
-      top=1
-     if( (datain$ML[length(datain$ML)]+.5*binwidth)>up[1]){
-     top=(up[2]+.5*binwidth-up[1])/(binwidth)#*LFdata[LFindex[1],i+1]
-   }
-     bottom=1#make sure that curve is in data
-     if(lp[1]>(lp[2]-.5*binwidth)){
-     bottom= 1-(lp[2]+.5*binwidth-lp[1])/(binwidth)#*LFdata[LFindex[length(LFindex)],i+1]
-   }
-     
-     print("Edges")
-     if(top>1){print(top)}
-     if(bottom>1){print(bottom)}
-     if(top<01){print(top)}
-     if(bottom<01){print(bottom)}
-     
-     if(length(LFindex)>2){
-      print("LFindex")
-      print("okay?")
-      print(LFindex)
-     print(LFindex[2:(length(LFindex)-1)])
-
-     abundancein[i,j]=sum(LFdata[LFindex[2:(length(LFindex)-1)],i+1])+top+bottom
-      tempcount=tempcount+1
-     }else{
-       print("LFindex")
-      print("okay2?")
-      print(LFindex)
-       abundancein[i,j]=top+bottom
-       tempcount=tempcount+1
-     }
-  }
-   }
-
-}
-
   
-print("abundancein")
-print(abundancein)
   
-storagesum <- colSums(abundancein)
-
-
-
-print(datain)
-print("STORAGESUM")
-  print(storagesum)
-#plot long vs slow.
- plot(1:(length(datain$ML)+1),storagesum)
-
 
 }
 
