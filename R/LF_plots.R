@@ -76,15 +76,16 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
 
 
    if(sum(curves1$c[,2])!=0){
-   points(sdate1+as.numeric(datesloc$Date[1]),sML1,col="blue",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
-   points(curves1$c[,2]+as.numeric(datesloc$Date[1]),curves1$c[,3],pch=1 ,cex=.1,col="grey")# make real growth curve!
+   points(sdate1+as.numeric(datesloc$Date[1]),sML1,col="red",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
+   points(curves1$c[,2]+as.numeric(datesloc$Date[1]),curves1$c[,3],pch=1,cex=.1,col="grey")# make real growth curve!
+   
 
  }
    
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
   b<-bquote()
-  if(GF!=0){ legend(x="topleft",inset=0.02,legend=bquote(paste("R"[n] == .(signif(GF,3)))))}
-  if(GF1!=0){ legend(x="topleft",inset=0.05,legend=bquote(paste("R"[n] == .(signif(GF1,3)))))} 
+  if(GF!=0){ legend(x="topleft",inset=c(0.02,0.02),legend=bquote(paste("R"[n] == .(signif(GF,3)))))}
+  if(GF1!=0){ legend(x="topleft",inset=c(0.02,0.1),legend=bquote(paste("R"[n] == .(signif(GF1,3)))))} 
 
 
  }
