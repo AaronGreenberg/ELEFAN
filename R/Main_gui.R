@@ -87,7 +87,7 @@ tmp = gframe("Data", container = Entrylittle)
 add(tmp, readdatefile, expand=FALSE)
 
 #Add sponsors logo at the bottom of the page
-addSpace(Entrylittle,381,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(Entrylittle,384,horizontal=FALSE)# spacing needs to be tuned for each slide
 #addSpring(Entrylittle)
 Entrylogo <- ggroup(container=Entrylittle,expand=TRUE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Entrylogo)
@@ -131,14 +131,14 @@ tmp = gframe("Scale", container = LFplotlittle)
 add(tmp, scaleslide, expand=TRUE)
 
 
-  stdate <- gdroplist(list(1:10*0))
-  tmp <- gframe("SS",container=LFplotlittle)
-  add(tmp,stdate, expand=FALSE) 
+  #stdate <- gdroplist(list(1:10*0))
+  #tmp <- gframe("SS",container=LFplotlittle)
+  #add(tmp,stdate, expand=FALSE) 
 
 
-  midlength <- gdroplist(list(1:20*0))
-  tmp <- gframe("SL",container=LFplotlittle)
-  add(tmp,midlength, expand=FALSE) 
+  #midlength <- gdroplist(list(1:20*0))
+  #tmp <- gframe("SL",container=LFplotlittle)
+  #add(tmp,midlength, expand=FALSE) 
 
 
 #gimage("png/usaid.png",dirname=my_path,container=LFplotlogo)
@@ -152,9 +152,36 @@ plotlf <- function(h,...){
  plotpeak(svalue(Linfslide),svalue(Kslide),svalue(Cslide),svalue(twslide),ptype="Peaks",sdate,ML,svalue(scaleslide))
  }
 
- plot=gbutton("Make plot",handler=plotlf)
- tmp=gframe("Plot",container=LFplotlittle)
- add(tmp, plot, expand=FALSE)
+ 
+LFplotlittlecohort1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
+gtext(text="Main cohort",container=LFplotlittlecohort1,height=16,width=200)
+LFplotlittlebuttoncohort1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
+stdate <- gdroplist(list(1:10*0))
+tmp <- gframe("SS",container=LFplotlittlebuttoncohort1)
+add(tmp,stdate, expand=FALSE)
+midlength <- gdroplist(list(1:20*0))
+tmp <- gframe("SL",container=LFplotlittlebuttoncohort1)
+add(tmp,midlength, expand=FALSE)
+plot=gbutton("Make plot",handler=plotlf)
+tmp=gframe("Plot",container=LFplotlittlebuttoncohort1)
+add(tmp, plot, expand=FALSE)
+
+LFplotlittlecohort2<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
+gtext(text="2nd cohort",container=LFplotlittlecohort2,height=16,width=200)
+LFplotlittlebuttoncohort2<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
+stdate <- gdroplist(list(1:10*0))
+tmp <- gframe("SS",container=LFplotlittlebuttoncohort2)
+add(tmp,stdate, expand=FALSE)
+midlength <- gdroplist(list(1:20*0))
+tmp <- gframe("SL",container=LFplotlittlebuttoncohort2)
+add(tmp,midlength, expand=FALSE)
+plot=gbutton("Make plot",handler=plotlf)
+tmp=gframe("Plot",container=LFplotlittlebuttoncohort2)
+add(tmp, plot, expand=FALSE)
+
+ #plot=gbutton("Make plot",handler=plotlf)
+ #tmp=gframe("Plot",container=LFplotlittle)
+ #add(tmp, plot, expand=FALSE)
 
 
 #Add sponsors logo at the bottom of the page
@@ -193,7 +220,7 @@ add(tmp, plot, expand=FALSE)
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(Wetherallplotlittle,321,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(Wetherallplotlittle,324,horizontal=FALSE)# spacing needs to be tuned for each slide
 Wetherallplotlogo <- ggroup(container=Wetherallplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Wetherallplotlogo)
 
@@ -276,7 +303,7 @@ add(tmp, plot, expand=FALSE)
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(Kscanplotlittle,8,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(Kscanplotlittle,11,horizontal=FALSE)# spacing needs to be tuned for each slide
 Kscanplotlogo <- ggroup(container=Kscanplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Kscanplotlogo)
 
@@ -351,13 +378,13 @@ visible(Catchcurvegraphic) <- TRUE #make correct picture
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(Catchcurvelittle,141,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(Catchcurvelittle,144,horizontal=FALSE)# spacing needs to be tuned for each slide
 Catchcurvelogo <- ggroup(container=Catchcurvelittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Catchcurvelogo)
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(CorrLFlittle,428,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(CorrLFlittle,431,horizontal=FALSE)# spacing needs to be tuned for each slide
 CorrLFlogo <- ggroup(container=CorrLFlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=CorrLFlogo)
 
@@ -419,7 +446,7 @@ visible(SeasonalCatchgraphic) <- TRUE #make correct picture
  add(tmp, plot, expand=FALSE)
 
 
-addSpace(SeasonalCatchlittle,21,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(SeasonalCatchlittle,24,horizontal=FALSE)# spacing needs to be tuned for each slide
 SeasonalCatchlogo <- ggroup(container=SeasonalCatchlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=SeasonalCatchlogo)
 
@@ -463,7 +490,7 @@ tmp=gframe("Plot",container=Recruitlittle)
 add(tmp, plot, expand=FALSE)
 
 
-addSpace(Recruitlittle,141,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(Recruitlittle,144,horizontal=FALSE)# spacing needs to be tuned for each slide
 Recruitlogo <- ggroup(container=Recruitlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Recruitlogo)
 
@@ -515,7 +542,7 @@ visible(YieldperRecruitgraphic) <- TRUE #make correct picture
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(YieldperRecruitlittle,141,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(YieldperRecruitlittle,144,horizontal=FALSE)# spacing needs to be tuned for each slide
 YieldperRecruitlogo <- ggroup(container=YieldperRecruitlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=YieldperRecruitlogo)
 
