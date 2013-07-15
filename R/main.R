@@ -30,10 +30,11 @@ rm(datein)#remove date
 #this function reads in a single data file and returns datain, date in, and lfbin.
 fname1 <<- selectFile()
 #top <- scan(fname1,what="string",nlines=1)
-top <- strsplit(scan(fname1,what="string",nlines=1),",")[[1]]
+lengthunits<<-strsplit(scan(fname1,what="string",nlines=1),",")[[1]]
+top <- strsplit(scan(fname1,what="string",nlines=1,skip=1),",")[[1]]
 
 print(top)
-datain <- read.csv(fname1,head=TRUE,as.is=TRUE)
+datain <- read.csv(fname1,head=TRUE,as.is=TRUE,skip=2)
 colnames(datain) <- top
 lfbin <<-length(datain$ML)
 datein <- top

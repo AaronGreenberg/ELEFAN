@@ -20,7 +20,7 @@ rectplot <- function(ser,bins,xmin,xmax,ylim,barcol1,barcol2){
 
 
 
-rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c(min(time),max(time)), ylim = c(0, ceiling((max(bins)*1.1)+.2*(bins[2]-bins[1]))), barscale = 1, barcol1 = "black",barcol2="grey",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),title=" ",GF=0,birthday=0,...) {
+rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c(min(time),max(time)), ylim = c(0, ceiling((max(bins)*1.1)+.2*(bins[2]-bins[1]))), barscale = 1, barcol1 = "black",barcol2="grey",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),title=" ",GF=0,birthday=0,hline =sML,hlinecolor="pink", sdate1=0,sML1=0,curves1=0,GF1=0,...) {
   ## This function makes the fancy graphs that seems central to the output of ELEFAN
    ## In particular it provides a way of plotting a growth curve over length frequancy data plots over time.
    ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
@@ -65,16 +65,27 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
 
               }
 	}
-
+   text(as.numeric(datesloc$Date[1]),hline+.1*log(max(ylim)),label=as.character(hline),col="pink")#put text
+   abline(h=hline,col=hlinecolor)#make horizontal line
    if(sum(curves$c[,2])!=0){
+ 
    points(sdate+as.numeric(datesloc$Date[1]),sML,col="red",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
-   points(curves$c[,2]+as.numeric(datesloc$Date[1]),curves$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
+    points(curves$c[,2]+as.numeric(datesloc$Date[1]),curves$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
 
  }
 
+
+   if(sum(curves1$c[,2])!=0){
+   points(sdate1+as.numeric(datesloc$Date[1]),sML1,col="blue",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
+   points(curves1$c[,2]+as.numeric(datesloc$Date[1]),curves1$c[,3],pch=1 ,cex=.1,col="grey")# make real growth curve!
+
+ }
+   
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
   b<-bquote()
   if(GF!=0){ legend(x="topleft",inset=0.02,legend=bquote(paste("R"[n] == .(signif(GF,3)))))}
+  if(GF1!=0){ legend(x="topleft",inset=0.05,legend=bquote(paste("R"[n] == .(signif(GF1,3)))))} 
+
 
  }
 

@@ -4,34 +4,60 @@
 
 ###THE FUNCTIONS THAT INTERACT WITH THE UI ARE BELOW!!!
 ##
-plotpeak <- function(Linf,K,Cseasonal,tw,ptype,sdate,ML,scale){#function(d=days,dm=date,da=data,lfdata=lfdata,pd=peaks$out,curve=gcurve)
+plotpeak <- function(Linf,K,Cseasonal,tw,ptype,sdate,ML,scale,sdate1=(sdate+2),ML1=(ML+1),hline=1.2){#function(d=days,dm=date,da=data,lfdata=lfdata,pd=peaks$out,curve=gcurve)
 goodfit <- NULL
 startdate <- as.Date(datein[sdate,1])
 startime <- as.numeric(startdate-datein[1,1])
 ML <- as.numeric(ML)
+
+
+
 #need to convert start date to dime.
 growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
 lfdata<- fillgrowthdata(datein,datain,growthdata) #make data structure with length frequency data
 #head(lfdata)
 peaks <- lfrestruc(lfdata)                  #create restructure lfdata into peaks and valleys.
+gf <- 0
+gcurve <- matrix(0,4,ncol=4)        #initalize growth curve data structure
+gcurve$c <- matrix(0,4,ncol=4)
+
+gf1 <- 0
+gcurve1 <- matrix(0,4,ncol=4)        #initalize growth curve data structure
+gcurve1$c <- matrix(0,4,ncol=4)
+
+
 if(K!=0){
 #compute growth curves if K>0
 gcurve <- curves_cpp(Linf,Cseasonal,tw,K,datain$ML,days,startime,ML,BIRTHDAY) # compute growth curve this has index, day in growthcurve and properbin.
 asp <- aspcompute(peaks)                      #compute asp
+if(sdate1!=0){
+startdate1 <- as.Date(datein[sdate1,1])
+startime1 <- as.numeric(startdate1-datein[1,1])
+ML1 <- as.numeric(ML1)
+gcurve1 <- curves_cpp(Linf,Cseasonal,tw,K,datain$ML,days,startime1,ML1,BIRTHDAY) # compute growth curve this has index, day in growthcurve and properbin.
+esp1 <- espcompute(gcurve1,peaks$out,days,datain$ML)               #compute esp
+gf1 <- gfcompute(asp,esp1)
+}
+
+
+
 esp <- espcompute(gcurve,peaks$out,days,datain$ML)               #compute esp
 gf <- gfcompute(asp,esp)
-
-}else{
-gf <- 0
-gcurve <- matrix(0,4,ncol=4)        #initalize growth curve data structure
-gcurve$c <- matrix(0,4,ncol=4)
 }
-#make plots
+## }else{
+## gf <- 0
+
+## gcurve <- matrix(0,4,ncol=4)        #initalize growth curve data structure
+## gcurve$c <- matrix(0,4,ncol=4)
+## }
+#maek plots
+
+ylabel <- paste("Length(",lengthunits,")",sep="")
 if(ptype=="Peaks"){
-  rqFreqPlot(1:days,datain$ML,peaks$out,startime,ML,gcurve,datein,barscale=scale,GF=signif(gf,4),birthday=BIRTHDAY)
+  rqFreqPlot(1:days,datain$ML,peaks$out,startime,ML,gcurve,datein,barscale=scale,GF=signif(gf,4),birthday=BIRTHDAY,hline=hline,sdate1=startime1,sML1=ML1,curves1=gcurve1,GF1=gf1,ylab1=ylabel)
 }
 if(ptype=="LF"){
-  rqFreqPlot(1:days,datain$ML,lfdata,startime,ML,gcurve,datein,barscale=scale,GF=signif(gf,4),birthday=BIRTHDAY)
+  rqFreqPlot(1:days,datain$ML,lfdata,startime,ML,gcurve,datein,barscale=scale,GF=signif(gf,4),birthday=BIRTHDAY,hline=hline,sdate1=startime1,sML1=ML1,curves1=gcurve1,GF1=gf1,ylab1=ylabel)
 }
 
 }
