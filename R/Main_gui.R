@@ -133,6 +133,7 @@ scaleslide= gslider(from=0,to=4,by=.01,value=1)
 tmp = gframe("Scale", container = LFplotlittle)
 add(tmp, scaleslide, expand=TRUE)
 
+
 hline= gslider(from=0,to=4,by=.01,value=1)
 tmp = gframe("Ruler", container = LFplotlittle)
 add(tmp, hline, expand=TRUE)
@@ -141,7 +142,6 @@ add(tmp, hline, expand=TRUE)
   #stdate <- gdroplist(list(1:10*0))
   #tmp <- gframe("SS",container=LFplotlittle)
   #add(tmp,stdate, expand=FALSE) 
-
 
   #midlength <- gdroplist(list(1:20*0))
   #tmp <- gframe("SL",container=LFplotlittle)
@@ -164,28 +164,27 @@ plotlf <- function(h,...){
  }
 
  
+LFplotlittlebutton1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
+gtext(text="Main cohort",container=LFplotlittlebutton1,height=15,width=200)
 LFplotlittlecohort1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
-gtext(text="Main cohort",container=LFplotlittlecohort1,height=16,width=200)
-LFplotlittlebuttoncohort1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
 stdate <- gdroplist(list(1:10*0-1))
-tmp <- gframe("SS",container=LFplotlittlebuttoncohort1)
+tmp <- gframe("SS",container=LFplotlittlecohort1)
 add(tmp,stdate, expand=FALSE)
 midlength <- gdroplist(list(1:20*0))
-tmp <- gframe("SL",container=LFplotlittlebuttoncohort1)
+tmp <- gframe("SL",container=LFplotlittlecohort1)
 add(tmp,midlength, expand=FALSE)
 
+LFplotlittlebutton2<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
+gtext(text="2nd cohort",container=LFplotlittlebutton2,height=15,width=200)
 LFplotlittlecohort2<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
-gtext(text="2nd cohort",container=LFplotlittlecohort2,height=16,width=200)
-LFplotlittlebuttoncohort2<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
 stdate1 <- gdroplist(list(1:10*0-1))
-tmp <- gframe("SS",container=LFplotlittlebuttoncohort2)
+tmp <- gframe("SS",container=LFplotlittlecohort2)
 add(tmp,stdate1, expand=FALSE)
-midlength1 <- gdroplist(list(1:20*0-1))
-tmp <- gframe("SL",container=LFplotlittlebuttoncohort2)
+midlength1 <- gdroplist(list(1:20*0))
+tmp <- gframe("SL",container=LFplotlittlecohort2)
 add(tmp,midlength1, expand=FALSE)
-
 plot=gbutton("Make plot",handler=plotlf)
-tmp=gframe("Plot",container=LFplotlittle)
+tmp=gframe("Plot",container=LFplotlittlecohort2)
 add(tmp, plot, expand=FALSE)
 
 
