@@ -56,7 +56,8 @@ datefileinh <- function(h,...){
   visible(Datetable) <- FALSE
   Datetable[] <- datetmp
   Datetable[] <- datetmp
-  stdate[] <- 1:(length(datein[,2])-1)
+  stdate[] <- c(-1,1:(length(datein[,2])-1))
+  stdate1[] <- c(-1,1:(length(datein[,2])-1))
   stdatek[] <- 1:(length(datein[,2])-1)
   visible(Datetable) <- TRUE
   Datatable[] <- datain
@@ -73,7 +74,9 @@ datefileinh <- function(h,...){
   Pointslidelc[] <- 1:length(datain$ML)
   Pointslideuc2[] <- 1:length(datain$ML)
   Pointslidelc2[] <- 1:length(datain$ML)
-  midlength[] <- datain$ML
+  midlength[] <-   datain$ML
+  midlength1[] <- datain$ML#make 
+  hline[] <- datain$ML
   midlengthk[] <- datain$ML
   }
 
@@ -87,7 +90,7 @@ tmp = gframe("Data", container = Entrylittle)
 add(tmp, readdatefile, expand=FALSE)
 
 #Add sponsors logo at the bottom of the page
-addSpace(Entrylittle,381,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(Entrylittle,384,horizontal=FALSE)# spacing needs to be tuned for each slide
 #addSpring(Entrylittle)
 Entrylogo <- ggroup(container=Entrylittle,expand=TRUE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Entrylogo)
@@ -130,15 +133,19 @@ scaleslide= gslider(from=0,to=4,by=.01,value=1)
 tmp = gframe("Scale", container = LFplotlittle)
 add(tmp, scaleslide, expand=TRUE)
 
+hline= gslider(from=0,to=4,by=.01,value=1)
+tmp = gframe("Ruler", container = LFplotlittle)
+add(tmp, hline, expand=TRUE)
 
-  stdate <- gdroplist(list(1:10*0))
-  tmp <- gframe("SS",container=LFplotlittle)
-  add(tmp,stdate, expand=FALSE) 
+
+  #stdate <- gdroplist(list(1:10*0))
+  #tmp <- gframe("SS",container=LFplotlittle)
+  #add(tmp,stdate, expand=FALSE) 
 
 
-  midlength <- gdroplist(list(1:20*0))
-  tmp <- gframe("SL",container=LFplotlittle)
-  add(tmp,midlength, expand=FALSE) 
+  #midlength <- gdroplist(list(1:20*0))
+  #tmp <- gframe("SL",container=LFplotlittle)
+  #add(tmp,midlength, expand=FALSE) 
 
 
 #gimage("png/usaid.png",dirname=my_path,container=LFplotlogo)
@@ -146,15 +153,40 @@ plotlf <- function(h,...){
   sdate <- as.numeric(svalue(stdate))
   sdate <- sdate+1#converting to real sample number.
   ML <- as.numeric(svalue(midlength))
+  sdate1 <- as.numeric(svalue(stdate1))
+  sdate1 <- sdate1+1#converting to real sample number.
+  ML1 <- as.numeric(svalue(midlength1))
+  hline <- as.numeric(svalue(hline))
  visible(histgraphic) <- TRUE #make correct picture  
- plotpeak(svalue(Linfslide),svalue(Kslide),svalue(Cslide),svalue(twslide),ptype="LF",sdate,ML,svalue(scaleslide))
+ plotpeak(svalue(Linfslide),svalue(Kslide),svalue(Cslide),svalue(twslide),ptype="LF",sdate,ML,svalue(scaleslide),sdate1,ML1,hline)
  visible(refactorgraphic) <- TRUE #make correct picture  
- plotpeak(svalue(Linfslide),svalue(Kslide),svalue(Cslide),svalue(twslide),ptype="Peaks",sdate,ML,svalue(scaleslide))
+ plotpeak(svalue(Linfslide),svalue(Kslide),svalue(Cslide),svalue(twslide),ptype="Peaks",sdate,ML,svalue(scaleslide),sdate1,ML1,hline)
  }
 
- plot=gbutton("Make plot",handler=plotlf)
- tmp=gframe("Plot",container=LFplotlittle)
- add(tmp, plot, expand=FALSE)
+ 
+LFplotlittlecohort1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
+gtext(text="Main cohort",container=LFplotlittlecohort1,height=16,width=200)
+LFplotlittlebuttoncohort1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
+stdate <- gdroplist(list(1:10*0-1))
+tmp <- gframe("SS",container=LFplotlittlebuttoncohort1)
+add(tmp,stdate, expand=FALSE)
+midlength <- gdroplist(list(1:20*0))
+tmp <- gframe("SL",container=LFplotlittlebuttoncohort1)
+add(tmp,midlength, expand=FALSE)
+
+LFplotlittlecohort2<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
+gtext(text="2nd cohort",container=LFplotlittlecohort2,height=16,width=200)
+LFplotlittlebuttoncohort2<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
+stdate1 <- gdroplist(list(1:10*0-1))
+tmp <- gframe("SS",container=LFplotlittlebuttoncohort2)
+add(tmp,stdate1, expand=FALSE)
+midlength1 <- gdroplist(list(1:20*0-1))
+tmp <- gframe("SL",container=LFplotlittlebuttoncohort2)
+add(tmp,midlength1, expand=FALSE)
+
+plot=gbutton("Make plot",handler=plotlf)
+tmp=gframe("Plot",container=LFplotlittle)
+add(tmp, plot, expand=FALSE)
 
 
 #Add sponsors logo at the bottom of the page
@@ -193,7 +225,7 @@ add(tmp, plot, expand=FALSE)
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(Wetherallplotlittle,321,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(Wetherallplotlittle,324,horizontal=FALSE)# spacing needs to be tuned for each slide
 Wetherallplotlogo <- ggroup(container=Wetherallplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Wetherallplotlogo)
 
@@ -276,7 +308,7 @@ add(tmp, plot, expand=FALSE)
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(Kscanplotlittle,8,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(Kscanplotlittle,11,horizontal=FALSE)# spacing needs to be tuned for each slide
 Kscanplotlogo <- ggroup(container=Kscanplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Kscanplotlogo)
 
@@ -351,13 +383,13 @@ visible(Catchcurvegraphic) <- TRUE #make correct picture
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(Catchcurvelittle,141,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(Catchcurvelittle,144,horizontal=FALSE)# spacing needs to be tuned for each slide
 Catchcurvelogo <- ggroup(container=Catchcurvelittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Catchcurvelogo)
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(CorrLFlittle,428,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(CorrLFlittle,431,horizontal=FALSE)# spacing needs to be tuned for each slide
 CorrLFlogo <- ggroup(container=CorrLFlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=CorrLFlogo)
 
@@ -419,7 +451,7 @@ visible(SeasonalCatchgraphic) <- TRUE #make correct picture
  add(tmp, plot, expand=FALSE)
 
 
-addSpace(SeasonalCatchlittle,21,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(SeasonalCatchlittle,24,horizontal=FALSE)# spacing needs to be tuned for each slide
 SeasonalCatchlogo <- ggroup(container=SeasonalCatchlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=SeasonalCatchlogo)
 
@@ -463,7 +495,7 @@ tmp=gframe("Plot",container=Recruitlittle)
 add(tmp, plot, expand=FALSE)
 
 
-addSpace(Recruitlittle,141,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(Recruitlittle,144,horizontal=FALSE)# spacing needs to be tuned for each slide
 Recruitlogo <- ggroup(container=Recruitlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Recruitlogo)
 
@@ -481,9 +513,9 @@ YieldperRecruitgraphic<- ggraphics(container = YieldperRecruitpic,width=700,heig
 gimage("png/logo1.png",dirname=my_path,container=YieldperRecruitlittle)
 
 
-M=gslider(from=0.5,to=3,by=.01,value=0)
-tmp = gframe("M/K", container = YieldperRecruitlittle)
-add(tmp, M, expand=TRUE)
+Linfypr=gslider(from=1,to=10,length.out=1000,value=2)
+tmp = gframe("Linf", container = YieldperRecruitlittle)
+add(tmp, Linfypr, expand=TRUE)
 
 
 Kypr=gslider(from=0,to=10,by=.01,value=0)
@@ -496,9 +528,9 @@ tmp = gframe("Lc/Linf", container = YieldperRecruitlittle)
 add(tmp, Lc, expand=TRUE)
 
 
-Linfypr=gslider(from=1,to=10,length.out=1000,value=2)
-tmp = gframe("Linf", container = YieldperRecruitlittle)
-add(tmp, Linfypr, expand=TRUE)
+M=gslider(from=0.5,to=3,by=.01,value=0)
+tmp = gframe("M/K", container = YieldperRecruitlittle)
+add(tmp, M, expand=TRUE)
 
 
 plotyperr <- function(h,...){ 
@@ -515,7 +547,7 @@ visible(YieldperRecruitgraphic) <- TRUE #make correct picture
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(YieldperRecruitlittle,141,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(YieldperRecruitlittle,144,horizontal=FALSE)# spacing needs to be tuned for each slide
 YieldperRecruitlogo <- ggroup(container=YieldperRecruitlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=YieldperRecruitlogo)
 
