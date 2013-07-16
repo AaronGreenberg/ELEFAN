@@ -26,7 +26,7 @@ gcurve1 <- matrix(0,4,ncol=4)        #initalize growth curve data structure
 gcurve1$c <- matrix(0,4,ncol=4)
 
 
-if(K!=0){
+if(sdate>0){
 #compute growth curves if K>0
 gcurve <- curves_cpp(Linf,Cseasonal,tw,K,datain$ML,days,startime,ML,BIRTHDAY) # compute growth curve this has index, day in growthcurve and properbin.
 asp <- aspcompute(peaks)                      #compute asp

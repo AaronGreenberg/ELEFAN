@@ -56,7 +56,7 @@ datefileinh <- function(h,...){
   visible(Datetable) <- FALSE
   Datetable[] <- datetmp
   Datetable[] <- datetmp
-  stdate[] <- 1:(length(datein[,2])-1)
+  stdate[] <- c(-1,1:(length(datein[,2])-1))
   stdate1[] <- c(-1,1:(length(datein[,2])-1))
   stdatek[] <- 1:(length(datein[,2])-1)
   visible(Datetable) <- TRUE
@@ -75,7 +75,7 @@ datefileinh <- function(h,...){
   Pointslideuc2[] <- 1:length(datain$ML)
   Pointslidelc2[] <- 1:length(datain$ML)
   midlength[] <-   datain$ML
-  midlength1[] <- c(-1,datain$ML)#make 
+  midlength1[] <- datain$ML#make 
   hline[] <- datain$ML
   midlengthk[] <- datain$ML
   }
@@ -167,7 +167,7 @@ plotlf <- function(h,...){
 LFplotlittlecohort1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
 gtext(text="Main cohort",container=LFplotlittlecohort1,height=16,width=200)
 LFplotlittlebuttoncohort1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
-stdate <- gdroplist(list(1:10*0))
+stdate <- gdroplist(list(1:10*0-1))
 tmp <- gframe("SS",container=LFplotlittlebuttoncohort1)
 add(tmp,stdate, expand=FALSE)
 midlength <- gdroplist(list(1:20*0))
