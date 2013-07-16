@@ -28,31 +28,31 @@ gcurve1$c <- matrix(0,4,ncol=4)
 
 if(sdate>0){
 #compute growth curves if K>0
+if(K>0){  
 gcurve <- curves_cpp(Linf,Cseasonal,tw,K,datain$ML,days,startime,ML,BIRTHDAY) # compute growth curve this has index, day in growthcurve and properbin.
 asp <- aspcompute(peaks)                      #compute asp
 print("sdate1")
 print(sdate1)
+}
 if(sdate1>0){
+  
 startdate1 <- as.Date(datein[sdate1,1])
 startime1 <- as.numeric(startdate1-datein[1,1])
 ML1 <- as.numeric(ML1)
+if(K>0){
 gcurve1 <- curves_cpp(Linf,Cseasonal,tw,K,datain$ML,days,startime1,ML1,BIRTHDAY) # compute growth curve this has index, day in growthcurve and properbin.
 esp1 <- espcompute(gcurve1,peaks$out,days,datain$ML)               #compute esp
 gf1 <- gfcompute(asp,esp1)
+ }
 }
 
 
 
+if(K>0){
 esp <- espcompute(gcurve,peaks$out,days,datain$ML)               #compute esp
 gf <- gfcompute(asp,esp)
 }
-## }else{
-## gf <- 0
-
-## gcurve <- matrix(0,4,ncol=4)        #initalize growth curve data structure
-## gcurve$c <- matrix(0,4,ncol=4)
-## }
-#maek plots 
+}
 
 ylabel <- paste("Length(",lengthunits,")",sep="")
 if(ptype=="Peaks"){
