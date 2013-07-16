@@ -84,8 +84,10 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
    
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
   b<-bquote()
-  if(GF!=0){ legend(x="topleft",inset=c(0.02,0.02),legend=bquote(paste("R"[n] == .(signif(GF,3)))))}
-  if(GF1!=0){ legend(x="topleft",inset=c(0.02,0.1),legend=bquote(paste("R"[n] == .(signif(GF1,3)))))} 
+  if(GF!=0&GF1==0){ legend(x="topleft",inset=c(0.02,0.02),legend=bquote(paste("R"[n] == .(signif(GF,3)))))}
+  if(GF1!=0){
+    legendt=c(bquote(paste("R"[n] == .(signif(GF,3)))),bquote(paste("R2"[n] == .(signif(GF1,3)))))
+    legend(x="topleft",inset=c(0.02,0.01),legend=do.call(expression,legendt))} 
 
 
  }
