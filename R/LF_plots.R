@@ -54,7 +54,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
 		xmax <- xlim[2] - (time[i]+as.numeric(datesloc$Date[1]))       #got to find two points for 
 		ser <- as.vector(freqs[,i])   #putting right and left sides of rectangles
 		ser <-ser/maxscale*barscale      #scaleing... sometimes it is nice make things bigger or smaller
-                if(sum(ser) != 0){          #if there is lf data at time i make plot
+                if(sum(abs(ser)) != 0){          #if there is lf data at time i make plot
                 count=count+1
 		rectplot(-ser,bins,xmin,xmax,ylim,barcol1,barcol2)#make bar plot
                 #abline(h=bins,col="gray60",lty=1,cex=.001)
@@ -65,18 +65,21 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
 
               }
 	}
-   if(sum(curves$c[,2])!=0){
+
+   if(length(sdate)!=0){
    text(as.numeric(datesloc$Date[1]),hline+.1*log(max(ylim)),label=as.character(hline),col="pink")#put text
    abline(h=hline,col=hlinecolor)#make horizontal line
-
    points(sdate+as.numeric(datesloc$Date[1]),sML,col="red",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
+ }
+   if(sum(curves$c[,2])!=0){
+   #points(sdate+as.numeric(datesloc$Date[1]),sML,col="red",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
    points(curves$c[,2]+as.numeric(datesloc$Date[1]),curves$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
 
  }
 
 
    if(sum(curves1$c[,2])!=0){
-   points(sdate1+as.numeric(datesloc$Date[1]),sML1,col="red",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
+   points(sdate1+as.numeric(datesloc$Date[1]),sML1,col="red",pch=19,cex=.5) #These plots may need to be revisited.. however for the moment they are  good enough.
    points(curves1$c[,2]+as.numeric(datesloc$Date[1]),curves1$c[,3],pch=1,cex=.1,col="grey")# make real growth curve!
    
 
@@ -84,8 +87,10 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
    
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
   b<-bquote()
-  if(GF!=0){ legend(x="topleft",inset=c(0.02,0.02),legend=bquote(paste("R"[n] == .(signif(GF,3)))))}
-  if(GF1!=0){ legend(x="topleft",inset=c(0.02,0.1),legend=bquote(paste("R"[n] == .(signif(GF1,3)))))} 
+  if(GF!=0&GF1==0){ legend(x="topleft",inset=c(0.02,0.02),legend=bquote(paste("R"[n] == .(signif(GF,3)))))}
+  if(GF1!=0){
+    legendt=c(bquote(paste("R"[n] == .(signif(GF,3)))),bquote(paste("R2"[n] == .(signif(GF1,3)))))
+    legend(x="topleft",inset=c(0.02,0.01),legend=do.call(expression,legendt))} 
 
 
  }

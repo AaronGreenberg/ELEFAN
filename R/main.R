@@ -28,6 +28,7 @@ datefilein <- function()
 rm(datain)#remove data
 rm(datein)#remove date
 rm(lengthunits)#remove lengthunits
+
 #this function reads in a single data file and returns datain, date in, and lfbin.
 fname1 <<- selectFile()
 #top <- scan(fname1,what="string",nlines=1)
