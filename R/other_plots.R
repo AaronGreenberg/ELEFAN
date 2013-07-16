@@ -4,7 +4,7 @@
 
 ###THE FUNCTIONS THAT INTERACT WITH THE UI ARE BELOW!!!
 ##
-plotpeak <- function(Linf,K,Cseasonal,tw,ptype,sdate,ML,scale,sdate1=(sdate+2),ML1=(ML+1),hline=1.2){#function(d=days,dm=date,da=data,lfdata=lfdata,pd=peaks$out,curve=gcurve)
+plotpeak <- function(Linf,K,Cseasonal,tw,ptype,sdate,ML,scale,sdate1,ML1,hline){#function(d=days,dm=date,da=data,lfdata=lfdata,pd=peaks$out,curve=gcurve)
 goodfit <- NULL
 startdate <- as.Date(datein[sdate,1])
 startime <- as.numeric(startdate-datein[1,1])
@@ -26,11 +26,13 @@ gcurve1 <- matrix(0,4,ncol=4)        #initalize growth curve data structure
 gcurve1$c <- matrix(0,4,ncol=4)
 
 
-if(K!=0){
+if(sdate>0){
 #compute growth curves if K>0
 gcurve <- curves_cpp(Linf,Cseasonal,tw,K,datain$ML,days,startime,ML,BIRTHDAY) # compute growth curve this has index, day in growthcurve and properbin.
 asp <- aspcompute(peaks)                      #compute asp
-if(sdate1!=0){
+print("sdate1")
+print(sdate1)
+if(sdate1>0){
 startdate1 <- as.Date(datein[sdate1,1])
 startime1 <- as.numeric(startdate1-datein[1,1])
 ML1 <- as.numeric(ML1)
@@ -50,7 +52,7 @@ gf <- gfcompute(asp,esp)
 ## gcurve <- matrix(0,4,ncol=4)        #initalize growth curve data structure
 ## gcurve$c <- matrix(0,4,ncol=4)
 ## }
-#maek plots
+#maek plots 
 
 ylabel <- paste("Length(",lengthunits,")",sep="")
 if(ptype=="Peaks"){
