@@ -73,7 +73,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
  }
    if(sum(curves$c[,2])!=0){
    #points(sdate+as.numeric(datesloc$Date[1]),sML,col="red",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
-   points(curves$c[,2]+as.numeric(datesloc$Date[1]),curves$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
+   points(curves$c[,2]+as.numeric(datesloc$Date[1]),curves$c[,3],pch=19 ,cex=.2,col="black")# make real growth curve!
 
  }
 
@@ -81,8 +81,8 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
    if(sum(curves1$c[,2])!=0){
    temp <- seq(1,length(curves1$c[,1]),by=10)#get vector of day to actually plot to make dashed line...if more space is needed 
    points(sdate1+as.numeric(datesloc$Date[1]),sML1,col="red",pch=19) #These plots may need to be revisited.. however for the moment they are  good enough.
-   points(curves1$c[,2]+as.numeric(datesloc$Date[1]),curves1$c[,3],pch=1,cex=.05,col="black")# make real growth curve!
-   points(curves1$c[temp,2]+as.numeric(datesloc$Date[1]),curves1$c[temp,3],pch=1,cex=.4,col="black")# make real growth curve!
+   points(curves1$c[,2]+as.numeric(datesloc$Date[1]),curves1$c[,3],pch=19,cex=.05,col="black")# make real growth curve!
+   points(curves1$c[temp,2]+as.numeric(datesloc$Date[1]),curves1$c[temp,3],pch=19,cex=.4,col="black")# make real growth curve!
 
    
 
