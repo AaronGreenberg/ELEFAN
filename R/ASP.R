@@ -118,7 +118,7 @@ datatmp$D <- isolate(datatmp$C,datatmp$OBS)       #isolate peaks
 datatmp$E <- deemph(datatmp$C,datatmp$D)          #deemph according to manual (SERIOUSLY see manual...)
 #datatmp$F <- spv(datatmp$E/((1+2/datatmp$OBS)^.5))                       #final rescale
 datatmp$F <- spv(datatmp$E)                       #final rescale
-print("data restructure")
+#print("data restructure")
 #print(datatmp$F)
 #print(datatmp)
 return(as.vector(datatmp$F))
