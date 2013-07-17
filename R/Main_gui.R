@@ -33,7 +33,7 @@ datatmp <- NA
 #visible(nb[1]) <- TRUE
 Entry <- ggroup(container = nb,label="Tab. data", expand=TRUE,horizontal=TRUE)#make entry gr
 addSpace(biggroup,300,horizontal=FALSE)
-Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE,height=30)# make little entry group
+Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE,height=30,width=330)# make little entry group
 
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=Entrylittle)
@@ -90,16 +90,16 @@ tmp = gframe("Data", container = Entrylittle)
 add(tmp, readdatefile, expand=FALSE)
 
 #Add sponsors logo at the bottom of the page
-addSpace(Entrylittle,384,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(Entrylittle,438,horizontal=FALSE)# spacing needs to be tuned for each slide
 #addSpring(Entrylittle)
-Entrylogo <- ggroup(container=Entrylittle,expand=TRUE,horizontal=FALSE,width=200)# make little entry group
+Entrylogo <- ggroup(container=Entrylittle,expand=TRUE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Entrylogo)
 
 
 ## ## ## ## Make Length Frequency plot window.
 
 LFplot <- ggroup(container = nb,label="L/F", expand=TRUE,horizontal=TRUE)#make entry group
-LFplotlittle <- ggroup(container=LFplot,expand=FALSE,horizontal=FALSE,width=200)# make little entry group  
+LFplotlittle <- ggroup(container=LFplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group  
 LFpic<- gnotebook(container=LFplot,expand=TRUE)#create the Entry pic.
 histgraphic<- ggraphics(container = LFpic,width=700,height=500,label="Orig. L/F")
 refactorgraphic<- ggraphics(container = LFpic,width=700,height=500,label="Restruct. L/F")
@@ -164,9 +164,9 @@ plotlf <- function(h,...){
  }
 
  
-LFplotlittlebutton1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
+LFplotlittlebutton1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=330)
 gtext(text="Main cohort",container=LFplotlittlebutton1,height=15,width=200)
-LFplotlittlecohort1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
+LFplotlittlecohort1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=330)
 stdate <- gdroplist(list(1:10*0-1))
 tmp <- gframe("SS",container=LFplotlittlecohort1)
 add(tmp,stdate, expand=FALSE)
@@ -174,9 +174,9 @@ midlength <- gdroplist(list(1:20*0))
 tmp <- gframe("SL",container=LFplotlittlecohort1)
 add(tmp,midlength, expand=FALSE)
 
-LFplotlittlebutton2<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
+LFplotlittlebutton2<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=330)
 gtext(text="2nd cohort",container=LFplotlittlebutton2,height=15,width=200)
-LFplotlittlecohort2<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=200)
+LFplotlittlecohort2<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=330)
 stdate1 <- gdroplist(list(1:10*0-1))
 tmp <- gframe("SS",container=LFplotlittlecohort2)
 add(tmp,stdate1, expand=FALSE)
@@ -190,7 +190,7 @@ add(tmp, plot, expand=FALSE)
 
 #Add sponsors logo at the bottom of the page
 #addSpace(LFplotlittle,76,horizontal=FALSE)# spacing needs to be tuned for each slide
-LFplotlogo <- ggroup(container=LFplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+LFplotlogo <- ggroup(container=LFplotlittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=LFplotlogo)
 
 
@@ -198,7 +198,7 @@ gimage("png/logo2.png",dirname=my_path,container=LFplotlogo)
 ## ## ## ## Make Wetherall plot Window
 
 Wetherallplot <- ggroup(container = nb,label="W. plot", expand=TRUE,horizontal=TRUE)#make entry group
-Wetherallplotlittle <- ggroup(container=Wetherallplot,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+Wetherallplotlittle <- ggroup(container=Wetherallplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 Wetherallpic<- gnotebook(container=Wetherallplot,expand=TRUE)#create the Entry pic.
 Wetherallgraphic<- ggraphics(container = Wetherallpic,width=700,height=500,label="Wetherall plot")
 
@@ -224,8 +224,8 @@ add(tmp, plot, expand=FALSE)
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(Wetherallplotlittle,324,horizontal=FALSE)# spacing needs to be tuned for each slide
-Wetherallplotlogo <- ggroup(container=Wetherallplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+addSpace(Wetherallplotlittle,378,horizontal=FALSE)# spacing needs to be tuned for each slide
+Wetherallplotlogo <- ggroup(container=Wetherallplotlittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Wetherallplotlogo)
 
 
@@ -233,7 +233,7 @@ gimage("png/logo2.png",dirname=my_path,container=Wetherallplotlogo)
 ## ## ## ## Make Kscan Window
 
 Kscanplot <- ggroup(container = nb,label="K-scan", expand=TRUE,horizontal=TRUE)#make entry group
-Kscanplotlittle <- ggroup(container=Kscanplot,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+Kscanplotlittle <- ggroup(container=Kscanplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 Kscanplotpic<- gnotebook(container=Kscanplot,expand=TRUE)#create the Entry pic.
 Kscangraphic<- ggraphics(container = Kscanplotpic,width=700,height=500,label="K-scan")
 
@@ -289,7 +289,7 @@ fixedkscanplot(window=svalue(movingaveragek))
  }
 
 
-Kscanplotlittlebutton<-ggroup(container=Kscanplotlittle,expand=FALSE,horizontal=TRUE,width=200)
+Kscanplotlittlebutton<-ggroup(container=Kscanplotlittle,expand=FALSE,horizontal=TRUE,width=330)
 compute=gbutton("Start full scan",handler=computefullkscan)
 tmp=gframe("K-scan",container=Kscanplotlittlebutton)
 add(tmp, compute, expand=FALSE)
@@ -297,7 +297,7 @@ plot=gbutton("Make plot",handler=plotfullkscan)
 tmp=gframe("Plot",container=Kscanplotlittlebutton)
 add(tmp, plot, expand=FALSE)
 
-Kscanplotlittlebutton1<-ggroup(container=Kscanplotlittle,expand=FALSE,horizontal=TRUE,width=200)
+Kscanplotlittlebutton1<-ggroup(container=Kscanplotlittle,expand=FALSE,horizontal=TRUE,width=330)
 compute=gbutton("Start fixed scan",handler=computefixedkscan)
 tmp=gframe("K-scan",container=Kscanplotlittlebutton1)
 add(tmp, compute, expand=FALSE)
@@ -307,8 +307,8 @@ add(tmp, plot, expand=FALSE)
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(Kscanplotlittle,11,horizontal=FALSE)# spacing needs to be tuned for each slide
-Kscanplotlogo <- ggroup(container=Kscanplotlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+addSpace(Kscanplotlittle,65,horizontal=FALSE)# spacing needs to be tuned for each slide
+Kscanplotlogo <- ggroup(container=Kscanplotlittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Kscanplotlogo)
 
 
@@ -316,7 +316,7 @@ gimage("png/logo2.png",dirname=my_path,container=Kscanplotlogo)
 ## ## ## ## Make Catch curve and Corr.L/F wind-points-pointsow
 
 Catchcurveplot <- ggroup(container = nb,label="C.C. I", expand=TRUE,horizontal=TRUE)#make entry group
-Catchcurvelittle <- ggroup(container=Catchcurveplot,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+Catchcurvelittle <- ggroup(container=Catchcurveplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 Catchcurvepic<- gnotebook(container=Catchcurveplot,expand=TRUE)#create the Entry pic.
 Catchcurvegraphic<- ggraphics(container = Catchcurvepic,width=700,height=500,label="C.C. non seasonal")
 
@@ -346,7 +346,7 @@ add(tmp, Pointslideuc, expand=TRUE)
 
 
 CorrLFplot <- ggroup(container = nb,label="Corr. L/F", expand=TRUE,horizontal=TRUE)#make entry group
-CorrLFlittle <- ggroup(container=CorrLFplot,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+CorrLFlittle <- ggroup(container=CorrLFplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 CorrLFpic <- gnotebook(container=CorrLFplot,expand=TRUE)#create the Entry pic.
 Datatablemodified<- gtable(datatmp,container=CorrLFpic,label="Modified data")
 names(Datatablemodified) <- "ML"
@@ -382,14 +382,14 @@ visible(Catchcurvegraphic) <- TRUE #make correct picture
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(Catchcurvelittle,144,horizontal=FALSE)# spacing needs to be tuned for each slide
-Catchcurvelogo <- ggroup(container=Catchcurvelittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+addSpace(Catchcurvelittle,198,horizontal=FALSE)# spacing needs to be tuned for each slide
+Catchcurvelogo <- ggroup(container=Catchcurvelittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Catchcurvelogo)
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(CorrLFlittle,431,horizontal=FALSE)# spacing needs to be tuned for each slide
-CorrLFlogo <- ggroup(container=CorrLFlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+addSpace(CorrLFlittle,485,horizontal=FALSE)# spacing needs to be tuned for each slide
+CorrLFlogo <- ggroup(container=CorrLFlittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=CorrLFlogo)
 
 
@@ -397,7 +397,7 @@ gimage("png/logo2.png",dirname=my_path,container=CorrLFlogo)
 ## ## ## ## Seasonal Catch curve tab
 
 SeasonalCatch <- ggroup(container = nb,label="C.C. II", expand=TRUE,horizontal=TRUE)#make entry gr
-SeasonalCatchlittle <- ggroup(container=SeasonalCatch,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+SeasonalCatchlittle <- ggroup(container=SeasonalCatch,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 SeasonalCatchpic<- gnotebook(container=SeasonalCatch,expand=TRUE)#create the Entry pic.
 SeasonalCatchgraphic<- ggraphics(container = SeasonalCatchpic,width=700,height=500,label="C.C. seasonal")
 
@@ -450,8 +450,8 @@ visible(SeasonalCatchgraphic) <- TRUE #make correct picture
  add(tmp, plot, expand=FALSE)
 
 
-addSpace(SeasonalCatchlittle,24,horizontal=FALSE)# spacing needs to be tuned for each slide
-SeasonalCatchlogo <- ggroup(container=SeasonalCatchlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+addSpace(SeasonalCatchlittle,78,horizontal=FALSE)# spacing needs to be tuned for each slide
+SeasonalCatchlogo <- ggroup(container=SeasonalCatchlittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=SeasonalCatchlogo)
 
 
@@ -459,7 +459,7 @@ gimage("png/logo2.png",dirname=my_path,container=SeasonalCatchlogo)
 ## ## ## ## Recruitment tab
 
 Recruit <- ggroup(container = nb,label="Recr.", expand=TRUE,horizontal=TRUE)#make entry gr
-Recruitlittle <- ggroup(container=Recruit,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+Recruitlittle <- ggroup(container=Recruit,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 Recruitpic<- gnotebook(container=Recruit,expand=TRUE)#create the Entry pic.
 Recruitgraphic<- ggraphics(container = Recruitpic,width=700,height=500,label="Recr.")
 
@@ -494,8 +494,8 @@ tmp=gframe("Plot",container=Recruitlittle)
 add(tmp, plot, expand=FALSE)
 
 
-addSpace(Recruitlittle,144,horizontal=FALSE)# spacing needs to be tuned for each slide
-Recruitlogo <- ggroup(container=Recruitlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+addSpace(Recruitlittle,198,horizontal=FALSE)# spacing needs to be tuned for each slide
+Recruitlogo <- ggroup(container=Recruitlittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Recruitlogo)
 
 
@@ -503,7 +503,7 @@ gimage("png/logo2.png",dirname=my_path,container=Recruitlogo)
 ## ## ## ## Yield per recruit tab
 
 YieldperRecruit <- ggroup(container = nb,label="Y/R", expand=TRUE,horizontal=TRUE)#make entry gr
-YieldperRecruitlittle <- ggroup(container=YieldperRecruit,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+YieldperRecruitlittle <- ggroup(container=YieldperRecruit,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 YieldperRecruitpic<- gnotebook(container=YieldperRecruit,expand=TRUE)#create the Entry pic.
 YieldperRecruitgraphic<- ggraphics(container = YieldperRecruitpic,width=700,height=500,label="Y/R")
 
@@ -546,8 +546,8 @@ visible(YieldperRecruitgraphic) <- TRUE #make correct picture
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(YieldperRecruitlittle,144,horizontal=FALSE)# spacing needs to be tuned for each slide
-YieldperRecruitlogo <- ggroup(container=YieldperRecruitlittle,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+addSpace(YieldperRecruitlittle,198,horizontal=FALSE)# spacing needs to be tuned for each slide
+YieldperRecruitlogo <- ggroup(container=YieldperRecruitlittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=YieldperRecruitlogo)
 
 
@@ -556,7 +556,7 @@ gimage("png/logo2.png",dirname=my_path,container=YieldperRecruitlogo)
 ## ## ## ## L/F manip. tab
 
 LFmanip <- ggroup(container = nb,label="L/F manip.", expand=TRUE,horizontal=TRUE)#make entry gr
-LFmaniplittle <- ggroup(container=LFmanip,expand=FALSE,horizontal=FALSE,width=200)# make little entry group
+LFmaniplittle <- ggroup(container=LFmanip,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 LFmanippic<- gnotebook(container=LFmanip,expand=TRUE)#create the Entry pic.
 LFmanipgraphic<- ggraphics(container = LFmanippic,width=700,height=500,label="L/F manip.")
 
