@@ -242,7 +242,7 @@ recruitment2 <- aggregate(height~month, data=recruitment, FUN=sum)
 
 print((recruitment2))
 y=(recruitment2$height-min(recruitment2$height))/(sum((recruitment2$height-min(recruitment2$height))))*100
-plot(recruitment2$month,y,type="l",col="black",xlim=c(1,12),xlab="month",ylab="Percent Recruitment")
+plot(as.Date(recruitment2$month,format="%B",origin=datein$Date[1]),y,type="l",col="black",xlim=c(1,12),xlab="month",ylab="Percent Recruitment")
 polygon( c(min(recruitment2$month), recruitment2$month, max(recruitment2$month)), c(min(y), y, min(y)), density=100,alpha=.2,col="grey" )
 #points(recruitment2[,1],y,type="p",col="red",xlim=c(1,12),pch=19,cex=.5)
 
