@@ -487,9 +487,14 @@ TWslider=gslider(from=0,to=1,by=.01,value=0)
 tmp = gframe("WP", container = Recruitlittle)
 add(tmp, TWslider, expand=TRUE)
 
+plotrecruit <- function(h,...){ 
+visible(Recruitgraphic) <- TRUE #make correct picture
+temp<- recruitment(svalue(Klocslider),svalue(Linfslider),svalue(Cslider),svalue(TWslider))
+visible(Recruitgraphic) <- TRUE #make correct picture
+}
 
 
-plot=gbutton("Make plot",handler=NULL)
+plot=gbutton("Make plot",handler=plotrecruit)
 tmp=gframe("Plot",container=Recruitlittle)
 add(tmp, plot, expand=FALSE)
 

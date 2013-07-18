@@ -145,7 +145,9 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,tzero[i],0,BIRTHDAY)
   ages[i] <- tempered$c[max(index),1]+tempered$tzero
   }
-  plot(ages/365,log(sort(rowSums(pointsout),decreasing=FALSE)))
+  print(pointsout)
+  print(colSums(pointsout))
+  plot(ages/365,log(rowSums(pointsout)))
 
   x11()
 
