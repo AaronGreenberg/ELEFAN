@@ -366,9 +366,10 @@ filename <- (paste(substr(fname1,start=1,stop=(nchar(fname1)-4)),"corrected.csv"
 
 if(file.exists(filename)){file.remove(filename)}#remove file
 print(temp$data)
-write(noquote(as.character(colnames(datain))),file=filename,sep=",",ncolumns=length(colnames(datain)))
-
-write.csv(round(temp$data,4),file=filename,row.names=FALSE,col.names=FALSE,append=TRUE)
+print(lengthunits)
+#write("hey",file=filename)
+write.table(lengthunits,file=filename,quote=FALSE,append=TRUE,row.names=FALSE,col.names=FALSE)
+write.table(round(temp$data,4),file=filename,row.names=FALSE,col.names=TRUE,append=TRUE,quote=FALSE,sep=",")
 
 
 visible(Catchcurvegraphic) <- TRUE #make correct picture
