@@ -86,7 +86,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,oldest,datain$ML[length(datain$ML)],BIRTHDAY)#compute growth curve that goes through youngest
   #index <-which(colSums(lfdata)>0)
   
-  tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=(length(datain$ML)+1)),decreasing=TRUE))
+  tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=3),decreasing=TRUE))#(length(datain$ML)+1)),decreasing=TRUE))
 # gcurvemain <- 0*lfdata
  count=1
   pointscurve <- matrix(0,ncol=4,nrow=length(tzero)*length(index))
@@ -129,10 +129,10 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
    print(index[i])
    print(datain$ML)
    #get bins between curves
-   for(j in 1:(length(datain$ML)-1)){
+   for(j in 1:(length(tzero)-1)){
 
     curvebin <- which(datain$ML >= floor(subday$length[j]) &datain$ML <= ceiling(subday$length[j+1]))
-    print(paste("the vector of bins between curve", j, "and",j+1))
+    print(paste("the vector of bins between curve", j, "and",j+1, "on day","subday",subday))
     print(curvebin)
     print(datain$ML[curvebin])
     pointsout[j,i] <- sum(datain[curvebin,i+1])#add up all things
