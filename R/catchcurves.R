@@ -120,14 +120,13 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   pointsout <- matrix(0,nrow=length(tzero),ncol=length(index))
   #loop over days
   for(i in 1:length(index)){
-    
-   print(i)
-   
   #loop over correct number of curves and fill in table.
-   subday=subset(pointcurve, day==index[i]) #get part that is correct day.
-   print(subday)
-   print(index[i])
-   print(datain$ML)
+   z=which(pointcurve$day==index[i]) #get part that is correct day.
+   print(z)
+   print(pointscurve[z,])
+   
+   subday=pointscurve[z,]
+   print(paste("subday::",subday,"index::",index[i],"datain::",datain$ML,"i::",i))
    #get bins between curves
    for(j in 1:(length(tzero)-1)){
 
