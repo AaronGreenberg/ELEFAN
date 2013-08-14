@@ -68,18 +68,18 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   #--1--compute oldest and youngest
   #locate the oldest and youngest fish.
   index <-which(colSums(lfdata)>0)
-  print("index where lfdata not equal zero")
-  print(index)
-  print(colSums(lfdata)[index])
-  print(max(index))
-  print(min(index))
-  print(lfdata[,max(index)])
-  print(lfdata[,min(index)])
+  ## print("index where lfdata not equal zero")
+  ## print(index)
+  ## print(colSums(lfdata)[index])
+  ## print(max(index))
+  ## print(min(index))
+  ## print(lfdata[,max(index)])
+  ## print(lfdata[,min(index)])
   youngest <- max(index)#lfdata[1,max(index)]
   oldest <- min(index)#lfdata[length(datain$ML),min(index)]
   #youngest <- max(which(lfdata[1,]>0))            
   #oldest <- max(which(lfdata[length(lfdata[,1]),]>0)) 
-  print("hum")
+  #print("hum")
   # compute growth curve that goes through oldest and youngest
 
   gcurve1 <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,youngest,datain$ML[1],BIRTHDAY)#compute growth curve that goes through oldest
@@ -99,9 +99,9 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
       gcurvemain <- c(gcurvemain,as.vector(tempered$c[,3]))
       timeblue <- c(timeblue,as.vector(tempered$c[,1]))
       int <- which(tempered$c[,1]==index[j])
-      print(int)
-      print(j)
-      print(pointscurve)
+      ## print(int)
+      ## print(j)
+      ## print(pointscurve)
       if(length(int)!=0){
       pointscurve[count,1] <- i #determine curve
       pointscurve[count,2] <- tempered$c[int,1]#+tempered$tzero#get index of location x axis.date...
@@ -123,18 +123,18 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   #loop over correct number of curves and fill in table.
    z=as.data.frame(subset(pointcurve,pointcurve$day==index[i]))
    colnames(z) <- c("curve","day","length","bin") #get part that is correct day.
-   print("subday?!")
-   print(z)
+   ## print("subday?!")
+   ## print(z)
    subday=z#correct subday!
    
  
    #get bins between curves
    count=0;
    for(j in 1:(length(tzero)-1)){
-    print("curve index")
-    print(j)
-    print(paste("subday$lengthf::",subday$length[j]))
-    print(paste("subday$lengthc::",subday$length[j+1]))
+    ## print("curve index")
+    ## print(j)
+    ## print(paste("subday$lengthf::",subday$length[j]))
+    ## print(paste("subday$lengthc::",subday$length[j+1]))
     curvebin <- which(datain$ML >= floor(subday$length[j]) &datain$ML <= ceiling(subday$length[j+1]))
     if(!is.na(sum(datain[curvebin,i+1]))){
     pointsout[subday$curve[j],i] <- sum(datain[curvebin,i+1])#add up all things
@@ -148,23 +148,17 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,tzero[i],0,BIRTHDAY)
   ages[i] <- tempered$c[max(index),1]-tempered$tzero
   }
-  print(pointsout)# got to reverse order so youngest fish are plotted first!
-  
-  pointsout <- pointsout[nrow(pointsout):1,]
-  print(pointsout)
+  pointsout <- pointsout[nrow(pointsout):1,]# got to reverse order so youngest fish are plotted first!
   widthvec <- pointslower:(pointsupper)
-
-                                        #print(ti)
-widthvec2 <-0:pointslower
+  widthvec2 <-0:pointslower
 
 x <- ages[widthvec]/365
 print(x)
 y <- log(rowSums(pointsout)[widthvec])
-print("hum something funny")
 print(log(rowSums(pointsout)))
 print(y)
 z <- lm(y~x)
-  print(summary(z))
+print(summary(z))
 
 
 par(1,las=1,bty='n',oma=c(0,1,1,1))
@@ -174,13 +168,7 @@ lines(x=ages[widthvec]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec]
   
 temp2 <-bquote(paste("ln(N) = ",.(signif(z$coefficients[1],3)),.(signif(z$coefficients[2],3)),"*age"," ; ",r^2," = ",.(signif(summary(z)$r.squared,3))))  
 legend(x="topright",legend=temp2,inset=0.02)  
-
-#  print(colSums(pointsout))
-#  plot(ages/365,log(rowSums(pointsout)))
-  x11()
-
-
-  
+ x11() #eventually this plot can be sent to garbage... but  not until debugging is complete.
 catchrqFreqPlot(1:days,datain$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(datain$ML[1],datain$ML[length(datain$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,pointscurve,timeblue,datein,barscale=1,GF=0)
   
   
