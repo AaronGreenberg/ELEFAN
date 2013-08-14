@@ -30,7 +30,7 @@ print(ti)
 widthvec2 <-0:pointslower
 z <- lm(log(sumsample[widthvec]/delti[widthvec])~ti[widthvec])
 par(1,las=1,bty='n',oma=c(0,1,1,1))
-plot(x=ti[widthvec2],y=(z$coefficients[1]+z$coefficients[2]*ti[widthvec2]),type="l",lty=2,col="black",xlab=bquote(paste("Relative age (t-t"[o],")")), ylab=expression(paste("Relative abundance (ln(N/",Delta,"t))")),yaxt="n",xaxt="n",xlim=c(-0.5,ceiling(max(ti))),ylim=c(0,ceiling(1.1*max(log(sumsample/delti)))))#make the line that does not count
+plot(x=ti[widthvec2],y=(z$coefficients[1]+z$coefficients[2]*ti[widthvec2]),type="l",lty=2,col="black",xlab=bquote(paste("Relative age (t-t"[o],")")), ylab=expression(paste("Relative abundance (ln(N/",Delta,"t))")),yaxt="n",xaxt="n",xlim=c(-0.5,ceiling(max(ti))),ylim=c(0,ceiling(1.1*z$coefficients[1])))#make the line that does not count
 axis(2,tck=0.02,las=2)
 axis(1,tck=0.02)
 
@@ -58,7 +58,7 @@ return(nonseasonal=list(data=dataout,prob=selectivity$prob))
 
 
 
-plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
+plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,pointslower){
 
   # initialize data structure
   growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
@@ -86,7 +86,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,oldest,datain$ML[length(datain$ML)],BIRTHDAY)#compute growth curve that goes through youngest
   #index <-which(colSums(lfdata)>0)
   
-  tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=3),decreasing=TRUE))#(length(datain$ML)+1)),decreasing=TRUE))
+  tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(datain$ML)),decreasing=TRUE))#(length(datain$ML)+1)),decreasing=TRUE))
 # gcurvemain <- 0*lfdata
  count=1
   pointscurve <- matrix(0,ncol=4,nrow=length(tzero)*length(index))
@@ -121,35 +121,66 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw){
   #loop over days
   for(i in 1:length(index)){
   #loop over correct number of curves and fill in table.
-   z=which(pointcurve$day==index[i]) #get part that is correct day.
+   z=as.data.frame(subset(pointcurve,pointcurve$day==index[i]))
+   colnames(z) <- c("curve","day","length","bin") #get part that is correct day.
+   print("subday?!")
    print(z)
-   print(pointscurve[z,])
+   subday=z#correct subday!
    
-   subday=pointscurve[z,]
-   print(paste("subday::",subday,"index::",index[i],"datain::",datain$ML,"i::",i))
+ 
    #get bins between curves
+   count=0;
    for(j in 1:(length(tzero)-1)){
-
+    print("curve index")
+    print(j)
+    print(paste("subday$lengthf::",subday$length[j]))
+    print(paste("subday$lengthc::",subday$length[j+1]))
     curvebin <- which(datain$ML >= floor(subday$length[j]) &datain$ML <= ceiling(subday$length[j+1]))
-    print(paste("the vector of bins between curve", j, "and",j+1, "on day","subday",subday))
-    print(curvebin)
-    print(datain$ML[curvebin])
-    pointsout[j,i] <- sum(datain[curvebin,i+1])#add up all things
-  #row sums are sum of points inside curves.
+    if(!is.na(sum(datain[curvebin,i+1]))){
+    pointsout[subday$curve[j],i] <- sum(datain[curvebin,i+1])#add up all things
+
+  }
   }
  }
   #pointsout <- prop.table(pointsout,2)
   ages <- vector()
   for(i in 1:length(tzero)){#loop over curves
   tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,tzero[i],0,BIRTHDAY)
-  ages[i] <- tempered$c[max(index),1]+tempered$tzero
+  ages[i] <- tempered$c[max(index),1]-tempered$tzero
   }
+  print(pointsout)# got to reverse order so youngest fish are plotted first!
+  
+  pointsout <- pointsout[nrow(pointsout):1,]
   print(pointsout)
-  print(colSums(pointsout))
-  plot(ages/365,log(rowSums(pointsout)))
+  widthvec <- pointslower:(pointsupper)
 
+                                        #print(ti)
+widthvec2 <-0:pointslower
+
+x <- ages[widthvec]/365
+print(x)
+y <- log(rowSums(pointsout)[widthvec])
+print("hum something funny")
+print(log(rowSums(pointsout)))
+print(y)
+z <- lm(y~x)
+  print(summary(z))
+
+
+par(1,las=1,bty='n',oma=c(0,1,1,1))
+plot(ages/365,log(rowSums(pointsout)))
+lines(x=ages[widthvec]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec]/365),col="black")#make the line through the selected points
+
+  
+temp2 <-bquote(paste("ln(N) = ",.(signif(z$coefficients[1],3)),.(signif(z$coefficients[2],3)),"*age"," ; ",r^2," = ",.(signif(summary(z)$r.squared,3))))  
+legend(x="topright",legend=temp2,inset=0.02)  
+
+#  print(colSums(pointsout))
+#  plot(ages/365,log(rowSums(pointsout)))
   x11()
 
+
+  
 catchrqFreqPlot(1:days,datain$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(datain$ML[1],datain$ML[length(datain$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,pointscurve,timeblue,datein,barscale=1,GF=0)
   
   

@@ -439,7 +439,7 @@ add(tmp, Pointslideuc2, expand=TRUE)
 
 plotseacatch <- function(h,...){ 
   visible(SeasonalCatchgraphic) <- TRUE #make correct picture
-temp<- plotseacatchcurve(svalue(Klocslidec2),svalue(Linfslidec2),svalue(Cslidec2),svalue(TWslidec2))
+temp<- plotseacatchcurve(svalue(Klocslidec2),svalue(Linfslidec2),svalue(Cslidec2),svalue(TWslidec2),svalue(Pointslideuc2),svalue(Pointslidelc2))
 
 visible(SeasonalCatchgraphic) <- TRUE #make correct picture
 
