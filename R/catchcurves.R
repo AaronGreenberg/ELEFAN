@@ -162,7 +162,9 @@ print(summary(z))
 
 
 par(1,las=1,bty='n',oma=c(0,1,1,1))
-plot(ages/365,log(rowSums(pointsout)))
+plot(ages/365,log(rowSums(pointsout)),xlab=bquote(paste("Relative age (t-t"[o],")")),ylab=expression(paste("Relative abundance (ln(N))")),yaxt="n",xaxt="n")
+axis(2,tck=0.02,las=2)
+axis(1,tck=0.02)
 lines(x=ages[widthvec]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec]/365),col="black")#make the line through the selected points
 
   
