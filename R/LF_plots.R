@@ -61,7 +61,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
 
                 text(cbind((time[i]+as.numeric(datesloc$Date[1])),max(bins)+((count%%2)*.7+1.1)*min(c((bins[2]-bins[1]),1))),label=as.character(datesloc$Date[count+1],format="%d/%m/%y"),cex=.75,col="black")#add datesloc to things
              
-                text(cbind(time[i]+as.numeric(datesloc$Date[1]),min(bins)-((count%%2)*.7+1.1)*min(c((bins[2]-bins[1]),1))),label=as.character( sum(datain[,count+1]),cex=.35,col="black")) # add frequency counts
+                text(cbind(time[i]+as.numeric(datesloc$Date[1]),min(bins)-((count%%2)*.7+1.1)*min(c((bins[2]-bins[1]),1))),label=as.character( round(sum(datain[,count+1])),cex=.35,col="black")) # add frequency counts
 
               }
 	}
@@ -88,7 +88,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
 
  }
    
-   axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
+   axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b",las=2)
   b<-bquote()
   if(GF!=0&GF1==0){ legend(x="topleft",inset=c(0.02,0.02),legend=bquote(paste("R"[n] == .(signif(GF,3)))))}
   if(GF1!=0){
@@ -153,7 +153,7 @@ catchrqFreqPlot <- function(time,bins,freqs, sdate,sML,tzeros,curves1,curves2,ma
    points(curves2$c[,1]+as.numeric(datesloc$Date[1]),curves2$c[,3],pch=1 ,cex=.2,col="black")# make real growth curve!
    points(timeblue+as.numeric(datesloc$Date[1]),maincurve,pch=1 ,cex=.2,col="grey")# make real growth curve!
    points(pointscurve[,2]+as.numeric(datesloc$Date[1]),pointscurve[,3],col="red",cex=.5)
-   axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b")
+   axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b",las=2)
   if(GF!=0){ legend(x="topleft",inset=0.02,legend=paste("Rn =",signif(GF,3)))}
  }
 
