@@ -27,7 +27,8 @@ nb <- gnotebook(container=biggroup,expand=TRUE,horizontal=TRUE)
 
 #%############################################################
 #Make the Entry page!
-YieldProbs<<-NA
+YieldProbs<<-NA  #place to store prob.
+YieldAges <<- NA#place to store ages
 datetmp <- NA
 datatmp <- NA
 #visible(nb[1]) <- TRUE
@@ -361,7 +362,7 @@ temp<- plotnonseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Pointsl
 Datatablemodified[] <- (signif(temp$data,3))
 Datatablemodified[] <- (signif(temp$data,3))
 YieldProbs <<- temp$prob
-
+YieldAges<<-temp$ages
 filename <- (paste(substr(fname1,start=1,stop=(nchar(fname1)-4)),"corrected.csv",sep="_"))
 
 if(file.exists(filename)){file.remove(filename)}#remove file
@@ -370,8 +371,6 @@ print(lengthunits)
 #write("hey",file=filename)
 write.table(lengthunits,file=filename,quote=FALSE,append=TRUE,row.names=FALSE,col.names=FALSE)
 write.table(round(temp$data,4),file=filename,row.names=FALSE,col.names=TRUE,append=TRUE,quote=FALSE,sep=",")
-
-
 visible(Catchcurvegraphic) <- TRUE #make correct picture
 
  }
@@ -541,7 +540,7 @@ add(tmp, M, expand=TRUE)
 plotyperr <- function(h,...){ 
 visible(YieldperRecruitgraphic) <- TRUE #make correct picture
 Yieldbiomass <- yield_biomass_per_recruit(svalue(M),svalue(Kypr),svalue(Lc),svalue(Linfypr),Pi=(YieldProbs),pas=NULL)
-plot_yield_biomass_per_recruit(Yieldbiomass)
+plot_yield_biomass_per_recruit(Yieldbiomass,YieldProbs,YieldAges)
 visible(YieldperRecruitgraphic) <- TRUE #make correct picture  
  }
 

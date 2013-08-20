@@ -10,7 +10,6 @@ yield_biomass_per_recruit <- function (M,K,Littlec,Linf,Pi=YieldProbs,pas=NULL)
 Lc=Littlec*Linf #convert from little c to Lc 
 M=M*K #convert from M/K to M
 
-
 if (is.null(pas)) pas <- 0.05
 
 

@@ -52,7 +52,7 @@ print(selectivity)
 dataout <- datain#initialize
 for(i in 2:length(datain[1,])){dataout[,i] <-datain[,i]/selectivity$prob} 
   
-return(nonseasonal=list(data=dataout,prob=selectivity$prob))  
+return(nonseasonal=list(data=dataout,prob=selectivity$prob,ages=ti))  
 }
 
 
