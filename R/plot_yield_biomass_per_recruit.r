@@ -10,10 +10,9 @@ print("plot")
 print(Pi)
 #compute p50
 vec=approx(Pi,n=10000)
-P50x=vec$x[which.min((vec$y-.5)^2)]
 P50y=vec$y[which.min((vec$y-.5)^2)]
 vec2=approx(ages,n=10000)
-Age=vec2$y[which.min((vec2$y-P50x)^2)]
+Age=vec2$y[which.min((vec2$y-P50y)^2)]
 
 
 ylim <- c(0,max(tab_final[,1:2],na.rm=TRUE))
@@ -29,7 +28,7 @@ axis(1,tck=0.02)
 axis(2,tck=0.02,las=2)
 
 x11()
-plot(ages,Pi)
+plot(ages,Pi,type="l")
 points(P50x,P50y,col="red")       
 points(Age,P50y,col="green")       
        
