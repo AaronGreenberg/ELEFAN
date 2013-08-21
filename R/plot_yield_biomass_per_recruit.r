@@ -36,5 +36,6 @@ plot(ages,Pi,type="p")
 points(vec2$y,vec$y,col="black",type="l")
 curve(predict(g,data.frame(ages=x),type="resp"),add=TRUE,col="grey")
 points(Age,P50y,col="red",pch=19)       
-abline(h=.5,col="darkgrey")       
+abline(h=.5,col="darkgrey")
+abline(v=Age,col="darkgrey")       
 }
