@@ -540,7 +540,7 @@ add(tmp, M, expand=TRUE)
 plotyperr <- function(h,...){ 
 visible(YieldperRecruitgraphic) <- TRUE #make correct picture
 Yieldbiomass <- yield_biomass_per_recruit(svalue(M),svalue(Kypr),svalue(Lc),svalue(Linfypr),Pi=(YieldProbs),pas=NULL)
-plot_yield_biomass_per_recruit(Yieldbiomass,YieldProbs,YieldAges)
+plot_yield_biomass_per_recruit(Yieldbiomass,YieldProbs,datain$ML)
 visible(YieldperRecruitgraphic) <- TRUE #make correct picture  
  }
 
