@@ -142,30 +142,41 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   ages[i] <- tempered$c[max(index),1]-tempered$tzero
   }
   pointsout <- pointsout[nrow(pointsout):1,]# got to reverse order so youngest fish are plotted first!
-  widthvec <- pointslower:(pointsupper)
-  widthvec2 <-0:pointslower
+  widthvec <- (pointslower):pointsupper
+  widthvec2 <- 1:pointslower
 
 x <- ages[widthvec]/365
 print(x)
 y <- log(rowSums(pointsout)[widthvec])
 print(log(rowSums(pointsout)))
+print((rowSums(pointsout)))  
 print(y)
 z <- lm(y~x)
 print(summary(z))
 
+
 #should follow what I did in Catch curve 1.
 par(1,las=1,bty='n',oma=c(0,1,1,1))
+  
 plot(ages/365,log(rowSums(pointsout)),xlab=bquote(paste("Relative age (t-t"[o],")")),ylab=expression(paste("Relative abundance (ln(N))")),yaxt="n",xaxt="n")
+points(ages[widthvec]/365,log(rowSums(pointsout)[widthvec]),pch=19,col="black") #make filled circles only on points in width vect
 axis(2,tck=0.02,las=2)
 axis(1,tck=0.02)
+text(ages/365,log(rowSums(pointsout))+.1*log(max(log(rowSums(pointsout)))),as.character(length(ages):1)) #put on text
+text(ages/365,log(rowSums(pointsout))-.05*log(max(log(rowSums(pointsout)))),as.character(round(rowSums(pointsout))),col="red") #put on text
+lines(x=ages[widthvec2]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec2]/365),col="red")#make the line through the selected points
 lines(x=ages[widthvec]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec]/365),col="black")#make the line through the selected points
 
-  
-temp2 <-bquote(paste("ln(N) = ",.(signif(z$coefficients[1],3)),.(signif(z$coefficients[2],3)),"*age"," ; ",r^2," = ",.(signif(summary(z)$r.squared,3))))  
+tempsum <- sum(rowSums(pointsout))
+print("tempsum")
+print(tempsum) 
+temp2 <-bquote(paste("ln(N) = ",.(signif(z$coefficients[1],3)),.(signif(z$coefficients[2],3)),"*age"," ; ",r^2," = ",.(signif(summary(z)$r.squared,3)),";  sum",.(signif(tempsum,3))))  
 legend(x="topright",legend=temp2,inset=0.02)  
  x11() #eventually this plot can be sent to garbage... but  not until debugging is complete.
 catchrqFreqPlot(1:days,datain$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(datain$ML[1],datain$ML[length(datain$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,pointscurve,timeblue,datein,barscale=1,GF=0)
-  
+## x11()
+##   plot(ages/365,rowSums(pointsout))
+##   points(ages[widthvec]/365,rowSums(pointsout)[widthvec],pch=19,col="black") #make filled circles only on points in width vect
   
 
 }
