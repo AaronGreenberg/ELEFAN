@@ -135,7 +135,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   }
   }
  }
-  pointsout <- prop.table(pointsout,2)*100
+  #pointsout <- prop.table(pointsout,2)*100
   ages <- vector()
   for(i in 1:length(tzero)){#loop over curves
   tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,tzero[i],0,BIRTHDAY)
