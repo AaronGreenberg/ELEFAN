@@ -9,9 +9,7 @@ yield_biomass_per_recruit <- function (M,K,Littlec,Linf,Pi=YieldProbs,pas=NULL)
 #print(YieldProbs)  
 Lc=Littlec*Linf #convert from little c to Lc 
 M=M*K #convert from M/K to M
-
-if (is.null(pas)) pas <- 0.05
-
+if (is.null(pas)) pas <- 0.015
 
 # Y/R Knife-edge
 
@@ -29,20 +27,22 @@ if(!is.na(sum(Pi))){
 #l2 <- seq(from=pas2, to=Linf, by=pas2)
 l1 <- datain$ML-(datain$ML[2]-datain$ML[1])/2
 l2 <- datain$ML+(datain$ML[2]-datain$ML[1])/2
-U1 <- 1-(l1/Linf)
-U2 <- 1-(l2/Linf)
+U1 <- 1-(l1/Linf)#lower class
+U2 <- 1-(l2/Linf)#upper class 
 
 YR_nke <- c()
 for (i in 1:length(E))
 {
+#reduction factor
 ri <- (U2^((M/K)*(E[i]/(1-E[i]))*Pi))/(U1^((M/K)*(E[i]/(1-E[i]))*Pi))
+
 Gi <- c()
 Gi[1]=ri[1]
-for (j in 2:length(ri)) {Gi[j] <- Gi[j-1]*ri[j]}
 
-yr1 <- (E[i]*U1^m[i])*((1-(3*U1)/(1+m[i]))+(3*(U1^2)/(1+(2*m[i])))-((U1^3)/(1+(3*m[i]))))
-yr2 <- (E[i]*U2^m[i])*((1-(3*U2)/(1+m[i]))+(3*(U2^2)/(1+(2*m[i])))-((U2^3)/(1+(3*m[i]))))
+for (j in 2:length(ri)) {Gi[j] <- Gi[j-1]*ri[j]}#doing product that computs Gi
 
+yr1 <- (E[i]*U1^m[i])*(1-((3*U1)/(1+m[i]))+(3*(U1^2)/(1+(2*m[i])))-((U1^3)/(1+(3*m[i]))))#upper limit of class
+yr2 <- (E[i]*U2^m[i])*(1-((3*U2)/(1+m[i]))+(3*(U2^2)/(1+(2*m[i])))-((U2^3)/(1+(3*m[i]))))#lower limit
 t1 <- c()
 t2 <- c()
 t1[1] <- NA
@@ -57,13 +57,16 @@ t2[k] <- Gi[k]*yr2[k]
 }
 
 Diff <- t1-t2
+
 yr <- Diff*Pi
 
 cum_yr <- c()
 cum_yr[1] <- 0
 for (l in 2:length(U1))
 {
+  
 cum_yr[l] <- cum_yr[l-1]+yr[l]
+
 }
 
 YR_nke[i] <- cum_yr[length(cum_yr)]
@@ -95,15 +98,12 @@ D2 <- 1-((3*U2)/(1+m_prim2[i]))+((3*U2^2)/(1+(2*m_prim2[i])))-((U2^3)/(1+(3*m_pr
 
 br1 <- (1-E[i])*(N1/D1)
 br2 <- (1-E[i])*(N2/D2)
-
 t1 <- c()
 t2 <- c()
 t1[1] <- NA
 t2[1] <- NA
 for (k in 2:length(U1))
 {
-  
-
 t1[k] <- Gi[k-1]*br1[k]
 t2[k] <- Gi[k]*br2[k]
 }

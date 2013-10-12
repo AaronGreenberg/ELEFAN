@@ -16,16 +16,17 @@ P50x=vec$x[which.min((vec$y-.5)^2)]
 vec2=approx(length,n=10000)
 Length=vec2$y[which.min((vec2$x-P50x)^2)]
 
-
+print(tab_final)
 ylim <- c(0,max(tab_final[,1:2],na.rm=TRUE))
 plot(rownames(tab_final),tab_final[,1],type="l",xaxt="n",yaxt="n",ylab="Relative yield per recruit",xlab="",col=1,ylim=ylim)
-lines(rownames(tab_final),tab_final[,2],type="l",lty=2,col=1)
+
+lines(rownames(tab_final),tab_final[,2],type="p",lty=2,col="red")
 axis(1,tck=0.02)
 axis(2,tck=0.02,las=2)
 legend(x="topright",paste("P50 length=",signif(Length,3), "P50 prob=",signif(P50y,3)))
 ylim <- c(0,max(tab_final[,3:4],na.rm=TRUE))
 plot(rownames(tab_final),tab_final[,3],type="l",xaxt="n",yaxt="n",ylab="Relative biomass per recruit",xlab="Exploitation rate (E = F/Z)",col=1,ylim=ylim)
-lines(rownames(tab_final),tab_final[,4],type="l",lty=2,col=1)
+lines(rownames(tab_final),tab_final[,4],type="p",lty=2,col="red")
 axis(1,tck=0.02)
 axis(2,tck=0.02,las=2)
 

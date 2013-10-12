@@ -135,15 +135,15 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   }
   }
  }
-  pointsout <- prop.table(pointsout,2)*100
+  #pointsout <- prop.table(pointsout,2)*100
   ages <- vector()
   for(i in 1:length(tzero)){#loop over curves
   tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,tzero[i],0,BIRTHDAY)
   ages[i] <- tempered$c[max(index),1]-tempered$tzero
   }
   pointsout <- pointsout[nrow(pointsout):1,]# got to reverse order so youngest fish are plotted first!
-  widthvec <- (pointslower):pointsupper
-  widthvec2 <- 1:pointslower
+  widthvec <- (pointsupper):pointslower
+  widthvec2 <- 0:pointsupper
 
 x <- ages[widthvec]/365
 print(x)

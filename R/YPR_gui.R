@@ -74,7 +74,7 @@ YieldperRecruitpic<- gnotebook(container=YieldperRecruit,expand=TRUE)#create the
 YieldperRecruitgraphic<- ggraphics(container = YieldperRecruitpic,width=700,height=500,label="Y/R")
 
 
-Linfypr=gslider(from=1,to=10,length.out=1000,value=2)
+Linfypr=gslider(from=1,to=20,length.out=1000,value=2)
 tmp = gframe("Linf", container = YieldperRecruitlittle)
 add(tmp, Linfypr, expand=TRUE)
 
@@ -84,21 +84,23 @@ tmp = gframe("K", container = YieldperRecruitlittle)
 add(tmp, Kypr, expand=TRUE)
 
 
-Lc=gslider(from=0.1,to=0.9,by=.01,value=0)
+Littlec=gslider(from=0.1,to=0.9,by=.01,value=0)
 tmp = gframe("Lc/Linf", container = YieldperRecruitlittle)
-add(tmp, Lc, expand=TRUE)
+add(tmp, Littlec, expand=TRUE)
 
 
 M=gslider(from=0.5,to=3,by=.01,value=0)
 tmp = gframe("M/K", container = YieldperRecruitlittle)
 add(tmp, M, expand=TRUE)
 #This is where you set the dummy probabilities.
-
-YieldProbs <- seq(1:13)*0+.10
+#c(.01,.01,.5,.99,1,1,1,1,1,1,1,1,1)#seq(1:13)*0+.10
+#YieldProbs <- c(0,0,0,0,1,1,1,1)
+YieldProbs <- c(0,0,0.1,.3,.7,.9,1,1)
+#YieldProbs <- c(0,0.1,0.2,0.4,.6,.8,.9,1)
 
 plotyperr <- function(h,...){ 
 visible(YieldperRecruitgraphic) <- TRUE #make correct picture
-Yieldbiomass <- yield_biomass_per_recruit(svalue(M),svalue(Kypr),svalue(Lc),svalue(Linfypr),Pi=(YieldProbs),pas=NULL)
+Yieldbiomass <- yield_biomass_per_recruit(svalue(M),svalue(Kypr),svalue(Littlec),svalue(Linfypr),Pi=(YieldProbs),pas=NULL)
 plot_yield_biomass_per_recruit(Yieldbiomass,YieldProbs,datain$ML)
 visible(YieldperRecruitgraphic) <- TRUE #make correct picture  
  }
