@@ -124,14 +124,14 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
    #get bins between curves
    count=0;
    for(j in 1:(length(tzero)-1)){
-    ## print("curve index")
-    ## print(j)
-    ## print(paste("subday$lengthf::",subday$length[j]))
-    ## print(paste("subday$lengthc::",subday$length[j+1]))
     curvebin <- which(datain$ML >= floor(subday$length[j]) &datain$ML <= ceiling(subday$length[j+1]))
     if(!is.na(sum(datain[curvebin,i+1]))){
-    pointsout[subday$curve[j],i] <- sum(datain[curvebin,i+1])#add up all things
-
+      lengthcurvebin <- length(curvebin)
+      if(lengthcurvebin>=3){
+    pointsout[subday$curve[j],i] <- sum(datain[curvebin[2:(lengthcurvebin-1)],i+1])#add up all things in middle
+  }else{
+    pointsout[subday$curve[j],i] <- sum(datain[curvebin,i+1])*0+1#add up all things
+  }
   }
   }
  }
@@ -142,8 +142,8 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   ages[i] <- tempered$c[max(index),1]-tempered$tzero
   }
   pointsout <- pointsout[nrow(pointsout):1,]# got to reverse order so youngest fish are plotted first!
-  widthvec <- (pointslower):pointsupper
-  widthvec2 <- 1:pointslower
+  widthvec <- (pointsupper):pointslower
+  widthvec2 <- 0:pointsupper
 
 x <- ages[widthvec]/365
 print(x)
