@@ -116,25 +116,46 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   #loop over correct number of curves and fill in table.
    z=as.data.frame(subset(pointcurve,pointcurve$day==index[i]))
    colnames(z) <- c("curve","day","length","bin") #get part that is correct day.
-   ## print("subday?!")
-   ## print(z)
    subday=z#correct subday!
-   
- 
    #get bins between curves
    count=0;
    for(j in 1:(length(tzero)-1)){
-    curvebin <- which(datain$ML >= floor(subday$length[j]) &datain$ML <= ceiling(subday$length[j+1]))
-    if(!is.na(sum(datain[curvebin,i+1]))){
-      lengthcurvebin <- length(curvebin)
-      if(lengthcurvebin>=3){
-    pointsout[subday$curve[j],i] <- sum(datain[curvebin[2:(lengthcurvebin-1)],i+1])#add up all things in middle
-  }else{
-    pointsout[subday$curve[j],i] <- sum(datain[curvebin,i+1])*0+1#add up all things
-  }
-  }
-  }
+     curvebin <- which(datain$ML >= floor(subday$length[j]) &datain$ML <= ceiling(subday$length[j+1]))
+     if(!is.na(sum(datain[curvebin,i+1]))){
+       lengthcurvebin <- length(curvebin)
+       weight1=.82
+       weight2=.83
+       if(lengthcurvebin>=3){
+         print("test 3 +")
+         pointsout[subday$curve[j],i] <- sum(datain[curvebin[2:(lengthcurvebin-1)],i+1])#add up all things in middle
+         pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[1],i+1]*weight1 # add lower bin
+         pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[lengthcurvebin],i+1]*weight2# add upper bin
+           print(pointsout)
+           print("sum")
+           print(rowSums(pointsout))
+         print(rowSums(pointsout))
+       }else{
+         if(lengthcurvebin==2){
+           print("test 2")
+           pointsout[subday$curve[j],i] <- datain[curvebin[1],i+1]*weight1 # add lower bin
+           pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[2],i+1]*weight2# add upper bin
+            print(pointsout)
+           print("sum")
+           print(rowSums(pointsout))
+           print(rowSums(pointsout))
+           
+         }else{
+           print("test 1")
+           pointsout[subday$curve[j],i] <- datain[curvebin[1],i+1]*weight1 # add lower bin
+           print(pointsout)
+           print("sum")
+           print(rowSums(pointsout))
+         }
+       }
+     }
+   }
  }
+
   #pointsout <- prop.table(pointsout,2)*100
   ages <- vector()
   for(i in 1:length(tzero)){#loop over curves
@@ -149,34 +170,34 @@ x <- ages[widthvec]/365
 print(x)
 y <- log(rowSums(pointsout)[widthvec])
 print(log(rowSums(pointsout)))
-print((rowSums(pointsout)))  
 print(y)
 z <- lm(y~x)
 print(summary(z))
 
 
+tempsum <- sum(rowSums(pointsout),na.rm=TRUE)
+print("tempsum")
+print(rowSums(pointsout))
+print(tempsum) 
 #should follow what I did in Catch curve 1.
 par(1,las=1,bty='n',oma=c(0,1,1,1))
   
-plot(ages/365,log(rowSums(pointsout)),xlab=bquote(paste("Relative age (t-t"[o],")")),ylab=expression(paste("Relative abundance (ln(N))")),yaxt="n",xaxt="n")
-points(ages[widthvec]/365,log(rowSums(pointsout)[widthvec]),pch=19,col="black") #make filled circles only on points in width vect
+plot(ages/365,log(tempsum),xlab=bquote(paste("Relative age (t-t"[o],")")),ylab=expression(paste("Relative abundance (ln(N))")),yaxt="n",xaxt="n")
+points(ages[widthvec]/365,log(tempsum[widthvec]),pch=19,col="black") #make filled circles only on points in width vect
 axis(2,tck=0.02,las=2)
 axis(1,tck=0.02)
-text(ages/365,log(rowSums(pointsout))+.1*log(max(log(rowSums(pointsout)))),as.character(length(ages):1)) #put on text
-text(ages/365,log(rowSums(pointsout))-.05*log(max(log(rowSums(pointsout)))),as.character(round(rowSums(pointsout))),col="red") #put on text
+#text(ages/365,log(tempsum)+.1*log(max(c(log(tempsum),1))),as.character(length(ages):1)) #put on text
+text(ages/365,log(tempsum)-.05*log(max(c(log(tempsum),1))),as.character(round(tempsum)),col="red") #put on text
 lines(x=ages[widthvec2]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec2]/365),col="red")#make the line through the selected points
 lines(x=ages[widthvec]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec]/365),col="black")#make the line through the selected points
 
-tempsum <- sum(rowSums(pointsout))
-print("tempsum")
-print(tempsum) 
 temp2 <-bquote(paste("ln(N) = ",.(signif(z$coefficients[1],3)),.(signif(z$coefficients[2],3)),"*age"," ; ",r^2," = ",.(signif(summary(z)$r.squared,3)),";  sum",.(signif(tempsum,3))))  
 legend(x="topright",legend=temp2,inset=0.02)  
  x11() #eventually this plot can be sent to garbage... but  not until debugging is complete.
 catchrqFreqPlot(1:days,datain$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(datain$ML[1],datain$ML[length(datain$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,pointscurve,timeblue,datein,barscale=1,GF=0)
 ## x11()
-##   plot(ages/365,rowSums(pointsout))
-##   points(ages[widthvec]/365,rowSums(pointsout)[widthvec],pch=19,col="black") #make filled circles only on points in width vect
+##   plot(ages/365,tempsum)
+##   points(ages[widthvec]/365,tempsum[widthvec],pch=19,col="black") #make filled circles only on points in width vect
   
 
 }
