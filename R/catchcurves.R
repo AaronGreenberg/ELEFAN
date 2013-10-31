@@ -133,7 +133,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
            print(pointsout)
            print("sum")
            print(rowSums(pointsout))
-         print(rowSums(pointsout))
+         
        }else{
          if(lengthcurvebin==2){
            print("test 2")
@@ -142,11 +142,18 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
             print(pointsout)
            print("sum")
            print(rowSums(pointsout))
-           print(rowSums(pointsout))
+           
            
          }else{
-           print("test 1")
+           if(lengthcurvebin==1){
+           print("test 2")
            pointsout[subday$curve[j],i] <- datain[curvebin[1],i+1]*weight1 # add lower bin
+           print(pointsout)
+           print("sum")
+           print(rowSums(pointsout))
+           }else{  
+           print("test 1")
+           pointsout[subday$curve[j],i] <- 0
            print(pointsout)
            print("sum")
            print(rowSums(pointsout))
