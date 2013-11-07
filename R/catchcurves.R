@@ -123,13 +123,30 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
      curvebin <- which(datain$ML >= floor(subday$length[j]) &datain$ML <= ceiling(subday$length[j+1]))
      if(!is.na(sum(datain[curvebin,i+1]))){
        lengthcurvebin <- length(curvebin)
-       binwidth <- 2#(datein$ML[2]-datein$ML[1])
-       if((subday$length[curvebin[1]]>=(datain$ML[1]-1))){
-       weight1=(subday$bin[curvebin[1]]-subday$length[curvebin[1]])/binwidth}
-       if((subday$length[curvebin[lengthcurvebin]]<=(max(datain$ML)+1))){
-       weight2=(subday$length[curvebin[lengthcurvebin]]-subday$bin[curvebin[lengthcurvebin]])/binwidth
+       binwidth <- (datain$ML[2]-datain$ML[1])
+       print(binwidth)
+       if(lengthcurvebin>0){
+       #make sure that the length of curve bin is greater than zero
+       if(!is.na(subday$length[curvebin[1]])&&(subday$length[curvebin[1]]>=(min(datain$ML)-binwidth/2))){
+       #we need to compute two weights which determine the correct weights for the 
+       weight1=(-(subday$bin[curvebin[1]]-binwidth/2)+subday$length[curvebin[1]])/binwidth}else{weight1=1}
+       if(!is.na(subday$length[curvebin[lengthcurvebin]])&&(subday$length[curvebin[lengthcurvebin]]<=(max(datain$ML)+binwidth/2))){
+       weight2=(-subday$length[curvebin[lengthcurvebin]]+subday$bin[curvebin[lengthcurvebin]]+binwidth/2)/binwidth
+      }else{weight2=1}  
+     }else{
+       weight1=0
+       weight2=0
+     }
+       if(max(c(weight1,weight2))>1||min(c(weight1,weight2)<0)){
        print("Weights")
        print(c(weight1,weight2))
+       print(j)
+       print(subday$length[curvebin])
+       print(subday$bin[curvebin])
+       if(weight1>1){weight1=1}
+       if(weight2>1){weight2=1}
+      
+     } 
        if(lengthcurvebin>=3){
          pointsout[subday$curve[j],i] <- sum(datain[curvebin[2:(lengthcurvebin-1)],i+1])#add up all things in middle
          pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[1],i+1]*weight1 # add lower bin
@@ -142,7 +159,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
            if(lengthcurvebin==1){
            pointsout[subday$curve[j],i] <- datain[curvebin[1],i+1]*weight1 # add lower bin
            }else{  
-           pointsout[subday$curve[j],i] <- 1
+           pointsout[subday$curve[j],i] <- 0
          }}
        }
      }
@@ -168,8 +185,6 @@ z <- lm(y~x)
 print(summary(z))
 
 
-catchrqFreqPlot(1:days,datain$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(datain$ML[1],datain$ML[length(datain$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,pointscurve,timeblue,datein,barscale=1,GF=0)
-x11() #eventually this plot can be sent to garbage... but  not until debugging is complete.
 tempsum <- sum(rowSums(pointsout),na.rm=TRUE)
 print("tempsum")
 print(rowSums(pointsout))
@@ -190,6 +205,8 @@ lines(x=ages[widthvec]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec]
 temp2 <-bquote(paste("ln(N) = ",.(signif(z$coefficients[1],3)),.(signif(z$coefficients[2],3)),"*age"," ; ",r^2," = ",.(signif(summary(z)$r.squared,3)),";  sum",.(signif(tempsum,3))))  
 legend(x="topright",legend=temp2,inset=0.02)  
   
+x11()
+catchrqFreqPlot(1:days,datain$ML,lfdata,c(youngest,oldest,oldest+gcurve2$tzero,youngest+gcurve1$tzero),c(datain$ML[1],datain$ML[length(datain$ML)],0,0),tzero,gcurve1,gcurve2,gcurvemain,pointscurve,timeblue,datein,barscale=1,GF=0)
 
 }
 
