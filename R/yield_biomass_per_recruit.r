@@ -168,24 +168,7 @@ print(tab_final)
 tab_final[,4] <-sapply(E,BR_nkef,Linf,M,K,Littlec,Pi=YieldProbs,pas=NULL)
 print(tab_final)
 }
-isoplath(M,K,Littlec,Linf,Pi=YieldProbs,pas=NULL)
+
 return(tab_final)
 }
  
-
-isoplath <- function(M,K,Littlec,Linf,Pi=YieldProbs,pas=NULL)
-  {
- if (is.null(pas)) pas <- 0.015
-Ein=seq(.01,1,by=pas)
-Linfin=seq(.05*Linf,.95*Linf,length.out=length(Ein))
- iso <- array(dim=c(length(Ein),length(Linfin)))
- for(i in 1:length(Linfin)){
-   
-iso[,i]=sapply(Ein,YR_nkef,Linfin[i],M,K,Littlec,Pi=YieldProbs,pas=NULL)
-}
- print(iso)
- print("I AM Z")
-
- contour(Ein,Linfin,iso*1000)
- x11()
-  }

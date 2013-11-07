@@ -70,6 +70,7 @@ datefileinh <- function(h,...){
   Linfslidec2[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=1000)
   Linfslider[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=1000)
   Linfypr[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=1000)
+  Linfypriso[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=1000)
   Pointslide[] <- 2:length(datain$ML)
   Pointslideuc[] <- 1:length(datain$ML)
   Pointslidelc[] <- 1:length(datain$ML)
@@ -78,6 +79,7 @@ datefileinh <- function(h,...){
   midlength[] <-   datain$ML
   midlength1[] <- datain$ML#make 
   hline[] <- datain$ML
+  hlineiso[] <- seq(0.8*min(datain$ML),1.5*max(datain$ML),length.out=1000)
   midlengthk[] <- datain$ML
   }
 
@@ -510,7 +512,7 @@ gimage("png/logo2.png",dirname=my_path,container=Recruitlogo)
 YieldperRecruit <- ggroup(container = nb,label="Y/R", expand=TRUE,horizontal=TRUE)#make entry gr
 YieldperRecruitlittle <- ggroup(container=YieldperRecruit,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 YieldperRecruitpic<- gnotebook(container=YieldperRecruit,expand=TRUE)#create the Entry pic.
-YieldperRecruitgraphic<- ggraphics(container = YieldperRecruitpic,width=700,height=500,label="Y/R")
+YieldperRecruitgraphic<- ggraphics(container = YieldperRecruitpic,width=700,height=500,label="Isoplath")
 
 
 #Add ELEFAN in R logo at the top of the page
@@ -554,6 +556,67 @@ visible(YieldperRecruitgraphic) <- TRUE #make correct picture
 addSpace(YieldperRecruitlittle,198,horizontal=FALSE)# spacing needs to be tuned for each slide
 YieldperRecruitlogo <- ggroup(container=YieldperRecruitlittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=YieldperRecruitlogo)
+
+
+
+## ## ## ## Yield per recruit tab isoplath
+
+YieldperRecruitiso <- ggroup(container = nb,label="Y/R iso", expand=TRUE,horizontal=TRUE)#make entry gr
+YieldperRecruitisolittle <- ggroup(container=YieldperRecruitiso,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
+YieldperRecruitisopic<- gnotebook(container=YieldperRecruitiso,expand=TRUE)#create the Entry pic.
+YieldperRecruitisographic<- ggraphics(container = YieldperRecruitisopic,width=700,height=500,label="Y/R")
+
+
+#Add ELEFAN in R logo at the top of the page
+gimage("png/logo1.png",dirname=my_path,container=YieldperRecruitisolittle)
+
+
+Linfypriso=gslider(from=1,to=10,length.out=1000,value=2)
+tmp = gframe("Linf", container = YieldperRecruitisolittle)
+add(tmp, Linfypriso, expand=TRUE)
+
+
+Kypriso=gslider(from=0,to=10,by=.01,value=0)
+tmp = gframe("K", container = YieldperRecruitisolittle)
+add(tmp, Kypriso, expand=TRUE)
+
+
+Lciso=gslider(from=0.1,to=0.9,by=.01,value=0)
+tmp = gframe("Lc/Linf", container = YieldperRecruitisolittle)
+add(tmp, Lciso, expand=TRUE)
+
+
+Miso=gslider(from=0.5,to=3,by=.01,value=0)
+tmp = gframe("M/K", container = YieldperRecruitisolittle)
+add(tmp, Miso, expand=TRUE)
+
+
+hlineiso= gslider(from=0,to=4,by=.01,value=1)
+tmp = gframe("Ruler Linf", container = YieldperRecruitisolittle)
+add(tmp, hlineiso, expand=TRUE)
+
+
+vlineiso= gslider(from=0,to=4,by=.01,value=1)
+tmp = gframe("Ruler E", container = YieldperRecruitisolittle)
+add(tmp, vlineiso, expand=TRUE)
+
+
+plotyperriso <- function(h,...){ 
+visible(YieldperRecruitisographic) <- TRUE #make correct picture
+isoplath(svalue(Miso),svalue(Kypriso),svalue(Lciso),svalue(Linfypriso),svalue(vlineiso),svalue(hlineiso),Pi=(YieldProbs),pas=NULL)
+visible(YieldperRecruitisographic) <- TRUE #make correct picture  
+ }
+
+
+ plot=gbutton("Make plot",handler=plotyperriso)
+ tmp=gframe("Plot",container=YieldperRecruitisolittle)
+ add(tmp, plot, expand=FALSE)
+
+
+#Add sponsors logo at the bottom of the page
+addSpace(YieldperRecruitisolittle,198,horizontal=FALSE)# spacing needs to be tuned for each slide
+YieldperRecruitisologo <- ggroup(container=YieldperRecruitisolittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
+gimage("png/logo2.png",dirname=my_path,container=YieldperRecruitisologo)
 
 
 

@@ -37,3 +37,21 @@ points(Length,P50y,col="red",pch=19)
 abline(h=.5,col="darkgrey")
 abline(v=Length,col="darkgrey")       
 }
+
+
+
+isoplath <- function(M,K,Littlec,Linf,vline,hline,Pi=YieldProbs,pas=NULL)
+  {
+ if (is.null(pas)) pas <- 0.015
+Ein=seq(.01,1,by=pas)
+Linfin=seq(.05*Linf,.95*Linf,length.out=length(Ein))
+ iso <- array(dim=c(length(Ein),length(Linfin)))
+ for(i in 1:length(Linfin)){
+   iso[,i]=sapply(Ein,YR_nkef,Linfin[i],M,K,Littlec,Pi=YieldProbs,pas=NULL)
+  }
+ contour(Ein,Linfin,iso,nlevels=30,xlab="Effort",ylab="Length")
+ abline(h=hline,col="red")
+ abline(v=vline,col="red")
+ points(vline,hline,pch=19,col="blue")
+ text(vline,hline+1,as.character(signif(YR_nkef(vline,hline,M,K,Littlec,Pi=YieldProbs,pas=NULL)),4),col="red")
+  }
