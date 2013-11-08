@@ -396,6 +396,44 @@ gimage("png/logo2.png",dirname=my_path,container=CorrLFlogo)
 
 
 
+
+# Make the  Probability fixing page
+
+
+YieldtmpProbs <- YieldProbs
+probplot <- ggroup(container = nb,label="Prob", expand=TRUE,horizontal=TRUE)#make entry group
+problittle <- ggroup(container=probplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
+probpic <- gnotebook(container=probplot,expand=TRUE)#create the Entry pic.
+Probabilitymodified<- gtable(YieldtmpProbs,container=probpic,label="Probabilities")
+probgraphic<- ggraphics(container = probpic,width=700,height=500,label="Probability")
+plotprobs <- function(h,...){
+  visible(probgraphic) <- TRUE #make correct picture
+  print("HI I am plot probs")
+  print(YieldProbs)
+  Probabilitymodified[] <- (signif(YieldProbs,3))
+  Probabilitymodified[] <- (signif(YieldProbs,3))
+fn <- function(YieldProbs){
+  plot(YieldProbs,ylab="Probability")
+  abline(h=.5,col="grey")
+  lines(YieldProbs,col="grey")}
+  fn(YieldProbs)
+visible(probgraphic) <- TRUE #make correct picture
+}
+
+#Add ELEFAN in R logo at the top of the page
+gimage("png/logo1.png",dirname=my_path,container=problittle)
+
+ plot=gbutton("Make plot",handler=plotprobs)
+ tmp=gframe("Plot",container=problittle)
+ add(tmp, plot, expand=FALSE)
+
+#Add sponsors logo at the bottom of the page
+addSpace(problittle,198,horizontal=FALSE)# spacing needs to be tuned for each slide
+problogo <- ggroup(container=problittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
+gimage("png/logo2.png",dirname=my_path,container=problogo)
+
+
+
 ## ## ## ## Seasonal Catch curve tab
 
 SeasonalCatch <- ggroup(container = nb,label="C.C. II", expand=TRUE,horizontal=TRUE)#make entry gr
@@ -600,10 +638,14 @@ vlineiso= gslider(from=0,to=4,by=.01,value=1)
 tmp = gframe("Ruler E", container = YieldperRecruitisolittle)
 add(tmp, vlineiso, expand=TRUE)
 
+nlevels= gslider(from=10,to=50 ,by=1,value=10)
+tmp = gframe("Levels", container = YieldperRecruitisolittle)
+add(tmp, nlevels, expand=TRUE)
+
 
 plotyperriso <- function(h,...){ 
 visible(YieldperRecruitisographic) <- TRUE #make correct picture
-isoplath(svalue(Miso),svalue(Kypriso),svalue(Lciso),svalue(Linfypriso),svalue(vlineiso),svalue(hlineiso),Pi=(YieldProbs),pas=NULL)
+isoplath(svalue(Miso),svalue(Kypriso),svalue(Lciso),svalue(Linfypriso),svalue(vlineiso),svalue(hlineiso),svalue(nlevels),Pi=(YieldProbs),pas=NULL)
 visible(YieldperRecruitisographic) <- TRUE #make correct picture  
  }
 

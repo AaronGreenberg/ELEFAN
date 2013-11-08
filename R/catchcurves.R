@@ -172,10 +172,15 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,tzero[i],0,BIRTHDAY)
   ages[i] <- tempered$c[max(index),1]-tempered$tzero
   }
-  pointsout <- pointsout[nrow(pointsout):1,]# got to reverse order so youngest fish are plotted first!
-  widthvec <- (pointsupper):pointslower
-  widthvec2 <- 0:pointsupper
 
+  pointsout <- pointsout[nrow(pointsout):1,]# got to reverse order so youngest fish are plotted first!
+  widthvec <- (pointslower):pointsupper
+
+  widthvec2 <-c(1:pointslower, pointsupper:nrow(pointsout))
+  print("width vec")
+  print(widthvec)
+  print(widthvec2)
+  
 x <- ages[widthvec]/365
 print(x)
 y <- log(rowSums(pointsout)[widthvec])
@@ -199,7 +204,7 @@ axis(2,tck=0.02,las=2)
 axis(1,tck=0.02)
 text(ages/365,log(rowSums(pointsout))+.1*log(max(c(log(rowSums(pointsout)),1))),as.character(length(ages):1)) #put on text
 text(ages/365,log(rowSums(pointsout))-.05*log(max(c(log(rowSums(pointsout)),1))),as.character(round(rowSums(pointsout))),col="red") #put on text
-lines(x=ages[widthvec2]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec2]/365),col="red")#make the line through the selected points
+lines(x=ages[widthvec2]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec2]/365),col="grey")#make the line through the selected points
 lines(x=ages[widthvec]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec]/365),col="black")#make the line through the selected points
 
 temp2 <-bquote(paste("ln(N) = ",.(signif(z$coefficients[1],3)),.(signif(z$coefficients[2],3)),"*age"," ; ",r^2," = ",.(signif(summary(z)$r.squared,3)),";  sum",.(signif(tempsum,3))))  
