@@ -400,7 +400,7 @@ gimage("png/logo2.png",dirname=my_path,container=CorrLFlogo)
 # Make the  Probability fixing page
 
 
-YieldtmpProbs <- YieldProbs
+YieldtmpProbs <- cbind(datain$ML,YieldProbs)
 probplot <- ggroup(container = nb,label="Prob", expand=TRUE,horizontal=TRUE)#make entry group
 problittle <- ggroup(container=probplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 probpic <- gnotebook(container=probplot,expand=TRUE)#create the Entry pic.
@@ -408,15 +408,11 @@ Probabilitymodified<- gtable(YieldtmpProbs,container=probpic,label="Probabilitie
 probgraphic<- ggraphics(container = probpic,width=700,height=500,label="Probability")
 plotprobs <- function(h,...){
   visible(probgraphic) <- TRUE #make correct picture
-  print("HI I am plot probs")
-  print(YieldProbs)
-  Probabilitymodified[] <- (signif(YieldProbs,3))
-  Probabilitymodified[] <- (signif(YieldProbs,3))
-fn <- function(YieldProbs){
-  plot(YieldProbs,ylab="Probability")
-  abline(h=.5,col="grey")
-  lines(YieldProbs,col="grey")}
-  fn(YieldProbs)
+  Probabilitymodified <- 
+  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
+  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
+  colnames(Probabilitymodified) <- c("ML","probability")  
+probsplot(YieldProbs,datain$ML)
 visible(probgraphic) <- TRUE #make correct picture
 }
 
