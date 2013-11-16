@@ -4,7 +4,7 @@
 #' @export
 
 
-YR_kef <- function(E,Linf,M,K,Littlec,Pi=YieldProbs,pas=NULL)
+YR_kef <- function(E,Littlec,M,K,Linf,Pi=YieldProbs,pas=NULL)
   {
 Lc=Littlec*Linf #convert from little c to Lc 
 M=M*K #convert from M/K to M
@@ -21,8 +21,9 @@ return(YR_ke)
 
 
 
-YR_nkef <- function(E,Linf,M,K,Littlec,Pi=YieldProbs,pas=NULL)
+YR_nkef <- function(E,Littlec,M,K,Linf,Pi=YieldProbs,pas=NULL)
   {
+    
     Lc=Littlec*Linf #convert from little c to Lc 
     M=M*K #convert from M/K to M
     small_c <- Lc/Linf
@@ -39,8 +40,8 @@ ri <- (U2^((M/K)*(E/(1-E))*Pi))/(U1^((M/K)*(E/(1-E))*Pi))
 Gi <- c()
 Gi[1]=ri[1]
 for (j in 2:length(ri)) {Gi[j] <- Gi[j-1]*ri[j]}#doing product that computs Gi
-yr1 <- (E*U1^m)*(1-((3*U1)/(1+m))+(3*(U1^2)/(1+(2*m)))-((U1^3)/(1+(3*m))))#upper limit of class
-yr2 <- (E*U2^m)*(1-((3*U2)/(1+m))+(3*(U2^2)/(1+(2*m)))-((U2^3)/(1+(3*m))))#lower limit
+yr1 <- (E*U1^(M/K))*(1-((3*U1)/(1+m))+(3*(U1^2)/(1+(2*m)))-((U1^3)/(1+(3*m))))#upper limit of class
+yr2 <- (E*U2^(M/K))*(1-((3*U2)/(1+m))+(3*(U2^2)/(1+(2*m)))-((U2^3)/(1+(3*m))))#lower limit
 t1 <- c()
 t2 <- c()
 t1[1] <- NA
@@ -62,13 +63,21 @@ for (l in 2:length(U1))
 
 }
 YR_nke <- cum_yr[length(cum_yr)]
+## if(YR_nke<0){
+##   print("Negative Yeild_per Recruit")
+##   print(c(E,Linf,Littlec,M,K))
+##   print("diff")
+##   print(Diff)                           #
+#}
+
+    
 return(YR_nke)
 }
 }
 
 
 
-BR_kef <- function(E,Linf,M,K,Littlec,Pi=YieldProbs,pas=NULL)
+BR_kef <- function(E,Littlec,M,K,Linf,Pi=YieldProbs,pas=NULL)
   {
 Lc=Littlec*Linf #convert from little c to Lc 
 M=M*K #convert from M/K to M
@@ -85,7 +94,7 @@ return(BR_ke)
 }
 
 
-BR_nkef <- function(E,Linf,M,K,Littlec,Pi=YieldProbs,pas=NULL)
+BR_nkef <- function(E,Littlec,M,K,Linf,Pi=YieldProbs,pas=NULL)
   {
 
 l1 <- datain$ML-(datain$ML[2]-datain$ML[1])/2
@@ -160,13 +169,15 @@ tab_names <- c('YR_ke','YR_nke','BR_ke','BR_nke')
 tab_final <- array(dim=c(length(E),4),dimnames=(list(E,tab_names)))
 tab_final[,1] <- sapply(E,YR_kef,Linf=Linf,M=M,K=K,Littlec=Littlec,Pi=YieldProbs,pas=NULL)
 
-print(tab_final)
-tab_final[,2] <- sapply(E,YR_nkef,Linf,M,K,Littlec,Pi=YieldProbs,pas=NULL)
-print(tab_final)
-tab_final[,3] <- sapply(E,BR_kef,Linf,M,K,Littlec,Pi=YieldProbs,pas=NULL)
-print(tab_final)
-tab_final[,4] <-sapply(E,BR_nkef,Linf,M,K,Littlec,Pi=YieldProbs,pas=NULL)
-print(tab_final)
+#print(tab_final)
+print("YieldProbs")
+#print(YieldProbs)
+tab_final[,2] <- sapply(E,YR_nkef,Littlec,M,K,Linf,Pi=YieldProbs,pas=NULL)
+#print(tab_final)
+tab_final[,3] <- sapply(E,BR_kef,Littlec,M,K,Linf,Pi=YieldProbs,pas=NULL)
+#print(tab_final)
+tab_final[,4] <-sapply(E,BR_nkef,Littlec,M,K,Linf,Pi=YieldProbs,pas=NULL)
+#print(tab_final)
 }
 
 return(tab_final)
