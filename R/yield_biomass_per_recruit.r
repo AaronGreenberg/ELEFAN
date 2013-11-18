@@ -1,4 +1,4 @@
-#' Minimal doc
+##' Minimal doc
 #' @import compiler PBSmodelling animation
 #' @description minimal documentation for roxygen purposes and could be added later 
 #' @export
@@ -14,8 +14,8 @@ U <- 1-small_c
 m <- (1-E)/(M/K)
 
 YR_ke <- (E*(U^m))*(1-((3*U)/(1+m))+((3*(U^2))/(1+(2*m)))-((U^3)/(1+(3*m))))
-print("testing YR_kef")
-print(c(E,Linf,M/K,K,Littlec,YR_ke))
+#print("testing YR_kef")
+#print(c(E,Linf,M/K,K,Littlec,YR_ke))
 return(YR_ke)
 }
 
@@ -63,14 +63,6 @@ for (l in 2:length(U1))
 
 }
 YR_nke <- cum_yr[length(cum_yr)]
-## if(YR_nke<0){
-##   print("Negative Yeild_per Recruit")
-##   print(c(E,Linf,Littlec,M,K))
-##   print("diff")
-##   print(Diff)                           #
-#}
-
-    
 return(YR_nke)
 }
 }
@@ -169,15 +161,15 @@ tab_names <- c('YR_ke','YR_nke','BR_ke','BR_nke')
 tab_final <- array(dim=c(length(E),4),dimnames=(list(E,tab_names)))
 tab_final[,1] <- sapply(E,YR_kef,Linf=Linf,M=M,K=K,Littlec=Littlec,Pi=YieldProbs,pas=NULL)
 
-#print(tab_final)
-print("YieldProbs")
-#print(YieldProbs)
+##print(tab_final)
+#print("YieldProbs")
+##print(YieldProbs)
 tab_final[,2] <- sapply(E,YR_nkef,Littlec,M,K,Linf,Pi=YieldProbs,pas=NULL)
-#print(tab_final)
+##print(tab_final)
 tab_final[,3] <- sapply(E,BR_kef,Littlec,M,K,Linf,Pi=YieldProbs,pas=NULL)
-#print(tab_final)
+##print(tab_final)
 tab_final[,4] <-sapply(E,BR_nkef,Littlec,M,K,Linf,Pi=YieldProbs,pas=NULL)
-#print(tab_final)
+##print(tab_final)
 }
 
 return(tab_final)

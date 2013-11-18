@@ -33,21 +33,31 @@ axis(2,tck=0.02,las=2)
 
 
 
-isoplath <- function(M,K,Littlec,Linf,vline,hline,nlevels,Pi=YieldProbs,pas=NULL)
+isoplath <- function(M,K,Linf,vline,hline,nlevels,Pi=YieldProbs,pas=NULL)
   {
  if (is.null(pas)) pas <- 0.015
-  Ein=seq(.01,1,by=pas)
-  Littlec=seq(.05*Linf,0.95*Linf,length.out=length(Ein))
- iso <- array(dim=c(length(Ein),length(Littlec)))
- for(i in 1:length(Littlec)){
-   iso[,i]=sapply(Ein,YR_nkef,Littlec[i],M,K,Linf,Pi=YieldProbs,pas=NULL)
+  vlength=10
+  Ein=seq(.01,.99,length=vlength)
+  Littlecv=seq(.05*Linf,0.95*Linf,length.out=vlength)/Linf
+  print(Littlecv)
+ iso <- array(dim=c(vlength,vlength))
+# x11()
+ plot(0,0,xlim=c(0,1),ylim=c(0,.5))
+for(i in 1:vlength){
+   for(j in 1:vlength){
+   iso[j,i]= YR_nkef(Ein[j],Littlecv[i],M,K,Linf,Pi=YieldProbs,pas=NULL)
+   print(c(i,j,iso[j,i]))
+     }
+   lines(Ein,iso[,i])
   }
-par(las=1,bty="n",mar=c(5.1,6,4.1,2.1),mpg=c(4,1,0),oma=c(0,1,1,1))
- image(Ein,Littlec,iso,col = terrain.colors(10), axes = TRUE, xlab="Effort",ylab="Length")
- #image(Ein,Linfin,iso,col = grey.colors(10), axes = TRUE, xlab="Effort",ylab="Length")
- contour(Ein,Littlec,iso,nlevels=nlevels,add=TRUE)
- abline(h=hline,col="red")
- abline(v=vline,col="red")
- points(vline,hline,pch=19,col="blue")
- text(vline,hline+1,as.character(signif(YR_nkef(vline,hline,M,K,Linf,Pi=YieldProbs,pas=NULL)),4),col="red")
+ #dev.off()
+## #print(iso)
+## par(las=1,bty="n",mar=c(5.1,6,4.1,2.1),mpg=c(4,1,0),oma=c(0,1,1,1))
+##  image(Ein,Littlecv,iso,col = terrain.colors(10), axes = TRUE, xlab="Effort",ylab="Length")
+##  #image(Ein,Linfin,iso,col = grey.colors(10), axes = TRUE, xlab="Effort",ylab="Length")
+##  contour(Ein,Littlecv,iso,nlevels=nlevels,add=TRUE)
+##  abline(h=hline,col="red")
+##  abline(v=vline,col="red")
+##  points(vline,hline,pch=19,col="blue")
+##  text(vline,hline+1,as.character(signif(YR_nkef(vline,hline,M,K,Linf,Pi=YieldProbs,pas=NULL)),4),col="red")
   }
