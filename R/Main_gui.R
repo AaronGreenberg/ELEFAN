@@ -615,9 +615,9 @@ tmp = gframe("K", container = YieldperRecruitisolittle)
 add(tmp, Kypriso, expand=TRUE)
 
 
-Lciso=gslider(from=0.1,to=0.9,by=.01,value=0)
-tmp = gframe("Lc/Linf", container = YieldperRecruitisolittle)
-add(tmp, Lciso, expand=TRUE)
+## Lciso=gslider(from=0.1,to=0.9,by=.01,value=0)
+## tmp = gframe("Lc/Linf", container = YieldperRecruitisolittle)
+## add(tmp, Lciso, expand=TRUE)
 
 
 Miso=gslider(from=0.5,to=3,by=.01,value=0)
@@ -641,7 +641,7 @@ add(tmp, nlevels, expand=TRUE)
 
 plotyperriso <- function(h,...){ 
 visible(YieldperRecruitisographic) <- TRUE #make correct picture
-isoplath(svalue(Miso),svalue(Kypriso),svalue(Lciso),svalue(Linfypriso),svalue(vlineiso),svalue(hlineiso),svalue(nlevels),Pi=(YieldProbs),pas=NULL)
+isoplath(svalue(Miso),svalue(Kypriso),svalue(Linfypriso),svalue(vlineiso),svalue(hlineiso),svalue(nlevels),Pi=(YieldProbs),pas=NULL)
 visible(YieldperRecruitisographic) <- TRUE #make correct picture  
  }
 
