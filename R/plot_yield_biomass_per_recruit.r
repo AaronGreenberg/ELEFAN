@@ -33,7 +33,7 @@ axis(2,tck=0.02,las=2)
 
 
 
-isoplath <- function(M,K,Littlec,Linf,vline,hline,nlevels,Pi=YieldProbs,pas=NULL)
+isoplath <- function(M,K,Linf,vline,hline,nlevels,Pi=YieldProbs,pas=NULL)
   {
  if (is.null(pas)) pas <- 0.015
   Ein=seq(.01,1,by=pas)
