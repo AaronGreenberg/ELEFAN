@@ -59,6 +59,7 @@ datefileinh <- function(h,...){
   Datetable[] <- datetmp
   stdate[] <- c(-1,1:(length(datein[,2])-1))
   stdate1[] <- c(-1,1:(length(datein[,2])-1))
+  lengthprob[] <- c(-1,1:30)
   stdatek[] <- 1:(length(datein[,2])-1)
   visible(Datetable) <- TRUE
   Datatable[] <- datain
@@ -406,22 +407,48 @@ problittle <- ggroup(container=probplot,expand=FALSE,horizontal=FALSE,width=330)
 probpic <- gnotebook(container=probplot,expand=TRUE)#create the Entry pic.
 Probabilitymodified<- gtable(YieldtmpProbs,container=probpic,label="Probabilities")
 probgraphic<- ggraphics(container = probpic,width=700,height=500,label="Probability")
-plotprobs <- function(h,...){
-  visible(probgraphic) <- TRUE #make correct picture
-  Probabilitymodified <- 
-  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
-  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
-  colnames(Probabilitymodified) <- c("ML","probability")  
-probsplot(YieldProbs,datain$ML)
-visible(probgraphic) <- TRUE #make correct picture
-}
+
 
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=problittle)
 
+
+lengthprob <- gdroplist(list(1:200-2))
+tmp <- gframe("Which prob",container=problittle)
+add(tmp,lengthprob, expand=FALSE)
+
+probadjust <- gslider(from=0,to=100,by=.5,value=50)
+tmp <- gframe("probability",container=problittle)
+add(tmp,probadjust, expand=TRUE)
+
+fn <- function(length,prob){
+
+     if(svalue(length)>0){
+     YieldProbs[length] <- prob/100
+    }
+     YieldProbs<<-YieldProbs
+     return(YieldProbs)
+    }
+plotprobs <- function(h,...){
+  visible(probgraphic) <- TRUE #make correct picture
+    
+
+  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
+  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
+  YieldProbs<<-fn(svalue(lengthprob),svalue(probadjust))
+  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
+  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
+colnames(Probabilitymodified) <- c("ML","probability")  
+probsplot(YieldProbs,datain$ML)
+visible(probgraphic) <- TRUE #make correct picture
+}
+
+
+
  plot=gbutton("Make plot",handler=plotprobs)
  tmp=gframe("Plot",container=problittle)
  add(tmp, plot, expand=FALSE)
+
 
 #Add sponsors logo at the bottom of the page
 addSpace(problittle,198,horizontal=FALSE)# spacing needs to be tuned for each slide
@@ -577,7 +604,9 @@ plotyperr <- function(h,...){
 visible(YieldperRecruitgraphic) <- TRUE #make correct picture
 Yieldbiomass <- yield_biomass_per_recruit(svalue(M),svalue(Kypr),svalue(Lc),svalue(Linfypr),Pi=(YieldProbs),pas=NULL)
 plot_yield_biomass_per_recruit(Yieldbiomass,YieldProbs,datain$ML)
-visible(YieldperRecruitgraphic) <- TRUE #make correct picture  
+visible(YieldperRecruitgraphic) <- TRUE #make correct picture
+print("Yieldprobs")
+print(YieldProbs)
  }
 
 

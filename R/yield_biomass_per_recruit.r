@@ -13,7 +13,7 @@ small_c <- Lc/Linf
 U <- 1-small_c
 m <- (1-E)/(M/K)
 
-YR_ke <- (E*(U^m))*(1-((3*U)/(1+m))+((3*(U^2))/(1+(2*m)))-((U^3)/(1+(3*m))))
+YR_ke <- (E*(U^(M/K)))*(1-((3*U)/(1+m))+((3*(U^2))/(1+(2*m)))-((U^3)/(1+(3*m))))
 #print("testing YR_kef")
 #print(c(E,Linf,M/K,K,Littlec,YR_ke))
 return(YR_ke)
@@ -150,6 +150,8 @@ return(BR_nke)
 
 yield_biomass_per_recruit<- function(M,K,Littlec,Linf,Pi=YieldProbs,pas=NULL)
 {
+print("Yeild biomass per recruit")
+print(YieldProbs)
 if (is.null(pas)) pas <- 0.015
 E=seq(.01,1,by=pas) 
 if(is.na(sum(Pi)))
