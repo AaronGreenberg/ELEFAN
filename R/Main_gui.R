@@ -38,18 +38,21 @@ Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE,height=30,wi
 
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=Entrylittle)
-
-
 Entrypic<- gnotebook(container=Entry,expand=TRUE)#create the Entry pic.
 Datetable<- gtable(datetmp,container=NULL,label="Dates")
 Datatable<- gtable(datatmp,container=Entrypic,label="Lengths")
-names(Datatable) <- "ML"
+
+
+#names(Datatable) <- "ML"
 
 #Load Data
 #I need handlers.
 datefileinh <- function(h,...){
   #this function sets correct limits for sliders.
+  datetmp <- NA
+  datatmp <- NA
   datefilein()
+  names(Datatable) <- lengthunits
   datetmp <- datein
   options(digits=3)
   datetmp[,1] <- as.character(datein[,1])
@@ -64,6 +67,7 @@ datefileinh <- function(h,...){
   visible(Datetable) <- TRUE
   Datatable[] <- datain
   Datatable[] <- datain
+  
   visible(Datatable) <- TRUE
   Linfslide[] <- seq(0,1.5*max(datain$ML),length.out=1000)
   Linfslidek[] <- seq(0,1.5*max(datain$ML),length.out=1000)
@@ -80,7 +84,6 @@ datefileinh <- function(h,...){
   midlength[] <-   datain$ML
   midlength1[] <- datain$ML#make 
   hline[] <- datain$ML
-  hlineiso[] <- seq(0.8*min(datain$ML),1.5*max(datain$ML),length.out=1000)
   midlengthk[] <- datain$ML
   }
 
@@ -353,13 +356,13 @@ CorrLFplot <- ggroup(container = nb,label="Corr. L/F", expand=TRUE,horizontal=TR
 CorrLFlittle <- ggroup(container=CorrLFplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 CorrLFpic <- gnotebook(container=CorrLFplot,expand=TRUE)#create the Entry pic.
 Datatablemodified<- gtable(datatmp,container=CorrLFpic,label="Modified data")
-names(Datatablemodified) <- "ML"
+names(Datatablemodified) <- lengthunits
 
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=CorrLFlittle)
 
 
-plotnonseacatch <- function(h,...){ 
+plotnonseacatch <- function(h,...){
 visible(Catchcurvegraphic) <- TRUE #make correct picture
 temp<- plotnonseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Pointslideuc),svalue(Pointslidelc))
 Datatablemodified[] <- (signif(temp$data,3))
@@ -430,9 +433,8 @@ fn <- function(length,prob){
      return(YieldProbs)
     }
 plotprobs <- function(h,...){
+  print("Is this the error")
   visible(probgraphic) <- TRUE #make correct picture
-    
-
   Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
   Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
   YieldProbs<<-fn(svalue(lengthprob),svalue(probadjust))
@@ -654,12 +656,12 @@ tmp = gframe("M/K", container = YieldperRecruitisolittle)
 add(tmp, Miso, expand=TRUE)
 
 
-hlineiso= gslider(from=0,to=4,by=.01,value=1)
-tmp = gframe("Ruler Linf", container = YieldperRecruitisolittle)
+hlineiso= gslider(from=0,to=1,by=.01,value=.5)
+tmp = gframe("Ruler Lc/Linf", container = YieldperRecruitisolittle)
 add(tmp, hlineiso, expand=TRUE)
 
 
-vlineiso= gslider(from=0,to=4,by=.01,value=1)
+vlineiso= gslider(from=0,to=1,by=.01,value=.5)
 tmp = gframe("Ruler E", container = YieldperRecruitisolittle)
 add(tmp, vlineiso, expand=TRUE)
 

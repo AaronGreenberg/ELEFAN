@@ -89,11 +89,7 @@ kscanplot <- function(window=window,z=zkscan){
     #print(max(z[nzero,1]))#gf
     ss=which(datein[,1]==as.Date(z[correctedx,4],origin=datein$Date[1]))-1 #get correct start sample
     #make legend
-    legend("topright",legend=bquote(paste("K=",.(signif(z[correctedx,2],4)),"    ML=",.(z[correctedx,3]),"  Sample=",.(ss))),bty="n")
-    
-    #print(z[which.max(z[,1]),2]) #K
-    #print(z[which.max(z[,1]),3]) #ml
-    #print(z[which.max(z[,1]),4])#date
+    legend("topright",legend=bquote(paste("K=",.(signif(z[correctedx,2],4)),"    ML=",.(z[correctedx,3]),"  Sample=",.(ss))))#,bty="n")
 
   }
 
@@ -185,7 +181,7 @@ vec2=approx(length,n=10000)
 Length=vec2$y[which.min((vec2$x-P50x)^2)]
  
 par(las=1,bty="n",mar=c(5.1,6,4.1,2.1),mpg=c(4,1,0),oma=c(0,1,1,1))
-plot(length,Pi,type="p",xlab="Length",ylab="Probability")
+plot(length,Pi,type="p",xlab="Length",ylab="Probability",xlim=c(0,1.1*max(length)),ylim=c(0,1.1))
 text(length,Pi+.1,as.character(1:length(Pi)),col="black")
 points(vec2$y,vec$y,col="black",type="l")
 points(Length,P50y,col="red",pch=19)       
