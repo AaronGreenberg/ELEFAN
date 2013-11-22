@@ -27,8 +27,9 @@ nb <- gnotebook(container=biggroup,expand=TRUE,horizontal=TRUE)
 
 #%############################################################
 #Make the Entry page!
-YieldProbs<<-NA  #place to store prob.
-YieldAges <<- NA#place to store ages
+YieldProbs<<-NA#place to store prob.
+YieldAges <<-NA#place to store ages
+lengthunits<<-c("mt")
 datetmp <- NA
 datatmp <- NA
 #visible(nb[1]) <- TRUE
@@ -38,18 +39,19 @@ Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE,height=30,wi
 
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=Entrylittle)
-
-
 Entrypic<- gnotebook(container=Entry,expand=TRUE)#create the Entry pic.
 Datetable<- gtable(datetmp,container=NULL,label="Dates")
 Datatable<- gtable(datatmp,container=Entrypic,label="Lengths")
-names(Datatable) <- "ML"
+
+
+#names(Datatable) <- "ML"
 
 #Load Data
 #I need handlers.
 datefileinh <- function(h,...){
   #this function sets correct limits for sliders.
   datefilein()
+  names(Datatable) <- lengthunits
   datetmp <- datein
   options(digits=3)
   datetmp[,1] <- as.character(datein[,1])
@@ -59,6 +61,7 @@ datefileinh <- function(h,...){
   Datetable[] <- datetmp
   stdate[] <- c(-1,1:(length(datein[,2])-1))
   stdate1[] <- c(-1,1:(length(datein[,2])-1))
+  lengthprob[] <- c(-1,1:30)
   stdatek[] <- 1:(length(datein[,2])-1)
   visible(Datetable) <- TRUE
   Datatable[] <- datain
@@ -79,8 +82,9 @@ datefileinh <- function(h,...){
   midlength[] <-   datain$ML
   midlength1[] <- datain$ML#make 
   hline[] <- datain$ML
-  hlineiso[] <- seq(0.8*min(datain$ML),1.5*max(datain$ML),length.out=1000)
   midlengthk[] <- datain$ML
+YieldtmpProbs <- cbind(datain$ML,YieldProbs)
+
   }
 
 
@@ -140,15 +144,6 @@ add(tmp, scaleslide, expand=TRUE)
 hline= gslider(from=0,to=4,by=.01,value=1)
 tmp = gframe("Ruler", container = LFplotlittle)
 add(tmp, hline, expand=TRUE)
-
-
-  #stdate <- gdroplist(list(1:10*0))
-  #tmp <- gframe("SS",container=LFplotlittle)
-  #add(tmp,stdate, expand=FALSE) 
-
-  #midlength <- gdroplist(list(1:20*0))
-  #tmp <- gframe("SL",container=LFplotlittle)
-  #add(tmp,midlength, expand=FALSE) 
 
 
 #gimage("png/usaid.png",dirname=my_path,container=LFplotlogo)
@@ -352,13 +347,13 @@ CorrLFplot <- ggroup(container = nb,label="Corr. L/F", expand=TRUE,horizontal=TR
 CorrLFlittle <- ggroup(container=CorrLFplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 CorrLFpic <- gnotebook(container=CorrLFplot,expand=TRUE)#create the Entry pic.
 Datatablemodified<- gtable(datatmp,container=CorrLFpic,label="Modified data")
-names(Datatablemodified) <- "ML"
+names(Datatablemodified) <- lengthunits
 
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=CorrLFlittle)
 
 
-plotnonseacatch <- function(h,...){ 
+plotnonseacatch <- function(h,...){
 visible(Catchcurvegraphic) <- TRUE #make correct picture
 temp<- plotnonseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Pointslideuc),svalue(Pointslidelc))
 Datatablemodified[] <- (signif(temp$data,3))
@@ -366,7 +361,6 @@ Datatablemodified[] <- (signif(temp$data,3))
 YieldProbs <<- temp$prob
 YieldAges<<-temp$ages
 filename <- (paste(substr(fname1,start=1,stop=(nchar(fname1)-4)),"corrected.csv",sep="_"))
-
 if(file.exists(filename)){file.remove(filename)}#remove file
 print(temp$data)
 print(lengthunits)
@@ -400,28 +394,56 @@ gimage("png/logo2.png",dirname=my_path,container=CorrLFlogo)
 # Make the  Probability fixing page
 
 
-YieldtmpProbs <- cbind(datain$ML,YieldProbs)
+YieldtmpProbs <- cbind(0,0)
 probplot <- ggroup(container = nb,label="Prob", expand=TRUE,horizontal=TRUE)#make entry group
 problittle <- ggroup(container=probplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 probpic <- gnotebook(container=probplot,expand=TRUE)#create the Entry pic.
 Probabilitymodified<- gtable(YieldtmpProbs,container=probpic,label="Probabilities")
-probgraphic<- ggraphics(container = probpic,width=700,height=500,label="Probability")
-plotprobs <- function(h,...){
-  visible(probgraphic) <- TRUE #make correct picture
-  Probabilitymodified <- 
-  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
-  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
-  colnames(Probabilitymodified) <- c("ML","probability")  
-probsplot(YieldProbs,datain$ML)
-visible(probgraphic) <- TRUE #make correct picture
-}
+probgraphic<- ggraphics(container = probpic,width=700,height=500,label="Probability")  
 
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=problittle)
 
+
+lengthprob <- gdroplist(list(1:200-2))
+tmp <- gframe("Which prob",container=problittle)
+add(tmp,lengthprob, expand=FALSE)
+
+probadjust <- gslider(from=0,to=100,by=.5,value=50)
+tmp <- gframe("probability",container=problittle)
+add(tmp,probadjust, expand=TRUE)
+
+fn <- function(length,prob){
+
+     if(svalue(length)>0){
+     YieldProbs[length] <- prob/100
+    }
+     YieldProbs<<-YieldProbs
+     return(YieldProbs)
+    }
+plotprobs <- function(h,...){
+  print("Is this the error")
+  print(datain$ML)
+  print(YieldProbs)
+  
+  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
+  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
+  YieldProbs<<-fn(svalue(lengthprob),svalue(probadjust))
+  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
+  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
+  probsplot(YieldProbs,datain$ML)
+  colnames(Probabilitymodified) <- c("ML","probability")
+  visible(probgraphic) <- TRUE #make correct picture  
+  visible(probgraphic) <- TRUE #make correct picture
+
+}
+
+
+
  plot=gbutton("Make plot",handler=plotprobs)
  tmp=gframe("Plot",container=problittle)
  add(tmp, plot, expand=FALSE)
+
 
 #Add sponsors logo at the bottom of the page
 addSpace(problittle,198,horizontal=FALSE)# spacing needs to be tuned for each slide
@@ -474,10 +496,8 @@ add(tmp, Pointslideuc2, expand=TRUE)
 
 plotseacatch <- function(h,...){ 
   visible(SeasonalCatchgraphic) <- TRUE #make correct picture
-temp<- plotseacatchcurve(svalue(Klocslidec2),svalue(Linfslidec2),svalue(Cslidec2),svalue(TWslidec2),svalue(Pointslideuc2),svalue(Pointslidelc2))
-
-visible(SeasonalCatchgraphic) <- TRUE #make correct picture
-
+  temp<- plotseacatchcurve(svalue(Klocslidec2),svalue(Linfslidec2),svalue(Cslidec2),svalue(TWslidec2),svalue(Pointslideuc2),svalue(Pointslidelc2))
+  visible(SeasonalCatchgraphic) <- TRUE #make correct picture
  }
 
 
@@ -577,7 +597,9 @@ plotyperr <- function(h,...){
 visible(YieldperRecruitgraphic) <- TRUE #make correct picture
 Yieldbiomass <- yield_biomass_per_recruit(svalue(M),svalue(Kypr),svalue(Lc),svalue(Linfypr),Pi=(YieldProbs),pas=NULL)
 plot_yield_biomass_per_recruit(Yieldbiomass,YieldProbs,datain$ML)
-visible(YieldperRecruitgraphic) <- TRUE #make correct picture  
+visible(YieldperRecruitgraphic) <- TRUE #make correct picture
+print("Yieldprobs")
+print(YieldProbs)
  }
 
 
@@ -615,22 +637,17 @@ tmp = gframe("K", container = YieldperRecruitisolittle)
 add(tmp, Kypriso, expand=TRUE)
 
 
-## Lciso=gslider(from=0.1,to=0.9,by=.01,value=0)
-## tmp = gframe("Lc/Linf", container = YieldperRecruitisolittle)
-## add(tmp, Lciso, expand=TRUE)
-
-
 Miso=gslider(from=0.5,to=3,by=.01,value=0)
 tmp = gframe("M/K", container = YieldperRecruitisolittle)
 add(tmp, Miso, expand=TRUE)
 
 
-hlineiso= gslider(from=0,to=4,by=.01,value=1)
-tmp = gframe("Ruler Linf", container = YieldperRecruitisolittle)
+hlineiso= gslider(from=0,to=1,by=.01,value=.5)
+tmp = gframe("Ruler Lc/Linf", container = YieldperRecruitisolittle)
 add(tmp, hlineiso, expand=TRUE)
 
 
-vlineiso= gslider(from=0,to=4,by=.01,value=1)
+vlineiso= gslider(from=0,to=1,by=.01,value=.5)
 tmp = gframe("Ruler E", container = YieldperRecruitisolittle)
 add(tmp, vlineiso, expand=TRUE)
 
