@@ -149,15 +149,15 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
      } 
        if(lengthcurvebin>=3){
          pointsout[subday$curve[j],i] <- sum(datain[curvebin[2:(lengthcurvebin-1)],i+1])#add up all things in middle
-         pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[lengthcurvebin],i+1]*weight1 # add lower bin
-         pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[1],i+1]*weight2# add upper bin
+         pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[1],i+1]*weight1 # add lower bin
+         pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[lengthcurvebin],i+1]*weight2# add upper bin
        }else{
          if(lengthcurvebin==2){
-           pointsout[subday$curve[j],i] <- datain[curvebin[2],i+1]*weight1 # add lower bin
-           pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[1],i+1]*weight2# add upper bin
+           pointsout[subday$curve[j],i] <- datain[curvebin[1],i+1]*weight1 # add lower bin
+           pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[2],i+1]*weight2# add upper bin
          }else{
            if(lengthcurvebin==1){
-           pointsout[subday$curve[j],i] <- datain[curvebin[2],i+1]*weight1 # add lower bin
+           pointsout[subday$curve[j],i] <- datain[curvebin[1],i+1]*weight1 # add lower bin
            }else{  
            pointsout[subday$curve[j],i] <- 0
          }}

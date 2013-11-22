@@ -51,7 +51,7 @@ Datatable<- gtable(datatmp,container=Entrypic,label="Lengths")
 datefileinh <- function(h,...){
   #this function sets correct limits for sliders.
   datefilein()
-  names(Datatable) <- lengthunits
+  names(Datatable) <- paste("ML-",lengthunits)
   datetmp <- datein
   options(digits=3)
   datetmp[,1] <- as.character(datein[,1])
@@ -422,10 +422,6 @@ fn <- function(length,prob){
      return(YieldProbs)
     }
 plotprobs <- function(h,...){
-  print("Is this the error")
-  print(datain$ML)
-  print(YieldProbs)
-  
   Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
   Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
   YieldProbs<<-fn(svalue(lengthprob),svalue(probadjust))
@@ -435,7 +431,6 @@ plotprobs <- function(h,...){
   colnames(Probabilitymodified) <- c("ML","probability")
   visible(probgraphic) <- TRUE #make correct picture  
   visible(probgraphic) <- TRUE #make correct picture
-
 }
 
 
