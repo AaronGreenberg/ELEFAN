@@ -10,21 +10,12 @@ options("guiToolkit"="RGtk2")
 
 
 ELEFAN_gui <- function(){
-
 my_path <- paste(.libPaths()[1],"/ELEFAN",sep="")
-
 size=1000
 window = gwindow("ELEFAN in R",height=size,width=1.618*size,visible=TRUE)
-
-
-
 biggroup <- ggroup(container=window,expand=TRUE,horizontal=FALSE)
-
 #make big note book!
 nb <- gnotebook(container=biggroup,expand=TRUE,horizontal=TRUE)
-
- 
-
 #%############################################################
 #Make the Entry page!
 YieldProbs<<-NA#place to store prob.
@@ -50,6 +41,13 @@ Datatable<- gtable(datatmp,container=Entrypic,label="Lengths")
 #I need handlers.
 datefileinh <- function(h,...){
   #this function sets correct limits for sliders.
+  rm(datetmp)
+  rm(datatmp)
+  rm(list=ls())
+  YieldProbs<<-NA#place to store prob.
+  YieldAges <<-NA#place to store ages
+  datetmp <- NA
+  datatmp <- NA
   datefilein()
   names(Datatable) <- paste("ML-",lengthunits)
   datetmp <- datein
@@ -83,7 +81,7 @@ datefileinh <- function(h,...){
   midlength1[] <- datain$ML#make 
   hline[] <- datain$ML
   midlengthk[] <- datain$ML
-YieldtmpProbs <- cbind(datain$ML,YieldProbs)
+  YieldtmpProbs <- cbind(datain$ML,YieldProbs)
 
   }
 
@@ -427,6 +425,7 @@ plotprobs <- function(h,...){
   YieldProbs<<-fn(svalue(lengthprob),svalue(probadjust))
   Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
   Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
+  visible(probgraphic) <- TRUE #make correct picture
   probsplot(YieldProbs,datain$ML)
   colnames(Probabilitymodified) <- c("ML","probability")
   visible(probgraphic) <- TRUE #make correct picture  
@@ -492,6 +491,7 @@ add(tmp, Pointslideuc2, expand=TRUE)
 plotseacatch <- function(h,...){ 
   visible(SeasonalCatchgraphic) <- TRUE #make correct picture
   temp<- plotseacatchcurve(svalue(Klocslidec2),svalue(Linfslidec2),svalue(Cslidec2),svalue(TWslidec2),svalue(Pointslideuc2),svalue(Pointslidelc2))
+  visible(SeasonalCatchgraphic) <- TRUE #make correct picture
   visible(SeasonalCatchgraphic) <- TRUE #make correct picture
  }
 
