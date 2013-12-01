@@ -26,6 +26,9 @@
 datefilein <- function()
 {
 #this function reads in a single data file and returns datain, date in, and lfbin.
+print("what is here?")
+ls()
+print("TA DA")
 fname1 <<- selectFile()
 #top <- scan(fname1,what="string",nlines=1)
 lengthunits<<-strsplit(scan(fname1,what="string",nlines=1),",")[[1]]

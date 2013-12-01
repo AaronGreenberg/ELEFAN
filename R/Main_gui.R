@@ -10,21 +10,12 @@ options("guiToolkit"="RGtk2")
 
 
 ELEFAN_gui <- function(){
-
 my_path <- paste(.libPaths()[1],"/ELEFAN",sep="")
-
 size=1000
 window = gwindow("ELEFAN in R",height=size,width=1.618*size,visible=TRUE)
-
-
-
 biggroup <- ggroup(container=window,expand=TRUE,horizontal=FALSE)
-
 #make big note book!
 nb <- gnotebook(container=biggroup,expand=TRUE,horizontal=TRUE)
-
- 
-
 #%############################################################
 #Make the Entry page!
 YieldProbs<<-NA#place to store prob.
@@ -40,30 +31,28 @@ Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE,height=30,wi
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=Entrylittle)
 Entrypic<- gnotebook(container=Entry,expand=TRUE)#create the Entry pic.
-Datetable<- gtable(datetmp,container=NULL,label="Dates")
 Datatable<- gtable(datatmp,container=Entrypic,label="Lengths")
-
-
-#names(Datatable) <- "ML"
-
 #Load Data
 #I need handlers.
 datefileinh <- function(h,...){
-  #this function sets correct limits for sliders.
+  visible(Datatable) <- TRUE
+  rm(list=ls())
+  YieldProbs<<-NA#place to store prob.
+  YieldAges <<-NA#place to store ages
+  lengthunits<<-c("mt")
+  datetmp <- NA
+  datatmp <- NA
+  visible(Datatable) <- FALSE
+  visible(Datatable) <- TRUE
   datefilein()
-  names(Datatable) <- paste("ML-",lengthunits)
+  visible(Datatable) <- TRUE
+ # names(Datatable) <- paste("ML-",lengthunits)
   datetmp <- datein
   options(digits=3)
-  datetmp[,1] <- as.character(datein[,1])
-  datetmp[,1] <- as.character(datein[,1])
-  visible(Datetable) <- FALSE
-  Datetable[] <- datetmp
-  Datetable[] <- datetmp
   stdate[] <- c(-1,1:(length(datein[,2])-1))
   stdate1[] <- c(-1,1:(length(datein[,2])-1))
   lengthprob[] <- c(-1,1:30)
   stdatek[] <- 1:(length(datein[,2])-1)
-  visible(Datetable) <- TRUE
   Datatable[] <- datain
   Datatable[] <- datain
   visible(Datatable) <- TRUE
@@ -83,8 +72,9 @@ datefileinh <- function(h,...){
   midlength1[] <- datain$ML#make 
   hline[] <- datain$ML
   midlengthk[] <- datain$ML
-YieldtmpProbs <- cbind(datain$ML,YieldProbs)
-
+  YieldtmpProbs <- cbind(datain$ML,YieldProbs)
+  visible(Datatable) <- TRUE
+  visible(Datatable) <- TRUE
   }
 
 
@@ -427,6 +417,7 @@ plotprobs <- function(h,...){
   YieldProbs<<-fn(svalue(lengthprob),svalue(probadjust))
   Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
   Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
+  visible(probgraphic) <- TRUE #make correct picture
   probsplot(YieldProbs,datain$ML)
   colnames(Probabilitymodified) <- c("ML","probability")
   visible(probgraphic) <- TRUE #make correct picture  
@@ -492,6 +483,7 @@ add(tmp, Pointslideuc2, expand=TRUE)
 plotseacatch <- function(h,...){ 
   visible(SeasonalCatchgraphic) <- TRUE #make correct picture
   temp<- plotseacatchcurve(svalue(Klocslidec2),svalue(Linfslidec2),svalue(Cslidec2),svalue(TWslidec2),svalue(Pointslideuc2),svalue(Pointslidelc2))
+  visible(SeasonalCatchgraphic) <- TRUE #make correct picture
   visible(SeasonalCatchgraphic) <- TRUE #make correct picture
  }
 
