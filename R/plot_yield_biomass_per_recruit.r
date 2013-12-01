@@ -43,8 +43,15 @@ isoplath <- function(M,K,Linf,vline,hline,nlevels,Pi=YieldProbs,pas=NULL)
   #print(Littlecv)
  iso <- array(dim=c(vlength,vlength))
 for(i in 1:vlength){
+   L25=max(which(Pi<.25))#which.min((Pi-.25)^2)#find
+   Pitmp=Pi
+   slope=.25/(Littlecv[i]*Linf-datain$ML[L25])
+   Pitmp[L25:length(Pitmp)]=slope*L25:length(Pitmp)+(.25-slope*L25)
+   Pitmp=ifelse(Pitmp<1,Pitmp,1)#make sure that propbabilities are less than 1
+   print("Pitmp")
+   print(Pitmp)
    for(j in 1:vlength){
-   iso[j,i]= YR_kef(Ein[j],Littlecv[i],M,K,Linf,Pi,pas=NULL)
+   iso[j,i]= YR_kef(Ein[j],Littlecv[i],M,K,Linf,Pi=Pitmp,pas=NULL)
      }
   }
  par(las=1,bty="n",mar=c(5.1,6,4.1,2.1),mpg=c(4,1,0),oma=c(0,1,1,1))
@@ -53,5 +60,5 @@ for(i in 1:vlength){
  abline(h=hline,col="black",lwd=1.5)
  abline(v=vline,col="black",lwd=1.5)
  points(vline,hline,pch=19,col="blue")
- legend(x="topleft",as.character(signif(YR_kef(vline,hline,M,K,Linf,Pi=YieldProbs,pas=NULL)),4),col="black")
+ legend(x="topleft",as.character(signif(YR_kef(vline,hline,M,K,Linf,Pi=Pitmp,pas=NULL)),4),col="black")
   }
