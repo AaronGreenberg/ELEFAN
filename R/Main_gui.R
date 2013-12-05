@@ -40,21 +40,22 @@ datefileinh <- function(h,...){
   YieldProbs<<-NA#place to store prob.
   YieldAges <<-NA#place to store ages
   lengthunits<<-c("mt")
-  datetmp <- NA
-  datatmp <- NA
-  visible(Datatable) <- FALSE
-  visible(Datatable) <- TRUE
   datefilein()
   visible(Datatable) <- TRUE
- # names(Datatable) <- paste("ML-",lengthunits)
   datetmp <- datein
   options(digits=3)
   stdate[] <- c(-1,1:(length(datein[,2])-1))
   stdate1[] <- c(-1,1:(length(datein[,2])-1))
-  lengthprob[] <- c(-1,1:30)
+  lengthprob[] <- c(-1,1:length(datain$ML))
   stdatek[] <- 1:(length(datein[,2])-1)
   Datatable[] <- datain
+  visible(Datatable) <- TRUE
   Datatable[] <- datain
+  visible(Datatable) <- TRUE
+  ## colnames(Datatable)[1] <-as.character(lengthunits)
+  ## colnames(Datatable)[2:length(datein[,2])] <- as.character(colnames(datain)[2:length(datein[,2])])
+  ## colnames(Datatable)[1] <-as.character(lengthunits)
+  ## colnames(Datatable)[2:length(datein[,2])] <- as.character(colnames(datain)[2:length(datein[,2])])
   visible(Datatable) <- TRUE
   Linfslide[] <- seq(0,1.5*max(datain$ML),length.out=1000)
   Linfslidek[] <- seq(0,1.5*max(datain$ML),length.out=1000)
@@ -100,6 +101,8 @@ LFplotlittle <- ggroup(container=LFplot,expand=FALSE,horizontal=FALSE,width=330)
 LFpic<- gnotebook(container=LFplot,expand=TRUE)#create the Entry pic.
 histgraphic<- ggraphics(container = LFpic,width=700,height=500,label="Orig. L/F")
 refactorgraphic<- ggraphics(container = LFpic,width=700,height=500,label="Restruct. L/F")
+
+
 
 
 #Add ELEFAN in R logo at the top of the page
@@ -181,6 +184,15 @@ add(tmp, plot, expand=FALSE)
 LFplotlogo <- ggroup(container=LFplotlittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=LFplotlogo)
 
+
+
+
+## ## ## ## L/F manip. tab
+
+LFmanip <- ggroup(container = nb,label="L/F manip.", expand=TRUE,horizontal=TRUE)#make entry gr
+LFmaniplittle <- ggroup(container=LFmanip,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
+LFmanippic<- gnotebook(container=LFmanip,expand=TRUE)#create the Entry pic.
+LFmanipgraphic<- ggraphics(container = LFmanippic,width=700,height=500,label="L/F manip.")
 
 
 ## ## ## ## Make Wetherall plot Window
@@ -333,16 +345,6 @@ tmp = gframe("Last point", container = Catchcurvelittle)
 add(tmp, Pointslideuc, expand=TRUE)
 
 
-CorrLFplot <- ggroup(container = nb,label="Corr. L/F", expand=TRUE,horizontal=TRUE)#make entry group
-CorrLFlittle <- ggroup(container=CorrLFplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
-CorrLFpic <- gnotebook(container=CorrLFplot,expand=TRUE)#create the Entry pic.
-Datatablemodified<- gtable(datatmp,container=CorrLFpic,label="Modified data")
-names(Datatablemodified) <- lengthunits
-
-#Add ELEFAN in R logo at the top of the page
-gimage("png/logo1.png",dirname=my_path,container=CorrLFlittle)
-
-
 plotnonseacatch <- function(h,...){
 visible(Catchcurvegraphic) <- TRUE #make correct picture
 temp<- plotnonseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Pointslideuc),svalue(Pointslidelc))
@@ -371,13 +373,6 @@ visible(Catchcurvegraphic) <- TRUE #make correct picture
 addSpace(Catchcurvelittle,198,horizontal=FALSE)# spacing needs to be tuned for each slide
 Catchcurvelogo <- ggroup(container=Catchcurvelittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Catchcurvelogo)
-
-
-#Add sponsors logo at the bottom of the page
-addSpace(CorrLFlittle,485,horizontal=FALSE)# spacing needs to be tuned for each slide
-CorrLFlogo <- ggroup(container=CorrLFlittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
-gimage("png/logo2.png",dirname=my_path,container=CorrLFlogo)
-
 
 
 
@@ -436,6 +431,24 @@ addSpace(problittle,198,horizontal=FALSE)# spacing needs to be tuned for each sl
 problogo <- ggroup(container=problittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=problogo)
 
+
+
+
+CorrLFplot <- ggroup(container = nb,label="Corr. L/F", expand=TRUE,horizontal=TRUE)#make entry group
+CorrLFlittle <- ggroup(container=CorrLFplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
+CorrLFpic <- gnotebook(container=CorrLFplot,expand=TRUE)#create the Entry pic.
+Datatablemodified<- gtable(datatmp,container=CorrLFpic,label="Modified data")
+names(Datatablemodified) <- lengthunits
+
+#Add ELEFAN in R logo at the top of the page
+gimage("png/logo1.png",dirname=my_path,container=CorrLFlittle)
+
+
+
+#Add sponsors logo at the bottom of the page
+addSpace(CorrLFlittle,485,horizontal=FALSE)# spacing needs to be tuned for each slide
+CorrLFlogo <- ggroup(container=CorrLFlittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
+gimage("png/logo2.png",dirname=my_path,container=CorrLFlogo)
 
 
 ## ## ## ## Seasonal Catch curve tab
@@ -553,7 +566,8 @@ gimage("png/logo2.png",dirname=my_path,container=Recruitlogo)
 YieldperRecruit <- ggroup(container = nb,label="Y/R", expand=TRUE,horizontal=TRUE)#make entry gr
 YieldperRecruitlittle <- ggroup(container=YieldperRecruit,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 YieldperRecruitpic<- gnotebook(container=YieldperRecruit,expand=TRUE)#create the Entry pic.
-YieldperRecruitgraphic<- ggraphics(container = YieldperRecruitpic,width=700,height=500,label="Isoplath")
+YieldperRecruitgraphic<- ggraphics(container = YieldperRecruitpic,width=700,height=500,label="YPR-E")
+YieldperRecruitgraphic2<- ggraphics(container = YieldperRecruitpic,width=700,height=500,label="YPR-F")
 
 
 #Add ELEFAN in R logo at the top of the page
@@ -585,6 +599,11 @@ visible(YieldperRecruitgraphic) <- TRUE #make correct picture
 Yieldbiomass <- yield_biomass_per_recruit(svalue(M),svalue(Kypr),svalue(Lc),svalue(Linfypr),Pi=(YieldProbs),pas=NULL)
 plot_yield_biomass_per_recruit(Yieldbiomass,YieldProbs,datain$ML)
 visible(YieldperRecruitgraphic) <- TRUE #make correct picture
+visible(YieldperRecruitgraphic2) <- TRUE #make correct picture
+Yieldbiomass <- yield_biomass_per_recruitf(svalue(M),svalue(Kypr),svalue(Lc),svalue(Linfypr),Pi=(YieldProbs),pas=NULL)
+plot_yield_biomass_per_recruitf(Yieldbiomass,YieldProbs,datain$ML)
+visible(YieldperRecruitgraphic2) <- TRUE #make correct picture
+visible(YieldperRecruitgraphic) <- TRUE #make correct picture
 print("Yieldprobs")
 print(YieldProbs)
  }
@@ -607,7 +626,8 @@ gimage("png/logo2.png",dirname=my_path,container=YieldperRecruitlogo)
 YieldperRecruitiso <- ggroup(container = nb,label="Y/R iso", expand=TRUE,horizontal=TRUE)#make entry gr
 YieldperRecruitisolittle <- ggroup(container=YieldperRecruitiso,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 YieldperRecruitisopic<- gnotebook(container=YieldperRecruitiso,expand=TRUE)#create the Entry pic.
-YieldperRecruitisographic<- ggraphics(container = YieldperRecruitisopic,width=700,height=500,label="Y/R")
+YieldperRecruitisographic<- ggraphics(container = YieldperRecruitisopic,width=700,height=500,label="Isopleth-E")
+YieldperRecruitisographic2<- ggraphics(container = YieldperRecruitisopic,width=700,height=500,label="Isopleth-F")
 
 
 #Add ELEFAN in R logo at the top of the page
@@ -647,7 +667,11 @@ plotyperriso <- function(h,...){
 visible(YieldperRecruitisographic) <- TRUE #make correct picture
 isoplath(svalue(Miso),svalue(Kypriso),svalue(Linfypriso),svalue(vlineiso),svalue(hlineiso),svalue(nlevels),Pi=(YieldProbs),pas=NULL)
 visible(YieldperRecruitisographic) <- TRUE #make correct picture  
- }
+visible(YieldperRecruitisographic2) <- TRUE #make correct picture
+isoplathf(svalue(Miso),svalue(Kypriso),svalue(Linfypriso),svalue(vlineiso),svalue(hlineiso),svalue(nlevels),Pi=(YieldProbs),pas=NULL)
+visible(YieldperRecruitisographic2) <- TRUE #make correct picture  
+
+}
 
 
  plot=gbutton("Make plot",handler=plotyperriso)
@@ -661,14 +685,6 @@ YieldperRecruitisologo <- ggroup(container=YieldperRecruitisolittle,expand=FALSE
 gimage("png/logo2.png",dirname=my_path,container=YieldperRecruitisologo)
 
 
-
-
-## ## ## ## L/F manip. tab
-
-LFmanip <- ggroup(container = nb,label="L/F manip.", expand=TRUE,horizontal=TRUE)#make entry gr
-LFmaniplittle <- ggroup(container=LFmanip,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
-LFmanippic<- gnotebook(container=LFmanip,expand=TRUE)#create the Entry pic.
-LFmanipgraphic<- ggraphics(container = LFmanippic,width=700,height=500,label="L/F manip.")
 
 #change to correct starting window.
 svalue(nb)=1

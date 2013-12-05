@@ -26,28 +26,27 @@
 datefilein <- function()
 {
 #this function reads in a single data file and returns datain, date in, and lfbin.
-print("what is here?")
-ls()
-print("TA DA")
 fname1 <<- selectFile()
 #top <- scan(fname1,what="string",nlines=1)
 lengthunits<<-strsplit(scan(fname1,what="string",nlines=1),",")[[1]]
 top <- strsplit(scan(fname1,what="string",nlines=1,skip=1),",")[[1]]
+## print("top")
+## print(top)
+## top[1] <- paste("ML",lengthunits)
+## print(top)
 
-print(top)
 datain <- read.csv(fname1,head=TRUE,as.is=TRUE,skip=2)
 colnames(datain) <- top
 lfbin <<-length(datain$ML)
 datein <- top
 datein[1] <- NA
 
-print(datein)
+print(datain)
 index <- 1:length(top)
 datein <- as.data.frame((cbind(datein,index)))
 colnames(datein)=c("Date","index")
-print(datein)
 
-print(lfbin)
+#print(lfbin)
 datein$Date=(as.Date(datein$Date,format="%d/%m/%Y"))       #convert dates into the date class.
 datelength <- length(datein$Date)                                      #get number of days data was collected
 
@@ -63,9 +62,6 @@ datain<<-datain
 
 datein<<-datein
 datain<<-datain
-
-
-
 }
 
 

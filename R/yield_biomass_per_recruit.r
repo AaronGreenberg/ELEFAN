@@ -153,7 +153,8 @@ yield_biomass_per_recruit<- function(M,K,Littlec,Linf,Pi=YieldProbs,pas=NULL)
 print("Yeild biomass per recruit")
 print(YieldProbs)
 if (is.null(pas)) pas <- 0.015
-E=seq(.01,1,by=pas) 
+E=seq(.01,1,by=pas)
+
 if(is.na(sum(Pi)))
   { #make things = na
     YR_nke <- BR_nke <- NA
@@ -161,6 +162,38 @@ if(is.na(sum(Pi)))
 else{
 tab_names <- c('YR_ke','YR_nke','BR_ke','BR_nke')
 tab_final <- array(dim=c(length(E),4),dimnames=(list(E,tab_names)))
+tab_final[,1] <- sapply(E,YR_kef,Linf=Linf,M=M,K=K,Littlec=Littlec,Pi=YieldProbs,pas=NULL)
+
+##print(tab_final)
+#print("YieldProbs")
+##print(YieldProbs)
+tab_final[,2] <- sapply(E,YR_nkef,Littlec,M,K,Linf,Pi=YieldProbs,pas=NULL)
+##print(tab_final)
+tab_final[,3] <- sapply(E,BR_kef,Littlec,M,K,Linf,Pi=YieldProbs,pas=NULL)
+##print(tab_final)
+tab_final[,4] <-sapply(E,BR_nkef,Littlec,M,K,Linf,Pi=YieldProbs,pas=NULL)
+##print(tab_final)
+}
+
+return(tab_final)
+}
+ 
+
+
+yield_biomass_per_recruitf<- function(M,K,Littlec,Linf,Pi=YieldProbs,pas=NULL)
+{
+print("Yeild biomass per recruit")
+print(YieldProbs)
+if (is.null(pas)) pas <- 0.015
+F=seq(.01,5.99,by=pas)
+E=F/(F+M)
+if(is.na(sum(Pi)))
+  { #make things = na
+    YR_nke <- BR_nke <- NA
+  }
+else{
+tab_names <- c('YR_ke','YR_nke','BR_ke','BR_nke')
+tab_final <- array(dim=c(length(E),4),dimnames=(list(F,tab_names)))
 tab_final[,1] <- sapply(E,YR_kef,Linf=Linf,M=M,K=K,Littlec=Littlec,Pi=YieldProbs,pas=NULL)
 
 ##print(tab_final)

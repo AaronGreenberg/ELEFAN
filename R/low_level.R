@@ -104,9 +104,9 @@ wetherall <- function(da=datain,points=3){
   l1 <-bquote(paste("L"[infinity]))
   text(Li,Liprime+.4*log(max(Liprime)),as.character(sort(1:(length(Li)),decreasing=TRUE)))
   text(Linfest*1.0,min(1,.01*(z$coefficients[1]+z$coefficients[2]*Linfest)),l1)
-  temp2 <-bquote(paste("L"[infinity]==.(signif(temp,3))," ; ",
+  temp2 <-bquote(paste("L"[infinity]==.(signif(temp,3))," ; ", "Z/K=",.(signif(z$coefficients[2]/(1-z$coefficients[2])))," ; ",
                        bar(L)," = ",.(signif(z$coefficients[1],3)),"+",.(signif(z$coefficients[2],3)),"*L'",
-                       " ; ",r^2," = ",.(signif(summary(z)$r.squared,3))))
+                       " ; ",r^2," = ",.(signif(summary(z)$r.squared,3)))) #put Z/K output 
   legend(x="topleft",inset=0.02,legend=temp2)
   return(Linfest)
 }
