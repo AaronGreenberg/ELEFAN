@@ -52,10 +52,7 @@ datefileinh <- function(h,...){
   visible(Datatable) <- TRUE
   Datatable[] <- datain
   visible(Datatable) <- TRUE
-  ## colnames(Datatable)[1] <-as.character(lengthunits)
-  ## colnames(Datatable)[2:length(datein[,2])] <- as.character(colnames(datain)[2:length(datein[,2])])
-  ## colnames(Datatable)[1] <-as.character(lengthunits)
-  ## colnames(Datatable)[2:length(datein[,2])] <- as.character(colnames(datain)[2:length(datein[,2])])
+  print(svalue(Datatable))
   visible(Datatable) <- TRUE
   Linfslide[] <- seq(0,1.5*max(datain$ML),length.out=1000)
   Linfslidek[] <- seq(0,1.5*max(datain$ML),length.out=1000)
@@ -427,7 +424,7 @@ plotprobs <- function(h,...){
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(problittle,198,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(problittle,248,horizontal=FALSE)# spacing needs to be tuned for each slide
 problogo <- ggroup(container=problittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=problogo)
 
@@ -658,8 +655,13 @@ vlineiso= gslider(from=0,to=1,by=.01,value=.5)
 tmp = gframe("Ruler E", container = YieldperRecruitisolittle)
 add(tmp, vlineiso, expand=TRUE)
 
+
+vlineisof= gslider(from=0,to=5,by=.01,value=.5)
+tmp = gframe("Ruler F", container = YieldperRecruitisolittle)
+add(tmp, vlineisof, expand=TRUE)
+
 nlevels= gslider(from=10,to=50 ,by=1,value=10)
-tmp = gframe("Levels", container = YieldperRecruitisolittle)
+tmp = gframe("Contour Scale", container = YieldperRecruitisolittle)
 add(tmp, nlevels, expand=TRUE)
 
 
@@ -668,7 +670,7 @@ visible(YieldperRecruitisographic) <- TRUE #make correct picture
 isoplath(svalue(Miso),svalue(Kypriso),svalue(Linfypriso),svalue(vlineiso),svalue(hlineiso),svalue(nlevels),Pi=(YieldProbs),pas=NULL)
 visible(YieldperRecruitisographic) <- TRUE #make correct picture  
 visible(YieldperRecruitisographic2) <- TRUE #make correct picture
-isoplathf(svalue(Miso),svalue(Kypriso),svalue(Linfypriso),svalue(vlineiso),svalue(hlineiso),svalue(nlevels),Pi=(YieldProbs),pas=NULL)
+isoplathf(svalue(Miso),svalue(Kypriso),svalue(Linfypriso),svalue(vlineisof),svalue(hlineiso),svalue(nlevels),Pi=(YieldProbs),pas=NULL)
 visible(YieldperRecruitisographic2) <- TRUE #make correct picture  
 
 }
@@ -680,7 +682,7 @@ visible(YieldperRecruitisographic2) <- TRUE #make correct picture
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(YieldperRecruitisolittle,198,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(YieldperRecruitisolittle,128,horizontal=FALSE)# spacing needs to be tuned for each slide
 YieldperRecruitisologo <- ggroup(container=YieldperRecruitisolittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=YieldperRecruitisologo)
 

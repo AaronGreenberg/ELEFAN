@@ -82,7 +82,7 @@ kscanplot <- function(window=window,z=zkscan){
     #print("correctedx")
     #print(correctedx)
     correctedx=which.max(z[,1])
-    text(correctedx,z[which.max(z[,1]),1]+0.01,as.character(signif(z[which.max(z[,1]),2],2)))
+    #text(correctedx,z[which.max(z[,1]),1]+0.01,as.character(signif(z[which.max(z[,1]),2],2)))
     #text(z[which.max(z[,1]),2],z[which.max(z[,1]),1]+0.01,as.character(signif(z[which.max(z[,1]),2],2)))
     points(z[which.max(ma),2],ma[which.max(ma)],col="blue",cex=.8,pch=19)     
     text(z[which.max(ma),2],ma[which.max(ma)]+0.01,as.character(signif(z[which.max(ma),2],2)))     

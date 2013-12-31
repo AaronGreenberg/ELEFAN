@@ -185,8 +185,9 @@ yield_biomass_per_recruitf<- function(M,K,Littlec,Linf,Pi=YieldProbs,pas=NULL)
 print("Yeild biomass per recruit")
 print(YieldProbs)
 if (is.null(pas)) pas <- 0.015
-F=seq(.01,5.99,by=pas)
+F=seq(.01,5,by=pas)
 E=F/(F+M)
+
 if(is.na(sum(Pi)))
   { #make things = na
     YR_nke <- BR_nke <- NA
