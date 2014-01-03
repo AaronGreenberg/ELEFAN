@@ -32,7 +32,7 @@ lengthunits<<-strsplit(scan(fname1,what="string",nlines=1),",")[[1]]
 top <- strsplit(scan(fname1,what="string",nlines=1,skip=1),",")[[1]]
 ## print("top")
 ## print(top)
-## top[1] <- paste("ML",lengthunits)
+#top[1] <- paste("ML",lengthunits)
 ## print(top)
 
 datain <- read.csv(fname1,head=TRUE,as.is=TRUE,skip=2)

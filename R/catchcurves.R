@@ -30,7 +30,7 @@ print(ti)
 widthvec2 <-0:pointslower#points not selected
 z <- lm(log(sumsample[widthvec]/delti[widthvec])~ti[widthvec])#compute linear model.
 par(1,las=1,bty='n',oma=c(0,1,1,1))
-plot(x=ti[widthvec2],y=(z$coefficients[1]+z$coefficients[2]*ti[widthvec2]),type="l",lty=2,col="black",xlab=bquote(paste("Relative age (t-t"[o],")")), ylab=expression(paste("Relative abundance (ln(N/",Delta,"t))")),yaxt="n",xaxt="n",xlim=c(-0.5,ceiling(max(ti))),ylim=c(0,ceiling(1.1*z$coefficients[1])))#make the line that does not count goes trough widthvec2 ... the points NOT selected
+plot(x=ti[widthvec2],y=(z$coefficients[1]+z$coefficients[2]*ti[widthvec2]),type="l",lty=2,col="black",xlab=bquote(paste("Relative age (t-t"[o],";year)")), ylab=expression(paste("Relative abundance (ln(N/",Delta,"t))")),yaxt="n",xaxt="n",xlim=c(-0.5,ceiling(max(ti))),ylim=c(0,ceiling(1.1*z$coefficients[1])))#make the line that does not count goes trough widthvec2 ... the points NOT selected
 axis(2,tck=0.02,las=2)
 axis(1,tck=0.02)
 
@@ -59,12 +59,9 @@ return(nonseasonal=list(data=dataout,prob=selectivity$prob,ages=ti))
 
 
 plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,pointslower){
-
   # initialize data structure
   growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
   lfdata<- fillgrowthdata(datein,datain,growthdata) #make data structure with length frequency data
-
-  
   #--1--compute oldest and youngest
   #locate the oldest and youngest fish.
   index <-which(colSums(lfdata)>0)
@@ -79,6 +76,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,oldest,datain$ML[length(datain$ML)],BIRTHDAY)#compute growth curve that goes through youngest
   #index <-which(colSums(lfdata)>0)
   
+  #find vector of tzeros that determine slicing growth curves
   tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(datain$ML)),decreasing=TRUE))#(length(datain$ML)+1)),decreasing=TRUE))
 # gcurvemain <- 0*lfdata
  count=1
@@ -105,7 +103,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
     }
     }
  }
-#The above makes the table.
+#The above makes the table. of growth curves
   
   pointcurve <- as.data.frame(pointscurve)
   colnames(pointcurve) <- c("curve","day","length","bin")
@@ -114,51 +112,53 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   #loop over days
   for(i in 1:length(index)){
   #loop over correct number of curves and fill in table.
-   z=as.data.frame(subset(pointcurve,pointcurve$day==index[i]))
+   z=as.data.frame(subset(pointcurve,pointcurve$day==index[i])) #get part of point curve table that corresponds to correct day
    colnames(z) <- c("curve","day","length","bin") #get part that is correct day.
    subday=z#correct subday!
    #get bins between curves
    count=0;
-   for(j in 1:(length(tzero)-1)){
-     curvebin <- which(datain$ML >= floor(subday$length[j]) &datain$ML <= ceiling(subday$length[j+1]))
-     if(!is.na(sum(datain[curvebin,i+1]))){
-       lengthcurvebin <- length(curvebin)
-       binwidth <- (datain$ML[2]-datain$ML[1])
-       print(binwidth)
-       if(lengthcurvebin>0){
+   for(j in 1:(length(tzero)-1)){ #for each growth curve 
+     curvebin <- which(datain$ML >= floor(subday$length[j]) &datain$ML <= ceiling(subday$length[j+1]))#get bins between growth curves
+     if(!is.na(sum(datain[curvebin,i+1]))){#check that curvebin is not empty
+       lengthcurvebin <- length(curvebin)#get length of curve bin
+       binwidth <- (datain$ML[2]-datain$ML[1]) #compute width of bins
+       if(lengthcurvebin>0){#if length of curve bin is bigger than zero compute weights
        #make sure that the length of curve bin is greater than zero
        if(!is.na(subday$length[curvebin[1]])&&(subday$length[curvebin[1]]>=(min(datain$ML)-binwidth/2))){
-       #we need to compute two weights which determine the correct weights for the 
-       weight1=(-(subday$bin[curvebin[1]]-binwidth/2)+subday$length[curvebin[1]])/binwidth}else{weight1=1}
+       #we need to compute two weights which determine the correct weights for the
+         
+       weight1=(subday$bin[curvebin[1]]-subday$length[curvebin[1]])/(2*binwidth)+.5}else{weight1=1}
        if(!is.na(subday$length[curvebin[lengthcurvebin]])&&(subday$length[curvebin[lengthcurvebin]]<=(max(datain$ML)+binwidth/2))){
-       weight2=(-subday$length[curvebin[lengthcurvebin]]+subday$bin[curvebin[lengthcurvebin]]+binwidth/2)/binwidth
+       weight2=(subday$length[curvebin[lengthcurvebin]]-subday$bin[curvebin[lengthcurvebin]])/(2*binwidth) +.5
       }else{weight2=1}  
      }else{
        weight1=0
        weight2=0
      }
-       if(max(c(weight1,weight2))>1||min(c(weight1,weight2)<0)){
+       
+       if(max(c(weight1,weight2))>1||min(c(weight1,weight2)<0)){#error check. Weights should be between zero and one
        print("Weights")
        print(c(weight1,weight2))
        print(j)
        print(subday$length[curvebin])
        print(subday$bin[curvebin])
-       if(weight1>1){weight1=1}
-       if(weight2>1){weight2=1}
+       
+       #if(weight1>1){weight1=1}
+       #if(weight2>1){weight2=1}
       
      } 
-       if(lengthcurvebin>=3){
+       if(lengthcurvebin>=3){#if there are more than three bins in curvebin
          pointsout[subday$curve[j],i] <- sum(datain[curvebin[2:(lengthcurvebin-1)],i+1])#add up all things in middle
          pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[1],i+1]*weight1 # add lower bin
          pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[lengthcurvebin],i+1]*weight2# add upper bin
        }else{
-         if(lengthcurvebin==2){
+         if(lengthcurvebin==2){#if there are just two bins in the curvebin
            pointsout[subday$curve[j],i] <- datain[curvebin[1],i+1]*weight1 # add lower bin
            pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[2],i+1]*weight2# add upper bin
          }else{
-           if(lengthcurvebin==1){
+           if(lengthcurvebin==1){#if there is just one bin? Am I doing this right?
            pointsout[subday$curve[j],i] <- datain[curvebin[1],i+1]*weight1 # add lower bin
-           }else{  
+           }else{ #this should never happen ? right?
            pointsout[subday$curve[j],i] <- 0
          }}
        }
@@ -167,7 +167,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
  }
 
   #pointsout <- prop.table(pointsout,2)*100
-  ages <- vector()
+  ages <- vector()#compute ages for plotting
   for(i in 1:length(tzero)){#loop over curves
   tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,tzero[i],0,BIRTHDAY)
   ages[i] <- tempered$c[max(index),1]-tempered$tzero
@@ -177,17 +177,17 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   widthvec <- (pointslower):pointsupper
 
   widthvec2 <-c(1:pointslower, pointsupper:nrow(pointsout))
-  print("width vec")
-  print(widthvec)
-  print(widthvec2)
+#  print("width vec")
+#  print(widthvec)
+#  print(widthvec2)
   
 x <- ages[widthvec]/365
-print(x)
+#print(x)
 y <- log(rowSums(pointsout)[widthvec])
-print(log(rowSums(pointsout)))
-print(y)
+#print(log(rowSums(pointsout)))
+#print(y)
 z <- lm(y~x)
-print(summary(z))
+#print(summary(z))
 
 
 tempsum <- sum(rowSums(pointsout),na.rm=TRUE)
@@ -196,9 +196,9 @@ print(rowSums(pointsout))
 print(tempsum) 
 #should follow what I did in Catch curve 1.
 par(1,las=1,bty='n',oma=c(0,1,1,1))
-print("length check")
-print(c(length(ages),length(log(rowSums(pointsout)))))
-plot(ages/365,log(rowSums(pointsout)),xlab=bquote(paste("Relative age (t-t"[o],")")),ylab=expression(paste("Relative abundance (ln(N))")),yaxt="n",xaxt="n")
+#print("length check")
+#print(c(length(ages),length(log(rowSums(pointsout)))))
+plot(ages/365,log(rowSums(pointsout)),xlab=bquote(paste("Relative age (t-t"[o],";year)")),ylab=expression(paste("Relative abundance (ln(N))")),yaxt="n",xaxt="n")
 points(ages[widthvec]/365,log(rowSums(pointsout)[widthvec]),pch=19,col="black") #make filled circles only on points in width vect
 axis(2,tck=0.02,las=2)
 axis(1,tck=0.02)
