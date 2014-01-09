@@ -54,7 +54,7 @@ gf <- gfcompute(asp,esp)
 }
 }
 
-ylabel <- paste("Length(",lengthunits,")",sep="")
+ylabel <- paste("Length (",lengthunits,")",sep="")
 if(ptype=="Peaks"){
   rqFreqPlot(1:days,datain$ML,peaks$out,startime,ML,gcurve,datein,barscale=scale,GF=signif(gf,4),birthday=BIRTHDAY,hline=hline,sdate1=startime1,sML1=ML1,curves1=gcurve1,GF1=gf1,ylab1=ylabel)
 }
@@ -180,8 +180,8 @@ P50x=vec$x[which.min((vec$y-.5)^2)]
 vec2=approx(length,n=10000)
 Length=vec2$y[which.min((vec2$x-P50x)^2)]
 par(las=1,bty="n",mar=c(5.1,6,4.1,2.1),mpg=c(4,1,0),oma=c(0,1,1,1))
-
-plot(length,Pi,type="p",xlab="Length",ylab="Probability",xlim=c(0,1.1*max(length)),ylim=c(0,1.1))
+label <- paste("Length","(",lengthunits,")")
+plot(length,Pi,type="p",xlab=label,ylab="Probability",xlim=c(0,1.1*max(length)),ylim=c(0,1.1))
 text(length,Pi+.1,as.character(1:length(Pi)),col="black")
 points(vec2$y,vec$y,col="black",type="l")
 points(Length,P50y,col="red",pch=19)       

@@ -31,7 +31,8 @@ Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE,height=30,wi
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=Entrylittle)
 Entrypic<- gnotebook(container=Entry,expand=TRUE)#create the Entry pic.
-Datatable<- gtable(datatmp,container=Entrypic,label="LF-data")
+
+Datatable<- gtable(datatmp,container=Entrypic,label="LF data")
 #Load Data
 #I need handlers.
 datefileinh <- function(h,...){
@@ -42,7 +43,8 @@ datefileinh <- function(h,...){
   YieldAges <<-NA#place to store ages
   lengthunits<<-c("mt")
   datefilein()
-  Datatable<- gtable(datatmp,container=Entrypic,label="LF-data")
+  names(Datatable) <- c("ML")
+  names(Datatable) <- c("ML")
   visible(Datatable) <- TRUE
   datetmp <- datein
   options(digits=3)
@@ -159,6 +161,7 @@ plotlf <- function(h,...){
  
 LFplotlittlebutton1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=330)
 gtext(text="Main cohort",container=LFplotlittlebutton1,height=15,width=200)
+
 LFplotlittlecohort1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=330)
 stdate <- gdroplist(list(1:10*0-1))
 tmp <- gframe("SS",container=LFplotlittlecohort1)
@@ -168,7 +171,9 @@ tmp <- gframe("SL",container=LFplotlittlecohort1)
 add(tmp,midlength, expand=FALSE)
 
 LFplotlittlebutton2<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=330)
+addSpace(LFplotlittlebutton2,4,horizontal=FALSE)# spacing needs to be tuned for each slide
 gtext(text="2nd cohort",container=LFplotlittlebutton2,height=15,width=200)
+addSpace(LFplotlittlebutton2,4,horizontal=FALSE)# spacing needs to be tuned for each slide
 LFplotlittlecohort2<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=330)
 stdate1 <- gdroplist(list(1:10*0-1))
 tmp <- gframe("SS",container=LFplotlittlecohort2)
@@ -359,8 +364,8 @@ if(file.exists(filename)){file.remove(filename)}#remove file
 print(temp$data)
 print(lengthunits)
 #write("hey",file=filename)
-write.table(lengthunits,file=filename,quote=FALSE,append=TRUE,row.names=FALSE,col.names=FALSE)
 write.table(round(temp$data,4),file=filename,row.names=FALSE,col.names=TRUE,append=TRUE,quote=FALSE,sep=",")
+write.table(lengthunits,file=filename,quote=FALSE,append=TRUE,row.names=FALSE,col.names=FALSE)
 visible(Catchcurvegraphic) <- TRUE #make correct picture
 
  }
@@ -397,7 +402,7 @@ tmp <- gframe("Which prob",container=problittle)
 add(tmp,lengthprob, expand=FALSE)
 
 probadjust <- gslider(from=0,to=100,by=.5,value=50)
-tmp <- gframe("probability",container=problittle)
+tmp <- gframe("Probability",container=problittle)
 add(tmp,probadjust, expand=TRUE)
 
 fn <- function(length,prob){
@@ -416,7 +421,7 @@ plotprobs <- function(h,...){
   Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
   visible(probgraphic) <- TRUE #make correct picture
   probsplot(YieldProbs,datain$ML)
-  colnames(Probabilitymodified) <- c("ML","probability")
+  colnames(Probabilitymodified) <- c("ML","Probability")
   visible(probgraphic) <- TRUE #make correct picture  
   visible(probgraphic) <- TRUE #make correct picture
 }

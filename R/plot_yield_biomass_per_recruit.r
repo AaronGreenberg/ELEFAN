@@ -85,8 +85,9 @@ for(i in 1:vlength){
      }
   }
  par(las=1,bty="n",mar=c(5.1,6,4.1,2.1),mpg=c(4,1,0),oma=c(0,1,1,1))
- temp <- bquote(paste("Mean length at first capture","/","L"[infinity]))
- image(Ein,Littlecv,iso,col = rainbow(100,start=0,end=2/6), axes = TRUE, xlab="Exploitation Rate",ylab=temp,xlim=c(0,1),ylim=c(0,1))
+ #temp <- bquote(paste("Mean length at first capture","/","L"[infinity]))
+ temp <- "Length at 1st capture / Asymptotic length"
+ image(Ein,Littlecv,iso,col = rainbow(100,start=0,end=2/6), axes = TRUE, xlab="Exploitation rate (E = F/Z)",ylab=temp,xlim=c(0,1),ylim=c(0,1))
  contour(Ein,Littlecv,iso,nlevels=nlevels,add=TRUE,labcex=1.2)
  abline(h=hline,col="black",lwd=1.5)
  abline(v=vline,col="black",lwd=1.5)
@@ -121,8 +122,9 @@ for(i in 1:vlength){
      }
   }
  par(las=1,bty="n",mar=c(5.1,6,4.1,2.1),mpg=c(4,1,0),oma=c(0,1,1,1))
- temp <- bquote(paste("Mean length of first capture","/","L"[infinity]))
- image(Fin,Littlecv,iso,col = rainbow(100,start=0,end=2/6), axes = TRUE, xlab="Fishing mortality rate",ylab=temp,xlim=c(0,5),ylim=c(0,1))
+# temp <- bquote(paste("Mean length of first capture","/","L"[infinity]))
+  temp <- "Length at 1st capture / Asymptotic length"
+ image(Fin,Littlecv,iso,col = rainbow(100,start=0,end=2/6), axes = TRUE, xlab=expression(paste("Fishing mortality (F;,year", "^-1)")),ylab=temp,xlim=c(0,5),ylim=c(0,1))
  contour(Fin,Littlecv,iso,nlevels=nlevels,add=TRUE,labcex=1.2)
  abline(h=hline,col="black",lwd=1.5)
  abline(v=vline,col="black",lwd=1.5)

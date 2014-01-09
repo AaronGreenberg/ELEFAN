@@ -28,6 +28,7 @@ datefilein <- function()
 #this function reads in a single data file and returns datain, date in, and lfbin.
 fname1 <<- selectFile()
 #top <- scan(fname1,what="string",nlines=1)
+
 lengthfile <- length(readLines(fname1)) #get length of file
 top <<- strsplit(scan(fname1,what="string",nlines=1),",")[[1]]#get first row of file
 datain <- read.csv(fname1,head=TRUE,as.is=TRUE,skip=0,nrows=(lengthfile-2))#get main body of file
