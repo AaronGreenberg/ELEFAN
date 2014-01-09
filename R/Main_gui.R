@@ -31,36 +31,34 @@ Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE,height=30,wi
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=Entrylittle)
 Entrypic<- gnotebook(container=Entry,expand=TRUE)#create the Entry pic.
-
 Datatable<- gtable(datatmp,container=Entrypic,label="LF data")
+
 #Load Data
 #I need handlers.
 datefileinh <- function(h,...){
   visible(Datatable) <- TRUE
   rm(list=ls())
-  rm(Datatable)
   YieldProbs<<-NA#place to store prob.
   YieldAges <<-NA#place to store ages
   lengthunits<<-c("mt")
   datefilein()
-  names(Datatable) <- c("ML")
-  names(Datatable) <- c("ML")
-  visible(Datatable) <- TRUE
+  names(Datatable) <- paste("ML",";",lengthunits,sep="",collapse="")
+  visible(Datatable) <- FALSE
   datetmp <- datein
   options(digits=3)
   stdate[] <- c(-1,1:(length(datein[,2])-1))
   stdate1[] <- c(-1,1:(length(datein[,2])-1))
   lengthprob[] <- c(-1,1:length(datain$ML))
   stdatek[] <- 1:(length(datein[,2])-1)
-  rm(temptable)
-  temptable <- cbind(datain,lengthunits)
-  temptable <- cbind(datain,lengthunits)
+  temptable <-datain 
+  temptable <-datain
   Datatable[] <- temptable
   Datatable[] <- temptable
-  print(svalue(Datatable))
-  names(Datatable) <- c(top,"LengthUnits")
+ 
   visible(Datatable) <- TRUE
+  visible(Datatable) <- FALSE
   visible(Datatable) <- TRUE
+  
   Linfslide[] <- seq(0,1.5*max(datain$ML),length.out=1000)
   Linfslidek[] <- seq(0,1.5*max(datain$ML),length.out=1000)
   Linfslidec[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=1000)
