@@ -42,7 +42,7 @@ datefileinh <- function(h,...){
   YieldAges <<-NA#place to store ages
   lengthunits<<-c("mt")
   datefilein()
-  names(Datatable) <- paste("ML",";",lengthunits,sep="",collapse="")
+  names(Datatable)[1] <- paste("ML",";",lengthunits,sep="",collapse="")
   visible(Datatable) <- FALSE
   datetmp <- datein
   options(digits=3)
@@ -54,16 +54,14 @@ datefileinh <- function(h,...){
   temptable <-datain
   Datatable[] <- temptable
   Datatable[] <- temptable
- 
   visible(Datatable) <- TRUE
   visible(Datatable) <- FALSE
   visible(Datatable) <- TRUE
-  
   Linfslide[] <- seq(0,1.5*max(datain$ML),length.out=1000)
   Linfslidek[] <- seq(0,1.5*max(datain$ML),length.out=1000)
   Linfslidec[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=1000)
   Linfslidec2[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=1000)
-  Linfslider[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=1000)
+  #Linfslider[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=1000)
   Linfypr[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=1000)
   Linfypriso[] <- seq(0.8*max(datain$ML),1.5*max(datain$ML),length.out=1000)
   Pointslide[] <- 2:length(datain$ML)
@@ -287,10 +285,22 @@ cfixedkscan(sdate=svalue(stdatek),ML=svalue(midlengthk),Linf=svalue(Linfslidek),
 plotfullkscan <- function(h,...){ 
 visible(Kscangraphic) <- TRUE #make correct picture  
 kscanplot(window=svalue(movingaveragek))
+
+visible(Recruitgraphic) <- TRUE #make correct picture
+temp<- recruitment(max(zkscan[which.max(zkscan[,1]),1]),svalue(Linfslidek),svalue(Cslidek),svalue(twslidek))
+visible(Recruitgraphic) <- TRUE #make correct picture
+visible(Kscangraphic) <- TRUE #make correct picture  
+
+
  }
 plotfixedkscan <- function(h,...){ 
 visible(Kscangraphic) <- TRUE #make correct picture  
 fixedkscanplot(window=svalue(movingaveragek))
+visible(Recruitgraphic) <- TRUE #make correct picture
+temp<- recruitment(max(fixzkscan[which.max(fixzkscan[,1]),1]),svalue(Linfslidek),svalue(Cslidek),svalue(twslidek))
+visible(Recruitgraphic) <- TRUE #make correct picture
+visible(Kscangraphic) <- TRUE #make correct picture  
+
  }
 
 
@@ -353,6 +363,7 @@ add(tmp, Pointslideuc, expand=TRUE)
 plotnonseacatch <- function(h,...){
 visible(Catchcurvegraphic) <- TRUE #make correct picture
 temp<- plotnonseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Pointslideuc),svalue(Pointslidelc))
+names(Datatablemodified)[1] <- paste("ML",";",lengthunits,sep="",collapse="")
 Datatablemodified[] <- (signif(temp$data,3))
 Datatablemodified[] <- (signif(temp$data,3))
 YieldProbs <<- temp$prob
@@ -529,38 +540,7 @@ Recruitgraphic<- ggraphics(container = Recruitpic,width=700,height=500,label="Re
 gimage("png/logo1.png",dirname=my_path,container=Recruitlittle)
 
 
-Linfslider=gslider(from=1,to=10,length.out=1000,value=2)
-tmp = gframe("Linf", container = Recruitlittle)
-add(tmp, Linfslider, expand=TRUE)
-
-
-Klocslider=gslider(from=0,to=10,by=.01,value=0)
-tmp = gframe("K", container = Recruitlittle)
-add(tmp, Klocslider, expand=TRUE)
-
-
-Cslider=gslider(from=0,to=1.2,by=.01,value=0)
-tmp = gframe("C", container = Recruitlittle)
-add(tmp, Cslider, expand=TRUE)
-
-
-TWslider=gslider(from=0,to=1,by=.01,value=0)
-tmp = gframe("WP", container = Recruitlittle)
-add(tmp, TWslider, expand=TRUE)
-
-plotrecruit <- function(h,...){ 
-visible(Recruitgraphic) <- TRUE #make correct picture
-temp<- recruitment(svalue(Klocslider),svalue(Linfslider),svalue(Cslider),svalue(TWslider))
-visible(Recruitgraphic) <- TRUE #make correct picture
-}
-
-
-plot=gbutton("Make plot",handler=plotrecruit)
-tmp=gframe("Plot",container=Recruitlittle)
-add(tmp, plot, expand=FALSE)
-
-
-addSpace(Recruitlittle,198,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(Recruitlittle,600,horizontal=FALSE)# spacing needs to be tuned for each slide
 Recruitlogo <- ggroup(container=Recruitlittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=Recruitlogo)
 

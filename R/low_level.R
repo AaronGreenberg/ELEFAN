@@ -91,7 +91,7 @@ wetherall <- function(da=datain,points=3){
   z=lm(Lipoints~Lip)
   Linfest <- -z$coefficients[1]/(z$coefficients[2]-1)#compute Linf
   label1 <- paste("Cutoff Length (L';",lengthunits,")")
-  label2<- quote(paste("Mean length above cutoff (", bar(L),";",lengthunits))
+  label2<- bquote(paste("Mean length above cutoff (",  bar(L), "; ",.(lengthunits),")"))
   plot(Li,Liprime,xlim=c(0,max(Li,Linfest)*1.22),ylim=c(0,max(Liprime,Linfest)*1.22),xlab=label1,ylab=label2,yaxt="n",xaxt="n")
   axis(2,tck=0.02,las=2)
   axis(1,tck=0.02)
