@@ -18,7 +18,7 @@ plotnonseacatchcurve <- function(Kloc=K,Linfloc=Linf,pointsupper,pointslower){
     
 #then I compute the time needed for the fish of a given length class to grow
 #through that length class
-  width <- 2*(dataloc$ML[2]-dataloc$ML[1])/2 #assuming that the lengthfreq lengths are mid points.
+  width <- (dataloc$ML[2]-dataloc$ML[1]) #assuming that the lengthfreq lengths are mid points.
   print("catch curve ")
   print(width)
   delti <- -1/Kloc*log((Linfloc-(dataloc$ML+width))/(Linfloc-(dataloc$ML-width)))#-to
@@ -62,22 +62,21 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   # initialize data structure
   growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
   lfdata<- fillgrowthdata(datein,datain,growthdata) #make data structure with length frequency data
+  
   #--1--compute oldest and youngest
   #locate the oldest and youngest fish.
   index <-which(colSums(lfdata)>0)
   youngest <- max(index)  #lfdata[1,max(index)]
   oldest <- min(index)    #lfdata[length(datain$ML),min(index)]
-  
  #2 compute growth curve that goes through oldest and youngest
-  gcurve1 <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,youngest,datain$ML[1],BIRTHDAY)#compute growth curve that goes through oldest
-  gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,oldest,datain$ML[length(datain$ML)],BIRTHDAY)#compute growth curve that goes through youngest
-  #index <-which(colSums(lfdata)>0)
-  
+  binwidth <- (datain$ML[2]-datain$ML[1]) #compute width of bins
+  gcurve1 <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,youngest,datain$ML[1]-0*.5*binwidth,BIRTHDAY)#compute growth curve that goes through oldest
+  gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,oldest,datain$ML[length(datain$ML)]+0*.5*binwidth,BIRTHDAY)#compute growth curve that goes through youngest
+
   #find vector of tzeros that determine slicing growth curves
-  #tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(datain$ML)),decreasing=TRUE))#(length(datain$ML)+1)),decreasing=TRUE))
-  tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=3),decreasing=TRUE))#(length(datain$ML)+1)),decreasing=TRUE))
+ #tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(datain$ML)),decreasing=TRUE))
+    tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=4),decreasing=TRUE))
   #3 compute pointscurve this computes the growth curves.
-# gcurvemain <- 0*lfdata
  count=1
   pointscurve <- matrix(0,ncol=4,nrow=length(tzero)*length(index))
   gcurvemain <- vector()
@@ -89,61 +88,53 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
       gcurvemain <- c(gcurvemain,as.vector(tempered$c[,3]))
       timeblue <- c(timeblue,as.vector(tempered$c[,1]))
       int <- which(tempered$c[,1]==index[j])
-      ## print(int)
-      ## print(j)
-      ## print(pointscurve)
       if(length(int)!=0){
       pointscurve[count,1] <- i #determine curve
       pointscurve[count,2] <- tempered$c[int,1]#+tempered$tzero#get index of location x axis.date...
-      pointscurve[count,3] <- tempered$c[int,3]#get index of location y axis. size at date...
+      pointscurve[count,3] <- min(c(tempered$c[int,3],datain$ML[which.max(datain$ML)]+.5*binwidth))#get index of location y axis. size at date...
       pointscurve[count,4] <- tempered$c[int,4]#get index of location bin probably not needed...
+    }else{
+      pointscurve[count,1] <- i #determine curve
+      pointscurve[count,2] <- index[j]#get index of location x axis.date...
+      if(max(pointscurve[which(pointscurve[,2]==index[j]),3])>=datain$ML[which.min(datain$ML)]){#check to see if the curve is bigger than 95% Linf
+      pointscurve[count,3] <- datain$ML[which.max(datain$ML)]+.5*binwidth#get index of location y axis. size at date...
+      pointscurve[count,4] <- datain$ML[which.max(datain$ML)]#get index of location bin probably not needed...
+        }else{#the fish haven't been born yet.
+      pointscurve[count,3] <- datain$ML[which.min(datain$ML)]-.5*binwidth#get index of location y axis. size at date...
+      pointscurve[count,4] <- datain$ML[which.min(datain$ML)]#get index of location bin probably not needed...
+          }
+        }      
        count=count+1
+ 
+    }
+    }
 
-    }
-    }
- }
-#The above makes the table. of growth curves
+ 
+  #The above makes the table. of growth curves
   #now we need to intersect the growth curves and the data
-  #and add things up. This is the part with problems
-
-  
+  #and add things up. 
   pointcurve <- as.data.frame(pointscurve)
   colnames(pointcurve) <- c("curve","day","length","bin")
   print(pointcurve)
   pointsout <- matrix(0,nrow=length(tzero),ncol=length(index))
   #loop over days
-  
   for(i in 1:length(index)){
   #loop over correct number of curves and fill in table.
    z=as.data.frame(subset(pointcurve,pointcurve$day==index[i])) #get part of point curve table that corresponds to correct day
    colnames(z) <- c("curve","day","length","bin") #get part that is correct day.
    subday=z#correct subday!
    count=0;
+   weight1=1
+   weight2=1
    for(j in 1:(length(tzero)-1)){ #for each growth curve
      #this works!
-     weight1=1
-     weight2=1
-     binwidth <- (datain$ML[2]-datain$ML[1]) #compute width of bins
      upper <- ceiling(subday$length[j+1])
      lower<- floor(subday$length[j])
      if(is.na(subday$length[j+1])){upper=max(datain$ML)+binwidth/2}
      if(is.na(subday$length[j])){lower=min(datain$ML)-binwidth/2}
-     print("subday")
-     print(subday$length[j])
-     print("lower")
-     print(lower)
-     print("ceiling")
-     print(ceiling(subday$length[j+1]))
-     print("upper")
-     print(upper)
-
      curvebin <- which(datain$ML >= lower & datain$ML <= upper)#get bins between growth curves
-     print(curvebin)
-     print(c(i,j))
-      #curvebin <- which(datain$ML >= subday$bin[j] & datain$ML <=subday$bin[j+1])#get bins between growth curves
-      if(!is.na(sum(datain[curvebin,i+1]))){#check that curvebin is not empty
+     if(!is.na(sum(datain[curvebin,i+1]))){#check that curvebin is not empty
         lengthcurvebin <- length(curvebin)#get length of curve bin
-
         #seems to work up to now!
         if(lengthcurvebin>0){#if length of curve bin is bigger than zero compute weights
         #make sure that the length of curve bin is greater than zero
@@ -155,57 +146,55 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
        weight1=.5+(-subday$bin[curvebin[1]]+subday$length[curvebin[1]])/(binwidth)
      }
       }
-       
        else{weight1=1}
        if(!is.na(subday$length[curvebin[lengthcurvebin]])&&(subday$length[curvebin[lengthcurvebin]]<=(max(datain$ML)+binwidth/2))){
          if(subday$length[curvebin[lengthcurvebin]]<subday$bin[curvebin[lengthcurvebin]]){
        weight2=.5-(subday$length[curvebin[lengthcurvebin]]-subday$bin[curvebin[lengthcurvebin]])/(binwidth) 
      }else{
-       weight2=(-subday$length[curvebin[lengthcurvebin]]+subday$bin[curvebin[lengthcurvebin]])/(binwidth) +.5}
+       weight2=.5+(-subday$length[curvebin[lengthcurvebin]]+subday$bin[curvebin[lengthcurvebin]])/(binwidth)
+         }
       }else{weight2=1}  
 
      }
+#Error checking block may be removed on production version...
+#However, should remain until testing is fully done.
+#
+       if(length(curvebin)<=0){
+         print("curvebin is empty")
+         print(curvebin)
+       }
+
        if(max(c(weight1,weight2))>1){#error check. Weights should be between zero and one
        print("Weights Error weights greater than one")
        print(c(weight1,weight2))
-       print(j)
+       print(c(i,j))
+       print(curvebin)
        print(subday$length[curvebin])
        print(subday$bin[curvebin])
-      
+
      }
        if(min(c(weight1,weight2))<0){#error check. Weights should be between zero and one
        print("Weights Error less than one")
        print(c(weight1,weight2))
-       print(j)
+       print(c(i,j))
+       print(curvebin)
        print(subday$length[curvebin])
        print(subday$bin[curvebin])
       
-     }  
-        ## print("curvebin loop")
-        ## print(curvebin)
-        ## print(datain[curvebin,i+1])
-        ## print(sum(datain[curvebin,i+1]))
-        ## print(c(i,j))
+     } #do the actual adding. 
         if(lengthcurvebin>=3){#if there are more than three bins in curvebin
          pointsout[subday$curve[j],i] <- sum(datain[curvebin[2:(lengthcurvebin-1)],i+1])#add up all things in middle
          pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[1],i+1]*(1-weight1) # add lower bin
          pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[lengthcurvebin],i+1]*weight2# add upper bin
-         print("pointsout")
-         print(pointsout)
        }else{
          if(lengthcurvebin==2){#if there are just two bins in the curvebin
            pointsout[subday$curve[j],i] <- datain[curvebin[1],i+1]*(1-weight1) # add lower bin
            pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[2],i+1]*weight2# add upper bin
-         print("pointsout")
-         print(pointsout)
          }else{
            if(lengthcurvebin==1){#if there is just one bin? Am I doing this right?
            pointsout[subday$curve[j],i] <- datain[curvebin[1],i+1]*(1-weight1) # add lower bin
-         print("pointsout")
-         print(pointsout)
            }else{ #this should never happen ? right?
-             print("OH KNOW!!!")
-           pointsout[subday$curve[j],i] <- .1
+            pointsout[subday$curve[j],i] <- 0
          }}
        }
      }
@@ -227,14 +216,12 @@ x <- ages[widthvec]/365
 y <- log(rowSums(pointsout)[widthvec])
 z <- lm(y~x)
 
-
+print("pointsout")
+print(pointsout)
+  
 
 tempsum <- sum(rowSums(pointsout),na.rm=TRUE)
-print("tempsum")
-print(pointsout)  
-print(rowSums(pointsout))
-print(tempsum) 
-
+print(tempsum)
 #should follow what I did in Catch curve 1.
 par(1,las=1,bty='n',oma=c(0,1,1,1))
 #make the plots
