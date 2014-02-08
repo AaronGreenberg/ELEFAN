@@ -141,17 +141,17 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
        if(!is.na(subday$length[curvebin[1]])&&(subday$length[curvebin[1]]>=(min(datain$ML)-binwidth/2))){
         #we need to compute two weights which determine the correct weights for the Are these right?!
          if(subday$length[curvebin[1]]<subday$bin[curvebin[1]]){
-       weight1=.5-(subday$bin[curvebin[1]]-subday$length[curvebin[1]])/(binwidth)
+       weight1=.5+(subday$bin[curvebin[1]]-subday$length[curvebin[1]])/(binwidth)
      }else{
-       weight1=.5+(-subday$bin[curvebin[1]]+subday$length[curvebin[1]])/(binwidth)
+       weight1=.5-(-subday$bin[curvebin[1]]+subday$length[curvebin[1]])/(binwidth)
      }
       }
        else{weight1=1}
        if(!is.na(subday$length[curvebin[lengthcurvebin]])&&(subday$length[curvebin[lengthcurvebin]]<=(max(datain$ML)+binwidth/2))){
          if(subday$length[curvebin[lengthcurvebin]]<subday$bin[curvebin[lengthcurvebin]]){
-       weight2=.5-(subday$length[curvebin[lengthcurvebin]]-subday$bin[curvebin[lengthcurvebin]])/(binwidth) 
+       weight2=.5+(subday$length[curvebin[lengthcurvebin]]-subday$bin[curvebin[lengthcurvebin]])/(binwidth) 
      }else{
-       weight2=.5+(-subday$length[curvebin[lengthcurvebin]]+subday$bin[curvebin[lengthcurvebin]])/(binwidth)
+       weight2=.5-(-subday$length[curvebin[lengthcurvebin]]+subday$bin[curvebin[lengthcurvebin]])/(binwidth)
          }
       }else{weight2=1}  
 
@@ -234,7 +234,7 @@ text(ages/365,log(rowSums(pointsout))-.05*log(max(c(log(rowSums(pointsout)),1)))
 lines(x=ages[widthvec2]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec2]/365),col="grey")#make the line through the selected points
 lines(x=ages[widthvec]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec]/365),col="black")#make the line through the selected points
 
-temp2 <-bquote(paste("ln(N) = ",.(signif(z$coefficients[1],3)),.(signif(z$coefficients[2],3)),"*age"," ; ",r^2," = ",.(signif(summary(z)$r.squared,3)),";  sum",.(signif(tempsum,3))))  
+temp2 <-bquote(paste("ln(N) = ",.(signif(z$coefficients[1],3)),.(signif(z$coefficients[2],3)),"*age"," ; ",r^2," = ",.(signif(summary(z)$r.squared,3)),";  sum",.(signif(tempsum,6))))  
 legend(x="topright",legend=temp2,inset=0.02)  
 
 
