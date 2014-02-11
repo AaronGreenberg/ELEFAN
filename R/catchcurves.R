@@ -133,70 +133,55 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
      if(is.na(subday$length[j+1])){upper=max(datain$ML)+binwidth/2}
      if(is.na(subday$length[j])){lower=min(datain$ML)-binwidth/2}
      curvebin <- which(datain$ML >= lower & datain$ML <= upper)#get bins between growth curves
+     lcut <-which.min((datain$ML[min(curvebin)]-subday$bin)^2) #index of lower cut in weighting routine
+     ucut <-which.min((datain$ML[max(curvebin)]-subday$bin)^2) #index of upper cut in weighting routine
      if(!is.na(sum(datain[curvebin,i+1]))){#check that curvebin is not empty
         lengthcurvebin <- length(curvebin)#get length of curve bin
         #seems to work up to now!
         if(lengthcurvebin>0){#if length of curve bin is bigger than zero compute weights
         #make sure that the length of curve bin is greater than zero
-       if(!is.na(subday$length[curvebin[1]])&&(subday$length[curvebin[1]]>=(min(datain$ML)-binwidth/2))){
+       if(!is.na(subday$length[lcut])&&(subday$length[lcut]>=(min(datain$ML)-binwidth/2))){
         #we need to compute two weights which determine the correct weights for the Are the se right?!
-         if(subday$length[curvebin[1]]<subday$bin[curvebin[1]]){
-       weight1=.5+(subday$bin[curvebin[1]]-subday$length[curvebin[1]])/(binwidth)
+         if(subday$length[lcut]<subday$bin[lcut]){
+       weight1=.5+(subday$bin[lcut]-subday$length[lcut])/(binwidth)
      }else{
-       weight1=.5-(-subday$bin[curvebin[1]]+subday$length[curvebin[1]])/(binwidth)
+       weight1=.5-(-subday$bin[lcut]+subday$length[lcut])/(binwidth)
      }
       }else{
         print("ERROR")
         print(c(i,j))
         print(subday)
         print(curvebin)
-        print(subday$length[curvebin[1]])
-        print(subday$length[curvebin[lengthcurvebin]])
-        weight1=0.1010101}
-      if(!is.na(subday$length[curvebin[lengthcurvebin]])&&(subday$length[curvebin[lengthcurvebin]]<=(max(datain$ML)+binwidth/2))){
-         if(subday$length[curvebin[lengthcurvebin]]<subday$bin[curvebin[lengthcurvebin]]){
-       weight2=.5-(subday$length[curvebin[lengthcurvebin]]-subday$bin[curvebin[lengthcurvebin]])/(binwidth) 
+        print(subday$length[lcut])
+        print(subday$bin[lcut])
+        weight1=1}
+      if(!is.na(subday$length[ucut])&&(subday$length[ucut]<=(max(datain$ML)+binwidth/2))){
+         if(subday$length[ucut]<subday$bin[ucut]){
+       weight2=.5+(subday$length[ucut]-subday$bin[ucut])/(binwidth) 
      }else{
-       weight2=.5+(-subday$length[curvebin[lengthcurvebin]]+subday$bin[curvebin[lengthcurvebin]])/(binwidth)
+       weight2=.5-(-subday$length[ucut]+subday$bin[ucut])/(binwidth)
          }
       }else{
         print("ERROR")
         print(c(i,j))
         print(subday)
         print(curvebin)
-        print(subday$length[curvebin[1]])
-        print(subday$length[curvebin[lengthcurvebin]])
+        print(subday$length[ucut])
+        print(subday$bin[ucut])
 
-        weight2=0.1010101}  
+        weight2=1}  
 
-     }
-#Error checking block may be removed on production version...
-#However, should remain until testing is fully done.
-#
-       if(length(curvebin)<=0){
-         print("curvebin is empty")
-         print(curvebin)
-       }
-
-       if(max(c(weight1,weight2))>1){#error check. Weights should be between zero and one
-       print("Weights Error weights greater than one")
-       print(c(weight1,weight2))
-       print(c(i,j))
-       print(curvebin)
-       print(subday$length[curvebin])
-       print(subday$bin[curvebin])
-
-     }
-       if(min(c(weight1,weight2))<0){#error check. Weights should be between zero and one
-       print("Weights Error less than one")
-       print(c(weight1,weight2))
-       print(c(i,j))
-       print(curvebin)
-       print(subday$length[curvebin])
-       print(subday$bin[curvebin])
+     
       
      } #do the actual adding.
-
+        print("Day, curve")
+         print(c(i,j))
+        ## print("subday")
+        ## print(subday)
+        print("curvebin")
+        print(curvebin)
+        print("weights")
+        print(c(weight1,weight2))
         if(lengthcurvebin>=3){#if there are more than three bins in curvebin
          pointsout[subday$curve[j],i] <- sum(datain[curvebin[2:(lengthcurvebin-1)],i+1])#add up all things in middle
          pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[1],i+1]*(weight1) # add lower bin
