@@ -74,8 +74,8 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,oldest,datain$ML[length(datain$ML)]+0*.5*binwidth,BIRTHDAY)#compute growth curve that goes through youngest
 
   #find vector of tzeros that determine slicing growth curves
- #tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(datain$ML)),decreasing=TRUE))
-    tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=4),decreasing=TRUE))
+# tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(datain$ML)),decreasing=TRUE))
+ tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=3),decreasing=TRUE))
   #3 compute pointscurve this computes the growth curves.
  count=1
   pointscurve <- matrix(0,ncol=4,nrow=length(tzero)*length(index))
@@ -139,21 +139,35 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
         if(lengthcurvebin>0){#if length of curve bin is bigger than zero compute weights
         #make sure that the length of curve bin is greater than zero
        if(!is.na(subday$length[curvebin[1]])&&(subday$length[curvebin[1]]>=(min(datain$ML)-binwidth/2))){
-        #we need to compute two weights which determine the correct weights for the Are these right?!
+        #we need to compute two weights which determine the correct weights for the Are the se right?!
          if(subday$length[curvebin[1]]<subday$bin[curvebin[1]]){
        weight1=.5+(subday$bin[curvebin[1]]-subday$length[curvebin[1]])/(binwidth)
      }else{
        weight1=.5-(-subday$bin[curvebin[1]]+subday$length[curvebin[1]])/(binwidth)
      }
-      }
-       else{weight1=1}
-       if(!is.na(subday$length[curvebin[lengthcurvebin]])&&(subday$length[curvebin[lengthcurvebin]]<=(max(datain$ML)+binwidth/2))){
+      }else{
+        print("ERROR")
+        print(c(i,j))
+        print(subday)
+        print(curvebin)
+        print(subday$length[curvebin[1]])
+        print(subday$length[curvebin[lengthcurvebin]])
+        weight1=0.1010101}
+      if(!is.na(subday$length[curvebin[lengthcurvebin]])&&(subday$length[curvebin[lengthcurvebin]]<=(max(datain$ML)+binwidth/2))){
          if(subday$length[curvebin[lengthcurvebin]]<subday$bin[curvebin[lengthcurvebin]]){
-       weight2=.5+(subday$length[curvebin[lengthcurvebin]]-subday$bin[curvebin[lengthcurvebin]])/(binwidth) 
+       weight2=.5-(subday$length[curvebin[lengthcurvebin]]-subday$bin[curvebin[lengthcurvebin]])/(binwidth) 
      }else{
-       weight2=.5-(-subday$length[curvebin[lengthcurvebin]]+subday$bin[curvebin[lengthcurvebin]])/(binwidth)
+       weight2=.5+(-subday$length[curvebin[lengthcurvebin]]+subday$bin[curvebin[lengthcurvebin]])/(binwidth)
          }
-      }else{weight2=1}  
+      }else{
+        print("ERROR")
+        print(c(i,j))
+        print(subday)
+        print(curvebin)
+        print(subday$length[curvebin[1]])
+        print(subday$length[curvebin[lengthcurvebin]])
+
+        weight2=0.1010101}  
 
      }
 #Error checking block may be removed on production version...
@@ -181,18 +195,19 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
        print(subday$length[curvebin])
        print(subday$bin[curvebin])
       
-     } #do the actual adding. 
+     } #do the actual adding.
+
         if(lengthcurvebin>=3){#if there are more than three bins in curvebin
          pointsout[subday$curve[j],i] <- sum(datain[curvebin[2:(lengthcurvebin-1)],i+1])#add up all things in middle
-         pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[1],i+1]*(1-weight1) # add lower bin
+         pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[1],i+1]*(weight1) # add lower bin
          pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[lengthcurvebin],i+1]*weight2# add upper bin
        }else{
          if(lengthcurvebin==2){#if there are just two bins in the curvebin
-           pointsout[subday$curve[j],i] <- datain[curvebin[1],i+1]*(1-weight1) # add lower bin
+           pointsout[subday$curve[j],i] <- datain[curvebin[1],i+1]*(weight1) # add lower bin
            pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[2],i+1]*weight2# add upper bin
          }else{
            if(lengthcurvebin==1){#if there is just one bin? Am I doing this right?
-           pointsout[subday$curve[j],i] <- datain[curvebin[1],i+1]*(1-weight1) # add lower bin
+           pointsout[subday$curve[j],i] <- datain[curvebin[1],i+1]*(weight1) # add lower bin
            }else{ #this should never happen ? right?
             pointsout[subday$curve[j],i] <- 0
          }}
@@ -217,11 +232,11 @@ y <- log(rowSums(pointsout)[widthvec])
 z <- lm(y~x)
 
 print("pointsout")
-print(pointsout)
+print(pointsout,digits=6)
   
 
 tempsum <- sum(rowSums(pointsout),na.rm=TRUE)
-print(tempsum)
+print(tempsum,digits=6)
 #should follow what I did in Catch curve 1.
 par(1,las=1,bty='n',oma=c(0,1,1,1))
 #make the plots
