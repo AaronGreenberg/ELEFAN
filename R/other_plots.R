@@ -64,7 +64,16 @@ if(ptype=="LF"){
 
 }
 
-
+lfmanipplot <- function(hline)
+  {
+    
+#need to convert start date to dime.
+growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+lfdata<- fillgrowthdata(datein,datain,growthdata) #make data structure with length frequency data
+    print("hline")
+    manipFreqPlot(1:days,datain$ML,datain$ML+.5,2*lfdata,lfdata,datein)
+    
+  }
 
 
 kscanplot <- function(window=window,z=zkscan){

@@ -192,10 +192,36 @@ gimage("png/logo2.png",dirname=my_path,container=LFplotlogo)
 
 ## ## ## ## L/F manip. tab
 
-LFmanip <- ggroup(container = nb,label="L/F manip.", expand=TRUE,horizontal=TRUE)#make entry gr
-LFmaniplittle <- ggroup(container=LFmanip,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
-LFmanippic<- gnotebook(container=LFmanip,expand=TRUE)#create the Entry pic.
-LFmanipgraphic<- ggraphics(container = LFmanippic,width=700,height=500,label="L/F manip.")
+
+
+LFmanipplot <- ggroup(container = nb,label="L/F Manip", expand=TRUE,horizontal=TRUE)#make entry group
+LFmanipplotlittle <- ggroup(container=LFmanipplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group  
+LFmanippic<- gnotebook(container=LFmanipplot,expand=TRUE)#create the Entry pic.
+LFmaniphistgraphic<- ggraphics(container = LFmanippic,width=700,height=500,label="L/F Manip")
+
+
+#Add ELEFAN in R logo at the top of the page
+gimage("png/logo1.png",dirname=my_path,container=LFmanipplotlittle)
+
+
+#gimage("png/usaid.png",dirname=my_path,container=LFmanipplotlogo)
+plotlfmanip <- function(h,...){
+ print("hi")
+ visible(LFmaniphistgraphic) <- TRUE #make correct picture
+ hline <- c(1,2,3,4)
+ lfmanipplot(hline)
+ visible(LFmaniphistgraphic) <- TRUE #make correct picture  
+ }
+
+plot=gbutton("Make plot",handler=plotlfmanip)
+tmp=gframe("Plot",container=LFmanipplotlittle)
+add(tmp, plot, expand=FALSE)
+
+
+#Add sponsors logo at the bottom of the page
+#addSpace(LFmanipplotlittle,76,horizontal=FALSE)# spacing needs to be tuned for each slide
+LFmanipplotlogo <- ggroup(container=LFmanipplotlittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
+gimage("png/logo2.png",dirname=my_path,container=LFmanipplotlogo)
 
 
 ## ## ## ## Make Wetherall plot Window

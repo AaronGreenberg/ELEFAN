@@ -74,8 +74,8 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   gcurve2 <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,oldest,datain$ML[length(datain$ML)]+0*.5*binwidth,BIRTHDAY)#compute growth curve that goes through youngest
 
   #find vector of tzeros that determine slicing growth curves
-# tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(datain$ML)),decreasing=TRUE))
- tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=3),decreasing=TRUE))
+ #tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=length(datain$ML)),decreasing=TRUE))
+ tzero <- floor(sort(seq(oldest+gcurve2$tzero,youngest+gcurve1$tzero,length.out=8),decreasing=TRUE))
   #3 compute pointscurve this computes the growth curves.
  count=1
   pointscurve <- matrix(0,ncol=4,nrow=length(tzero)*length(index))
@@ -124,8 +124,8 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
    colnames(z) <- c("curve","day","length","bin") #get part that is correct day.
    subday=z#correct subday!
    count=0;
-   weight1=1
-   weight2=1
+   weight1=0
+   weight2=0
    for(j in 1:(length(tzero)-1)){ #for each growth curve
      #this works!
      upper <- ceiling(subday$length[j+1])
@@ -148,13 +148,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
        weight1=.5-(-subday$bin[lcut]+subday$length[lcut])/(binwidth)
      }
       }else{
-        print("ERROR")
-        print(c(i,j))
-        print(subday)
-        print(curvebin)
-        print(subday$length[lcut])
-        print(subday$bin[lcut])
-        weight1=1}
+        weight1=0}
       if(!is.na(subday$length[ucut])&&(subday$length[ucut]<=(max(datain$ML)+binwidth/2))){
          if(subday$length[ucut]<subday$bin[ucut]){
        weight2=.5+(subday$length[ucut]-subday$bin[ucut])/(binwidth) 
@@ -162,26 +156,17 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
        weight2=.5-(-subday$length[ucut]+subday$bin[ucut])/(binwidth)
          }
       }else{
-        print("ERROR")
-        print(c(i,j))
-        print(subday)
-        print(curvebin)
-        print(subday$length[ucut])
-        print(subday$bin[ucut])
-
-        weight2=1}  
-
-     
-      
+        weight2=0}  
      } #do the actual adding.
-        print("Day, curve")
-         print(c(i,j))
-        ## print("subday")
-        ## print(subday)
-        print("curvebin")
-        print(curvebin)
-        print("weights")
-        print(c(weight1,weight2))
+        ## print("Day, curve")
+        ##  print(c(i,j))
+        ## ## print("subday")
+        ## ## print(subday)
+        ## print("curvebin")
+        ## print(curvebin)
+        ## print("weights")
+        ## print(c(weight1,weight2))
+        
         if(lengthcurvebin>=3){#if there are more than three bins in curvebin
          pointsout[subday$curve[j],i] <- sum(datain[curvebin[2:(lengthcurvebin-1)],i+1])#add up all things in middle
          pointsout[subday$curve[j],i] <- pointsout[subday$curve[j],i]+datain[curvebin[1],i+1]*(weight1) # add lower bin
@@ -196,6 +181,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
            }else{ #this should never happen ? right?
             pointsout[subday$curve[j],i] <- 0
          }}
+           
        }
      }
    }
@@ -210,16 +196,19 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
 
   pointsout <- pointsout[nrow(pointsout):1,]# got to reverse order so youngest fish are plotted first!
   widthvec <- (pointslower):pointsupper
+  widthvec <- widthvec[length(widthvec):1]
   widthvec2 <-c(1:pointslower, pointsupper:nrow(pointsout))
-  
+  widthvec2 <- widthvec2[length(widthvec2):1]
 x <- ages[widthvec]/365
 y <- log(rowSums(pointsout)[widthvec])
 z <- lm(y~x)
 
 print("pointsout")
 print(pointsout,digits=6)
-  
-
+print("row Sums")  
+print(rowSums(pointsout))
+print("col Sums")  
+print(colSums(pointsout))
 tempsum <- sum(rowSums(pointsout),na.rm=TRUE)
 print(tempsum,digits=6)
 #should follow what I did in Catch curve 1.
