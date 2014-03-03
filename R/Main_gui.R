@@ -208,7 +208,7 @@ gimage("png/logo1.png",dirname=my_path,container=LFmanipplotlittle)
 plotlfmanip <- function(h,...){
  print("hi")
  visible(LFmaniphistgraphic) <- TRUE #make correct picture
- hline <- c(1,2,3,4)
+ hline <- 1:10 
  lfmanipplot(hline)
  visible(LFmaniphistgraphic) <- TRUE #make correct picture  
  }

@@ -71,7 +71,7 @@ lfmanipplot <- function(hline)
 growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
 lfdata<- fillgrowthdata(datein,datain,growthdata) #make data structure with length frequency data
     print("hline")
-    manipFreqPlot(1:days,datain$ML,datain$ML+.5,2*lfdata,lfdata,datein)
+    manipFreqPlot(1:days,datain$ML,datain$ML+1.5,2*lfdata,lfdata,hline,datein)
     
   }
 

@@ -161,7 +161,7 @@ catchrqFreqPlot <- function(time,bins,freqs, sdate,sML,tzeros,curves1,curves2,ma
 
 
 
-manipFreqPlot <- function(time,bins,bins2,freqs1,freqs2,datesloc=dates,xlim = c(min(time),max(time)), ylim = c(0, ceiling((max(bins)*1.1)+.2*(bins[2]-bins[1]))), barscale = 1, barcol1 = "black",barcol2="grey",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),title=" ",...) {
+manipFreqPlot <- function(time,bins,bins2,freqs1,freqs2,hline=0,datesloc=dates,xlim = c(min(time),max(time)), ylim = c(0, ceiling((max(bins)*1.1)+.2*(bins[2]-bins[1]))), barscale = 1, barcol1 = "black",barcol2="#FF003362",boxwex = 50,xlab1="Month" ,ylab1 = "Length (cm)", ylab2 = "", lty = c(2, 1, 2),title=" ",hlinecolor="blue",...) {
    ## This function makes the fancy graphs that seems central to the output of ELEFAN
    ## In particular it provides a way of plotting a growth curve over length frequancy data plots over time.
    ## It also allows for the plotting of different intermediate steps. Including plotting the peaks and troughs
@@ -206,6 +206,6 @@ manipFreqPlot <- function(time,bins,bins2,freqs1,freqs2,datesloc=dates,xlim = c(
               }
 	}
 
-
+  abline(h=hline,col=hlinecolor)#make horizontal line
  }
 
