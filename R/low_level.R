@@ -250,18 +250,18 @@ recruitment2 <- aggregate(height~month, data=recruitment, FUN=sum)
 print("recruitment2")
 print((recruitment2))
 y=(recruitment2$height-min(recruitment2$height))/(sum((recruitment2$height-min(recruitment2$height))))*100
-#ok so we need to re order the recruitment pattern
-ytmp <- y
-print("First Y")
-print(recruitment2$height)
-print(y)
-cut <- min(which.min(y))
-print(cut)
-ytmp[1:cut]=y[cut:length(y)]
-ytmp[cut:length(y)]=y[1:cut]
-y <- ytmp
-print("Second Y")
-print(y)
+## #ok so we need to re order the recruitment pattern
+## ytmp <- y
+## print("First Y")
+## print(recruitment2$height)
+## print(y)
+## cut <- min(which.min(y))
+## print(cut)
+## ytmp[1:cut]=y[cut:length(y)]
+## ytmp[cut:length(y)]=y[1:cut]
+## y <- ytmp
+## print("Second Y")
+## print(y)
 plot(recruitment2$month,y,type="l",col="black",xlim=c(1,12),xlab="One Year",ylab="Percent Recruitment")
 polygon( c(min(recruitment2$month), recruitment2$month, max(recruitment2$month)), c(min(y), y, min(y)), density=100,alpha=.2,col="grey" )
 #points(recruitment2[,1],y,type="p",col="red",xlim=c(1,12),pch=19,cex=.5)

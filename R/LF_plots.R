@@ -90,7 +90,7 @@ rqFreqPlot <- function(time,bins,freqs, sdate,sML,curves,datesloc=dates,xlim = c
    
    axis.Date(1, at=seq(dateaxis[1],dateaxis[length(dateaxis)],by="months") ,format="%b",las=2)
   b<-bquote()
-  legend(x="topleft",inset=c(0.02,0.02),legend=bquote(paste("Number" == .(signif(sum(datain[,2:(count+1)]),3)))))
+  #legend(x="topleft",inset=c(0.02,0.02),legend=bquote(paste("Number" == .(signif(sum(datain[,2:(count+1)]),3)))))
   if(GF!=0&GF1==0){ legend(x="topleft",inset=c(0.02,0.02),legend=bquote(paste("R"[n] == .(signif(GF,3)))))}
   if(GF1!=0){
     legendt=c(bquote(paste("R"[n] == .(signif(GF,3)))),bquote(paste("R"[n] == .(signif(GF1,3)))))

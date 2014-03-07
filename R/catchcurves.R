@@ -210,7 +210,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   ages <- vector()#compute ages for plotting
   for(i in 1:length(tzero)){#loop over curves
   tempered <- curves_cpp(Linfloc,Cloc,TW,Kloc,datain$ML,days,tzero[i],0,BIRTHDAY)
-  ages[i] <- tempered$c[max(index),1]-tempered$tzero
+  ages[i] <- ifelse(max(index)<length(tempered$c[,1]),tempered$c[max(index),1]-tempered$tzero,tempered$c[length(tempered$c[,1])]-tempered$tzero)
   }
 
   #pointsout <- pointsout[nrow(pointsout):1,]# got to reverse order so youngest fish are plotted first!
@@ -223,9 +223,9 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
   ## print(log(rowSums(pointsout)))
   ## print(widthvec)
   ## print(widthvec2)
-
+fully <- ifelse((rowSums(pointsout,na.rm=TRUE))==0,1,rowSums(pointsout,na.rm=TRUE))
 x <- ages[widthvec]/365
-y <- log(rowSums(pointsout)[widthvec])
+y <- log(fully[widthvec])
 z <- lm(y~x)
 
 ## print("pointsout")
@@ -239,14 +239,15 @@ tempsum <- sum(rowSums(pointsout),na.rm=TRUE)
 #should follow what I did in Catch curve 1.
 par(1,las=1,bty='n',oma=c(0,1,1,1))
 #make the plots
+print(z)
 ylimu <-z$coefficients[1]*1.1
-ylim <- c(0,ylimu)
-plot(ages/365,log(rowSums(pointsout)),xlab=bquote(paste("Relative age (t-t"[o],";year)")),ylab=expression(paste("Relative abundance (ln(N))")),yaxt="n",xaxt="n",ylim=ceiling(ylim),xlim=c(floor(min(ages/365)),ceiling(max(ages/365))))
-points(ages[widthvec]/365,log(rowSums(pointsout)[widthvec]),pch=19,col="black") #make filled circles only on points in width vect
+ylimr <- c(floor(min(log(fully))),ceiling(ylimu))
+plot(ages/365,log(fully),xlab=bquote(paste("Relative age (t-t"[o],";year)")),ylab=expression(paste("Relative abundance (ln(N))")),yaxt="n",xaxt="n",ylim=ylimr,xlim=c(floor(min(ages/365)),ceiling(max(ages/365))))
+points(ages[widthvec]/365,log(fully[widthvec]),pch=19,col="black") #make filled circles only on points in width vect
 axis(2,tck=0.02,las=2)
 axis(1,tck=0.02)
-text(ages/365,log(rowSums(pointsout))+.15*log(max(c(log(rowSums(pointsout)),1))),as.character(1:length(ages))) #put on text
-#text(ages/365,log(rowSums(pointsout))-.05*log(max(c(log(rowSums(pointsout)),1))),as.character(round(rowSums(pointsout))),col="red") #put on text
+text(ages/365,log(fully)+.15*log(max(c(log(fully),1))),as.character(1:length(ages))) #put on text
+#text(ages/365,log(fully)-.05*log(max(c(log(fully),1))),as.character(round(fully)),col="red") #put on text
 lines(x=ages[widthvec2]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec2]/365),col="grey")#make the line through the selected points
 lines(x=ages[widthvec]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec]/365),col="black")#make the line through the selected points
 

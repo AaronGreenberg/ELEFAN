@@ -70,8 +70,111 @@ lfmanipplot <- function(hline)
 #need to convert start date to dime.
 growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
 lfdata<- fillgrowthdata(datein,datain,growthdata) #make data structure with length frequency data
-    print("hline")
-    manipFreqPlot(1:days,datain$ML,datain$ML+1.5,2*lfdata,lfdata,hline,datein)
+print("hline")
+
+#get length of lfdata2
+datain2 <- matrix(0,nrow=length(hline),ncol=length(datain[1,]))
+datain2 <- data.frame(datain2)
+colnames(datain2)=colnames(datain)
+
+
+binwidth<-hline[2]-hline[1]#get new bins
+
+datain2 <- matrix(0,nrow=length(hline-1),ncol=length(datain[1,]))
+ datain2<- data.frame(datain2)
+colnames(datain2) <- colnames(datain)
+datain2$ML <- hline+.5*binwidth  
+  #loop over days
+  for(i in 1:(length(datain[1,])-1)){
+   count=0;
+   weight0=1
+   weight1=1
+   weight2=1
+   for(j in 1:(length(hline)-1)){ #for each slice
+     #this works!
+     upper <- hline[j+1]
+     lower<- hline[j]
+     
+     curvebin <- which(datain$ML >= lower & datain$ML <= upper)#get bins between slices
+     print("upper")
+     print(upper)
+     print("lower")
+     print(lower)
+     lcut <-min(curvebin)#which.min((datain$ML[min(curvebin)]-lower)^2) #index of lower cut in weighting routine
+     ucut <-max(curvebin)#((datain$ML[max(curvebin)]-upper)^2) #index of upper cut in weighting routine
+     print("cuts")
+     print(c(lcut,ucut))
+     print(c(datain$ML[lcut],datain$ML[ucut]))
+     
+     if(!is.na(sum(datain[curvebin,i+1]))){#check that curvebin is not empty
+       lengthcurvebin <- length(curvebin)#get length of curve bin
+           if(lengthcurvebin>1){#if length of curve bin is bigger than one compute weights
+        #make sure that the length of curve bin is greater than zero
+       if(!is.na(datain$ML[lcut])&&(datain$ML[lcut]>(min(datain$ML)-binwidth/2))){
+        #we need to compute two weights which determine the correct weights for the 
+         if((hline[j]+.5*binwidth)<=datain$ML[lcut]){
+       weight1=.5+(hline[j]+.0*binwidth-datain$ML[lcut])/(binwidth)
+     }else{
+       weight1=.5-((-hline[j]+.0*binwidth)+datain$ML[lcut])/(binwidth)
+     }
+      }else{
+        weight1=1}
+      if(!is.na(datain$ML[ucut])&&(datain$ML[ucut]<(max(datain$ML)+binwidth/2))){
+         if((hline[j]+.0*binwidth)<=datain$ML[ucut]){
+       weight2=.5+((hline[j+1]+.0*binwidth)-datain$ML[ucut])/(binwidth) 
+     }else{
+       weight2=.5-((-hline[j+1]+.5*binwidth)+datain$ML[ucut])/(binwidth)
+         }
+      }else{
+        weight2=1}  
+     }else{
+         upper <-hline[j+1]     #
+         lower <- hline[j]
+         if(upper>=max(datain$ML)+binwidth/2){upper <- max(datain$ML)+binwidth/2}
+         if(lower>=max(datain$ML)+binwidth/2){lower <- max(datain$ML)+binwidth/2}
+         if(upper<=min(datain$ML)-binwidth/2){upper <- min(datain$ML)-binwidth/2}
+         if(lower<=min(datain$ML)-binwidth/2){lower <- min(datain$ML)-binwidth/2}
+         if(is.na(hline[j+1])){upper=max(datain$ML)+binwidth/2}
+         if(is.na(hline[j])){lower=min(datain$ML)-binwidth/2}
+         weight0 <- (upper-lower)/binwidth
+        }
+       
+     }
+
+     print("i,j")
+     print(c(i,j))
+     print("weights")
+     print(c(weight0,weight1,weight2))
+        if(lengthcurvebin>=3){#if there are more than three bins in curvebin
+         datain2[j,i+1] <- sum(datain[curvebin[2:(lengthcurvebin-1)],i+1])+datain[curvebin[1],i+1]*(weight1)+datain[curvebin[lengthcurvebin],i+1]*weight2# add upper bin # add lower bin #add up all things in middle
+
+       }else{
+         if(lengthcurvebin==2){#if there are just two bins in the curvebin
+           datain2[j,i+1] <- datain[curvebin[1],i+1]*(weight1)+datain[curvebin[lengthcurvebin],i+1]*weight2# add upper bin
+         }else{
+           if(lengthcurvebin==1){
+           datain2[j,i+1] <- datain[curvebin[1],i+1]*(weight0) # add lower bin
+           }else{ #this should never happen ? right?
+            datain2[j,i+1] <- 0
+         }
+       }
+      
+           
+       }
+     }
+   }
+ 
+
+
+
+
+
+#print(datain2)
+print(colSums(datain2))
+growthdata2 <- matrix(0,ncol=days,nrow=length((hline))) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+lfdata2<- fillgrowthdata(datein,datain2,growthdata2) #make data structure with length frequency data
+
+manipFreqPlot(1:days,datain$ML,datain2$ML,lfdata,lfdata2,hline,datein)
     
   }
 
