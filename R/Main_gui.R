@@ -698,6 +698,10 @@ plotlfmanip <- function(h,...){
  hline <- seq(0,ceiling(max(datain$ML))+.5*(datain$ML[2]-datain$ML[1])+svalue(slices),by=svalue(slices))
  print(hline)
  lftemp<-lfmanipplot(hline)
+ filename <- (paste(substr(fname1,start=1,stop=(nchar(fname1)-4)),"resliced.csv",sep="_"))
+if(file.exists(filename)){file.remove(filename)}#remove file
+ write.table(lftemp,file=filename,row.names=FALSE,col.names=TRUE,append=TRUE,quote=FALSE,sep=",")
+ write.table(lengthunits,file=filename,quote=FALSE,append=TRUE,row.names=FALSE,col.names=FALSE)
  names(LFmaniphistgraphic)[1] <- paste("ML",";",lengthunits,sep="",collapse="")
  LFmaniphistgraphic[]<-lftemp
  visible(LFmaniphistgraphic) <- TRUE #make correct picture
