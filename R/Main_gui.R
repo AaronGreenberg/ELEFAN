@@ -675,11 +675,11 @@ gimage("png/logo2.png",dirname=my_path,container=YieldperRecruitisologo)
 ## ## ## ## L/F manip. tab
 
 
-
+reslicedtemp <- NA
 LFmanipplot <- ggroup(container = nb,label="L/F Manip", expand=TRUE,horizontal=TRUE)#make entry group
 LFmanipplotlittle <- ggroup(container=LFmanipplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group  
 LFmanippic<- gnotebook(container=LFmanipplot,expand=TRUE)#create the Entry pic.
-LFmaniphistgraphic<- ggraphics(container = LFmanippic,width=700,height=500,label="L/F Manip")
+LFmaniphistgraphic<- gtable(reslicedtemp,container=LFmanippic,label="Resliced Data")
 
 
 #Add ELEFAN in R logo at the top of the page
@@ -687,19 +687,26 @@ gimage("png/logo1.png",dirname=my_path,container=LFmanipplotlittle)
 
 
 
-slices= gslider(from=.25,to=20 ,by=.25,value=.25)
-tmp = gframe("Contour Scale", container = LFmanipplotlittle)
+slices= gslider(from=.25,to=2, by=.25,value=.25)
+tmp = gframe("Slice Scale", container = LFmanipplotlittle)
 add(tmp, slices, expand=TRUE)
 
 
 #gimage("png/usaid.png",dirname=my_path,container=LFmanipplotlogo)
 plotlfmanip <- function(h,...){
- print("hi")
- visible(LFmaniphistgraphic) <- TRUE #make correct picture
- hline <- seq(0,ceiling(max(datain$ML))+svalue(slices),by=svalue(slices))
+
+ hline <- seq(0,ceiling(max(datain$ML))+.5*(datain$ML[2]-datain$ML[1])+svalue(slices),by=svalue(slices))
  print(hline)
- lfmanipplot(hline)
+ lftemp<-lfmanipplot(hline)
+ names(LFmaniphistgraphic)[1] <- paste("ML",";",lengthunits,sep="",collapse="")
+ LFmaniphistgraphic[]<-lftemp
+ visible(LFmaniphistgraphic) <- TRUE #make correct picture
+ visible(LFmaniphistgraphic) <- TRUE #make correct picture
+ LFmaniphistgraphic[]<-lftemp
+ LFmaniphistgraphic[]<-lftemp
+ visible(LFmaniphistgraphic) <- TRUE #make correct picture
  visible(LFmaniphistgraphic) <- TRUE #make correct picture  
+ 
  }
 
 plot=gbutton("Make plot",handler=plotlfmanip)
@@ -708,7 +715,7 @@ add(tmp, plot, expand=FALSE)
 
 
 #Add sponsors logo at the bottom of the page
-addSpace(LFmanipplotlittle,76,horizontal=FALSE)# spacing needs to be tuned for each slide
+addSpace(LFmanipplotlittle,396,horizontal=FALSE)# spacing needs to be tuned for each slide
 LFmanipplotlogo <- ggroup(container=LFmanipplotlittle,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 gimage("png/logo2.png",dirname=my_path,container=LFmanipplotlogo) 
 svalue(nb)=1#change to correct starting window.

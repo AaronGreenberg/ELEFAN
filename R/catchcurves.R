@@ -129,6 +129,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
    count=0;
    weight1=1
    weight2=1
+   weight0=1
    for(j in 1:(length(tzero)-1)){ #for each growth curve
      #this works!
      upper <- ceiling(subday$length[j+1])
@@ -138,6 +139,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
      curvebin <- which(datain$ML >= lower & datain$ML <= upper)#get bins between growth curves
      lcut <-which.min((datain$ML[min(curvebin)]-subday$bin)^2) #index of lower cut in weighting routine
      ucut <-which.min((datain$ML[max(curvebin)]-subday$bin)^2) #index of upper cut in weighting routine
+
      if(!is.na(sum(datain[curvebin,i+1]))){#check that curvebin is not empty
         lengthcurvebin <- length(curvebin)#get length of curve bin
         
@@ -162,7 +164,7 @@ plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,points
       }else{
         #print("weight 2")
         weight2=1}  
-     }else{
+      }else{
 
        if(lengthcurvebin==1){
          ## print("HI")
