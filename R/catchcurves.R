@@ -248,7 +248,7 @@ plot(ages/365,log(fully),xlab=bquote(paste("Relative age (t-t"[o],";year)")),yla
 points(ages[widthvec]/365,log(fully[widthvec]),pch=19,col="black") #make filled circles only on points in width vect
 axis(2,tck=0.02,las=2)
 axis(1,tck=0.02)
-text(ages/365,log(fully)+.15*log(max(c(log(fully),1))),as.character(1:length(ages))) #put on text
+text(ages/365,log(fully)+max(c(.2*log(max(c(log(fully),1))),.1)),as.character(1:length(ages))) #put on text
 #text(ages/365,log(fully)-.05*log(max(c(log(fully),1))),as.character(round(fully)),col="red") #put on text
 lines(x=ages[widthvec2]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec2]/365),col="grey")#make the line through the selected points
 lines(x=ages[widthvec]/365,y=(z$coefficients[1]+z$coefficients[2]*ages[widthvec]/365),col="black")#make the line through the selected points

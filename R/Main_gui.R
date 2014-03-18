@@ -32,18 +32,21 @@ Entrylittle <- ggroup(container=Entry,expand=FALSE,horizontal=FALSE,height=30,wi
 gimage("png/logo1.png",dirname=my_path,container=Entrylittle)
 Entrypic<- gnotebook(container=Entry,expand=TRUE)#create the Entry pic.
 Datatable<- gtable(datatmp,container=Entrypic,label="LF data")
-
+names(Datatable) <- "ML" #lengthunist
 #Load Data
 #I need handlers.
 datefileinh <- function(h,...){
-  visible(Datatable) <- TRUE
-  rm(list=ls())
+  rm(list=ls())# clear everything out
+  dispose(Entrypic)
+  Datatable<- gtable(datatmp,container=Entrypic,label="LF data")
+  names(Datatable) <- "ML" #lengthunits
+  
   YieldProbs<<-NA#place to store prob.
   YieldAges <<-NA#place to store ages
   lengthunits<<-c("mt")
   datefilein()
-  names(Datatable)[1] <- paste("ML",";",lengthunits,sep="",collapse="")
-  visible(Datatable) <- FALSE
+  print("datain")
+  print(datain)
   datetmp <- datein
   options(digits=3)
   stdate[] <- c(-1,1:(length(datein[,2])-1))
@@ -52,10 +55,13 @@ datefileinh <- function(h,...){
   stdatek[] <- 1:(length(datein[,2])-1)
   temptable <-datain 
   temptable <-datain
-  Datatable[] <- temptable
-  Datatable[] <- temptable
+  height<- length(temptable[,1])
+  len<- length(temptable[1,])
+  temptable[height+1,1] <- as.character(lengthunits)
+  temptable[height+1,2:len] <- as.character(" ")
+  dispose(Entrypic)
+  Datatable<- gtable(temptable,container=Entrypic,label="LF data")
   visible(Datatable) <- TRUE
-  visible(Datatable) <- FALSE
   visible(Datatable) <- TRUE
   Linfslide[] <- seq(0,1.5*max(datain$ML),length.out=1000)
   Linfslidek[] <- seq(0,1.5*max(datain$ML),length.out=1000)
@@ -356,9 +362,25 @@ add(tmp, Pointslideuc, expand=TRUE)
 plotnonseacatch <- function(h,...){
 visible(Catchcurvegraphic) <- TRUE #make correct picture
 temp<- plotnonseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Pointslideuc),svalue(Pointslidelc))
-names(Datatablemodified)[1] <- paste("ML",";",lengthunits,sep="",collapse="")
-Datatablemodified[] <- (signif(temp$data,3))
-Datatablemodified[] <- (signif(temp$data,3))
+temptable2<- (signif(temp$data,3))
+temptable2 <- (signif(temp$data,3))
+height<- length(temptable2[,1])
+len<- length(temptable2[1,])
+temptable2[height+1,1] <- as.character(lengthunits)
+temptable2[height+1,2:len] <- as.character(" ")
+visible(Datatablemodified) <- TRUE
+dispose(CorrLFpic)
+Datatablemodified<- gtable(temptable2,container=CorrLFpic,label="Modified data")
+visible(Datatablemodified) <- FALSE
+for(i in 1:4){
+
+visible(Datatablemodified) <- TRUE
+#slow things down so windows are 
+(rnorm(10000)/rnorm(10000)^2)#properly refreshed
+
+visible(Datatablemodified) <- TRUE
+}
+
 YieldProbs <<- temp$prob
 YieldAges<<-temp$ages
 filename <- (paste(substr(fname1,start=1,stop=(nchar(fname1)-4)),"corrected.csv",sep="_"))
@@ -393,6 +415,7 @@ probplot <- ggroup(container = nb,label="Prob", expand=TRUE,horizontal=TRUE)#mak
 problittle <- ggroup(container=probplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 probpic <- gnotebook(container=probplot,expand=TRUE)#create the Entry pic.
 Probabilitymodified<- gtable(YieldtmpProbs,container=probpic,label="Probabilities")
+colnames(Probabilitymodified) <- c("ML","Probability")
 probgraphic<- ggraphics(container = probpic,width=700,height=500,label="Probability")  
 
 #Add ELEFAN in R logo at the top of the page
@@ -416,14 +439,20 @@ fn <- function(length,prob){
      return(YieldProbs)
     }
 plotprobs <- function(h,...){
-  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
-  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
   YieldProbs<<-fn(svalue(lengthprob),svalue(probadjust))
-  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
-  Probabilitymodified[] <- cbind(datain$ML,(signif(YieldProbs,3)))
-  visible(probgraphic) <- TRUE #make correct picture
-  probsplot(YieldProbs,datain$ML)
+  temprob<- cbind(datain$ML,(signif(YieldProbs,3)))
+  dispose(probpic)
+  dispose(probpic)
+  temprobs <- cbind(datain$ML,(signif(YieldProbs,3)))
+  Probabilitymodified<- gtable(temprobs,container=probpic,label="Probabilities")
   colnames(Probabilitymodified) <- c("ML","Probability")
+  visible(Probabilitymodified) <- TRUE #make correct picture
+  visible(Probabilitymodified) <- TRUE #make correct picture
+
+  probgraphic<- ggraphics(container = probpic,width=700,height=500,label="Probability")
+  visible(probgraphic) <- TRUE #make correct picture  
+  probsplot(YieldProbs,datain$ML)
+  
   visible(probgraphic) <- TRUE #make correct picture  
   visible(probgraphic) <- TRUE #make correct picture
 }
@@ -447,7 +476,7 @@ CorrLFplot <- ggroup(container = nb,label="Corr. L/F", expand=TRUE,horizontal=TR
 CorrLFlittle <- ggroup(container=CorrLFplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 CorrLFpic <- gnotebook(container=CorrLFplot,expand=TRUE)#create the Entry pic.
 Datatablemodified<- gtable(datatmp,container=CorrLFpic,label="Modified data")
-names(Datatablemodified) <- lengthunits
+names(Datatablemodified) <- "ML" #lengthunits
 
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=CorrLFlittle)
@@ -680,7 +709,7 @@ LFmanipplot <- ggroup(container = nb,label="L/F Manip", expand=TRUE,horizontal=T
 LFmanipplotlittle <- ggroup(container=LFmanipplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group  
 LFmanippic<- gnotebook(container=LFmanipplot,expand=TRUE)#create the Entry pic.
 LFmaniphistgraphic<- gtable(reslicedtemp,container=LFmanippic,label="Resliced Data")
-
+names(LFmaniphistgraphic) <- "ML" #lengthunits
 
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=LFmanipplotlittle)
@@ -702,12 +731,13 @@ plotlfmanip <- function(h,...){
 if(file.exists(filename)){file.remove(filename)}#remove file
  write.table(lftemp,file=filename,row.names=FALSE,col.names=TRUE,append=TRUE,quote=FALSE,sep=",")
  write.table(lengthunits,file=filename,quote=FALSE,append=TRUE,row.names=FALSE,col.names=FALSE)
- names(LFmaniphistgraphic)[1] <- paste("ML",";",lengthunits,sep="",collapse="")
- LFmaniphistgraphic[]<-lftemp
- visible(LFmaniphistgraphic) <- TRUE #make correct picture
- visible(LFmaniphistgraphic) <- TRUE #make correct picture
- LFmaniphistgraphic[]<-lftemp
- LFmaniphistgraphic[]<-lftemp
+ 
+ height<- length(lftemp[,1])
+ len<- length(lftemp[1,])
+ lftemp[height+1,1] <- as.character(lengthunits)
+ lftemp[height+1,2:len] <- as.character(" ")
+ dispose(LFmanippic)
+ LFmaniphistgraphic<- gtable(lftemp,container=LFmanippic,label="Resliced Data")
  visible(LFmaniphistgraphic) <- TRUE #make correct picture
  visible(LFmaniphistgraphic) <- TRUE #make correct picture  
  
