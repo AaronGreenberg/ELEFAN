@@ -71,93 +71,60 @@ lfmanipplot <- function(hline)
 growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
 lfdata<- fillgrowthdata(datein,datain,growthdata) #make data structure with length frequency data
 print("hline")
-
+print(datain$ML)
 #get length of lfdata2
 datain2 <- matrix(0,nrow=length(hline),ncol=length(datain[1,]))
 datain2 <- data.frame(datain2)
 colnames(datain2)=colnames(datain)
+
+
 binwidth<-datain$ML[2]-datain$ML[1]
 newbinwidth <- hline[2]-hline[1]#get new bins
 datain2 <- matrix(0,nrow=length(hline-1),ncol=length(datain[1,]))
 datain2<- data.frame(datain2)
 colnames(datain2) <- colnames(datain)
-datain2$ML <- hline+.5*newbinwidth
+datain2$ML <- hline+1/2*newbinwidth
+weights <- function(hline1,hline2,ML,binwidth)
+  {# This function computes the weights that get multiplied
+    WA <- vector()
+    hbw <- 1/2*binwidth
+    for(i in 1:length(ML))
+        {
+          if(((ML[i]+hbw)>hline1)||((ML[i]-hbw)<hline2))
+            {#if outside reslice interval set weight =0
+          WA[i]=0
+            }
+           if(((ML[i]-hbw)<hline1) && ((ML[i]+hbw)>hline2))
+            { #if inside of reslice interval set weight=1
+          WA[i]=1
+            }
 
-  for(i in 1:(length(datain[1,])-1)){
-  #loop over correct number of curves and fill in table.
-
-   weight1=1
-   weight2=1
-   weight0=1
-   for(j in 1:(length(hline)-1)){ #for each growth curve
-     #this works!
-     upper <- hline[j+1]#get upper new slice
-     lower<- hline[j]#get lower new slice
-     
-     if(is.na(hline[j+1])){upper=max(datain$ML)+binwidth/2}
-     if(is.na(hline[j])){lower=min(datain$ML)-binwidth/2}
-     curvebin <- which(datain$ML >= lower & datain$ML <= upper)#get bins between growth curves
-    print("curvebin")
-     print(curvebin)
-     if(!is.na(sum(datain[curvebin,i+1]))){#check that curvebin is not empty
-        lengthcurvebin <- length(curvebin)#get length of curve bin
-        
-     if(lengthcurvebin>1){#if length of curve bin is bigger than one compute weights
-        #make sure that the length of curve bin is greater than zero
-       if((hline[j]>(min(datain$ML)-binwidth/2))){
-        #we need to compute two weights which determine the correct weights for the 
-         if(hline[j]<=(datain$ML[min(curvebin)])){#see if slice is less then middle
-       weight1=.5+(hline[j]-(datain$ML[min(curvebin)]))/(binwidth)
-     }else{
-       weight1=.5-(-hline[j]+(datain$ML[min(curvebin)]))/(binwidth)
-     }
-      }else{
-        #print("weight 1")
-        weight1=1}
-      if((hline[j+1]<(max(datain$ML)+binwidth/2))){
-         if(hline[j+1]<=(datain$ML[max(curvebin)])){
-       weight2=.5+(hline[j+1]-(datain$ML[max(curvebin)]))/(binwidth) 
-     }else{
-       weight2=.5-(-hline[j+1]+(datain$ML[max(curvebin)]))/(binwidth)
-         }
-      }else{
-        #print("weight 2")
-        weight2=1}  
-      }else{
-
-       if(lengthcurvebin==1){
-         upper <-hline[j+1]     #
-         lower <- hline[j]
-         if(upper>=max(datain$ML)+binwidth/2){upper <- max(datain$ML)+binwidth/2}
-         if(lower>=max(datain$ML)+binwidth/2){lower <- max(datain$ML)+binwidth/2}
-         if(upper<=min(datain$ML)-binwidth/2){upper <- min(datain$ML)-binwidth/2}
-         if(lower<=min(datain$ML)-binwidth/2){lower <- min(datain$ML)-binwidth/2}
-         if(is.na(hline[j+1])){upper=max(datain$ML)+binwidth/2}
-         if(is.na(hline[j])){lower=min(datain$ML)-binwidth/2}
-         weight0 <- min(c((upper-lower)/binwidth,1))
-
+           if(((ML[i]+hbw)>hline1) && ((ML[i]-hbw)<=hline1))
+            { #get upper weight 
+          WA[i]=(hline1-(ML[i]-hbw))/binwidth
         }
-       
+          
+           if(((ML[i]+hbw)>hline2) && ((ML[i]-hbw)<=hline2))
+            { #get lower weight 
+          WA[i]=1-((hline2-(ML[i]-hbw))/binwidth)
+        }
+          
+        if((((ML[i]+hbw)>hline2) && ((ML[i]-hbw)<=hline2))&& (((ML[i]+hbw)>hline1) && ((ML[i]-hbw)<=hline1)))
+            { #get lower weight 
+          WA[i]=(hline1-hline2)/binwidth
+        }
+          
+  }
+    return(WA)
+  }
+    
+  for(i in 1:(length(datain[1,])-1)){
+     for(j in 1:(length(hline)-1)){ #for each growth curve
+       Wei <- weights(hline[j+1],hline[j],datain$ML,binwidth)
+       print(Wei)
+      datain2[j,i+1] <- sum(Wei*datain[,i+1])
      }
-
-    if(is.na(lengthcurvebin)){
-           lengthcurvebin=0}
-        if(lengthcurvebin>=3){#if there are more than three bins in curvebin
-         datain2[j,i] <- sum(datain[curvebin[2:(lengthcurvebin-1)],i+1])+datain[curvebin[1],i+1]*(weight1)+datain[curvebin[lengthcurvebin],i+1]*weight2# add upper bin # add lower bin #add up all things in middle
-
-       }else{
-         if(lengthcurvebin==2){#if there are just two bins in the curvebin
-           datain2[j,i+1] <- datain[curvebin[1],i+1]*(weight1)+datain[curvebin[lengthcurvebin],i+1]*weight2# add upper bin
-         }else{
-           if(lengthcurvebin==1){#if there is just one bin? Am I doing this right?
-           datain2[j,i+1] <- datain[curvebin[1],i+1]*(weight0) # add lower bin
-           }else{ #this should never happen ? right?
-            datain2[j,i+1] <- 0
-         }}
-           
-       }
-      }}}
-   
+   }
 
 
 
@@ -169,11 +136,13 @@ print(datain2)
 print(colSums(datain2))
 growthdata2 <- matrix(0,ncol=days,nrow=length((hline))) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
 lfdata2<- fillgrowthdata(datein,datain2,growthdata2) #make data structure with length frequency data
-return(datain2)
-#manipFreqPlot(1:days,datain$ML,datain2$ML,lfdata,lfdata2,hline,datein)
-    
-  }
+x11()
+manipFreqPlot(1:days,datain$ML,datain2$ML,lfdata,lfdata2,hline,datein)
 
+return(datain2)
+    
+  
+}
 
 kscanplot <- function(window=window,z=zkscan){
     nzero <- which(z[,1]>0)

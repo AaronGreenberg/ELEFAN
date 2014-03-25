@@ -14,15 +14,20 @@ my_path <- paste(.libPaths()[1],"/ELEFAN",sep="")
 size=1000
 window = gwindow("ELEFAN in R",height=size,width=1.618*size,visible=TRUE)
 biggroup <- ggroup(container=window,expand=TRUE,horizontal=FALSE)
+welcome<- gtext("Welcome to ELEFAN in R; please load a file!", container =biggroup,expand=FALSE,horizontal=FALSE,font.attr=c(size=18))
 #make big note book!
-nb <- gnotebook(container=biggroup,expand=TRUE,horizontal=TRUE)
+nb <- gnotebook(container=biggroup,expand=FALSE,horizontal=FALSE)
+
+
+
+
 #%############################################################
 #Make the Entry page!
 YieldProbs<<-NA#place to store prob.
 YieldAges <<-NA#place to store ages
 lengthunits<<-c("mt")
-datetmp <- NA
-datatmp <- NA
+datetmp <- "  "
+datatmp <- "  "
 #visible(nb[1]) <- TRUE
 Entry <- ggroup(container = nb,label="Tab. data", expand=TRUE,horizontal=TRUE)#make entry gr
 addSpace(biggroup,300,horizontal=FALSE)
@@ -45,6 +50,7 @@ datefileinh <- function(h,...){
   YieldAges <<-NA#place to store ages
   lengthunits<<-c("mt")
   datefilein()
+  svalue(welcome) <-paste("You are studying: ", basename(sub("(.*\\/)([^.]+)(\\.[[:alnum:]]+$)", "\\2",fname1)),".",sep="")
   print("datain")
   print(datain)
   datetmp <- datein
@@ -410,13 +416,13 @@ gimage("png/logo2.png",dirname=my_path,container=Catchcurvelogo)
 # Make the  Probability fixing page
 
 
-YieldtmpProbs <- cbind(0,0)
+YieldtmpProbs <- cbind(" "," ")
 probplot <- ggroup(container = nb,label="Prob", expand=TRUE,horizontal=TRUE)#make entry group
 problittle <- ggroup(container=probplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group
 probpic <- gnotebook(container=probplot,expand=TRUE)#create the Entry pic.
 Probabilitymodified<- gtable(YieldtmpProbs,container=probpic,label="Probabilities")
-colnames(Probabilitymodified) <- c("ML","Probability")
-probgraphic<- ggraphics(container = probpic,width=700,height=500,label="Probability")  
+colnames(Probabilitymodified) <- c("ML","Probabilities")
+probgraphic<- ggraphics(container = probpic,width=700,height=500,label="Prob. plot")  
 
 #Add ELEFAN in R logo at the top of the page
 gimage("png/logo1.png",dirname=my_path,container=problittle)
@@ -445,11 +451,11 @@ plotprobs <- function(h,...){
   dispose(probpic)
   temprobs <- cbind(datain$ML,(signif(YieldProbs,3)))
   Probabilitymodified<- gtable(temprobs,container=probpic,label="Probabilities")
-  colnames(Probabilitymodified) <- c("ML","Probability")
+  colnames(Probabilitymodified) <- c("ML","Probabilities")
   visible(Probabilitymodified) <- TRUE #make correct picture
   visible(Probabilitymodified) <- TRUE #make correct picture
 
-  probgraphic<- ggraphics(container = probpic,width=700,height=500,label="Probability")
+  probgraphic<- ggraphics(container = probpic,width=700,height=500,label="Prob. plot")
   visible(probgraphic) <- TRUE #make correct picture  
   probsplot(YieldProbs,datain$ML)
   
@@ -704,8 +710,8 @@ gimage("png/logo2.png",dirname=my_path,container=YieldperRecruitisologo)
 ## ## ## ## L/F manip. tab
 
 
-reslicedtemp <- NA
-LFmanipplot <- ggroup(container = nb,label="L/F Manip", expand=TRUE,horizontal=TRUE)#make entry group
+reslicedtemp <- " "
+LFmanipplot <- ggroup(container = nb,label="L/F manip", expand=TRUE,horizontal=TRUE)#make entry group
 LFmanipplotlittle <- ggroup(container=LFmanipplot,expand=FALSE,horizontal=FALSE,width=330)# make little entry group  
 LFmanippic<- gnotebook(container=LFmanipplot,expand=TRUE)#create the Entry pic.
 LFmaniphistgraphic<- gtable(reslicedtemp,container=LFmanippic,label="Resliced Data")
@@ -723,7 +729,6 @@ add(tmp, slices, expand=TRUE)
 
 #gimage("png/usaid.png",dirname=my_path,container=LFmanipplotlogo)
 plotlfmanip <- function(h,...){
-
  hline <- seq(0,ceiling(max(datain$ML))+.5*(datain$ML[2]-datain$ML[1])+svalue(slices),by=svalue(slices))
  print(hline)
  lftemp<-lfmanipplot(hline)
@@ -737,7 +742,7 @@ if(file.exists(filename)){file.remove(filename)}#remove file
  lftemp[height+1,1] <- as.character(lengthunits)
  lftemp[height+1,2:len] <- as.character(" ")
  dispose(LFmanippic)
- LFmaniphistgraphic<- gtable(lftemp,container=LFmanippic,label="Resliced Data")
+ LFmaniphistgraphic<- gtable(lftemp,container=LFmanippic,label="Sliced L/F")
  visible(LFmaniphistgraphic) <- TRUE #make correct picture
  visible(LFmaniphistgraphic) <- TRUE #make correct picture  
  

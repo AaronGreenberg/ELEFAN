@@ -242,7 +242,7 @@ tempsum <- sum(rowSums(pointsout),na.rm=TRUE)
 par(1,las=1,bty='n',oma=c(0,1,1,1))
 #make the plots
 print(z)
-ylimu <-z$coefficients[1]*1.1
+ylimu <-z$coefficients[1]+z$coefficients[2]*floor(min(ages/365))
 ylimr <- c(floor(min(log(fully))),ceiling(ylimu))
 plot(ages/365,log(fully),xlab=bquote(paste("Relative age (t-t"[o],";year)")),ylab=expression(paste("Relative abundance (ln(N))")),yaxt="n",xaxt="n",ylim=ylimr,xlim=c(floor(min(ages/365)),ceiling(max(ages/365))))
 points(ages[widthvec]/365,log(fully[widthvec]),pch=19,col="black") #make filled circles only on points in width vect
