@@ -5,9 +5,9 @@
 plotnonseacatchcurve <- function(Kloc=K,Linfloc=Linf,pointsupper,pointslower){
 #time to catchompute the standard length-converted catch curves :LCC1 sec 2.2 pg2
 #first I compute the number of fish caught in each age class.
-  print(Kloc)
-  print(Linfloc)
-  print(points)
+#  print(Kloc)
+  #print(Linfloc)
+  #print(points)
   dataloc <- datain
   size <- length(dataloc[1,]) #
   
@@ -19,14 +19,14 @@ plotnonseacatchcurve <- function(Kloc=K,Linfloc=Linf,pointsupper,pointslower){
 #then I compute the time needed for the fish of a given length class to grow
 #through that length class
   width <- (dataloc$ML[2]-dataloc$ML[1]) #assuming that the lengthfreq lengths are mid points.
-  print("catch curve ")
-  print(width)
+  #print("catch curve ")
+  #print(width)
   delti <- -1/Kloc*log((Linfloc-(dataloc$ML+width))/(Linfloc-(dataloc$ML-width)))#-to
   ti <- -1/Kloc*log(1-(dataloc$ML)/Linfloc)
 sumsample <- ifelse(sumsample==0,mean(sumsample),sumsample)#get rid of zeros
 #Ok time to make the plot
 widthvec <- pointslower:(pointsupper) #get vector of circles used in linear regression.
-print(ti)
+#print(ti)
 widthvec2 <-0:pointslower#points not selected
 z <- lm(log(sumsample[widthvec]/delti[widthvec])~ti[widthvec])#compute linear model.
 par(1,las=1,bty='n',oma=c(0,1,1,1))
@@ -43,19 +43,21 @@ lines(x=ti[widthvec],y=(z$coefficients[1]+z$coefficients[2]*ti[widthvec]),col="b
   
 temp2 <-bquote(paste("ln(N/",Delta,"t) = ",.(signif(z$coefficients[1],3)),.(signif(z$coefficients[2],3)),"*age"," ; ",r^2," = ",.(signif(summary(z)$r.squared,3))))  
 legend(x="topright",legend=temp2,inset=0.02)  
-print(z)
+#print(z)
 selectivity <- list()
 selectivity$prob <- 1:length(datain[,1])*0+1
 selectivity$index <- 1:pointslower
 selectivity$prob[1:pointslower]<- (sumsample[1:(pointslower)]/delti[1:(pointslower)])/exp(z$coefficients[1]+z$coefficients[2]*ti[1:(pointslower)])#compute selectivity probability
-print(selectivity)
-dataout <- datain#initialize
-for(i in 2:length(datain[1,])){dataout[,i] <-datain[,i]/selectivity$prob} 
+#print(selectivity)
   
-return(nonseasonal=list(data=dataout,prob=selectivity$prob,ages=ti))  
+return(nonseasonal=list(prob=selectivity$prob,ages=ti))  
 }
 
-
+ correctedlf<- function(probs=YieldProbs){
+dataout <- datain#initialize
+for(i in 2:length(datain[1,])){dataout[,i] <-datain[,i]/probs}
+return(dataout)
+}
 
 
 plotseacatchcurve<- function(Kloc=K,Linfloc=Linf,Cloc=C,TW=Tw,pointsupper,pointslower){
@@ -241,7 +243,7 @@ tempsum <- sum(rowSums(pointsout),na.rm=TRUE)
 #should follow what I did in Catch curve 1.
 par(1,las=1,bty='n',oma=c(0,1,1,1))
 #make the plots
-print(z)
+#print(z)
 ylimu <-z$coefficients[1]+z$coefficients[2]*floor(min(ages/365))
 ylimr <- c(floor(min(log(fully))),ceiling(ylimu))
 plot(ages/365,log(fully),xlab=bquote(paste("Relative age (t-t"[o],";year)")),ylab=expression(paste("Relative abundance (ln(N))")),yaxt="n",xaxt="n",ylim=ylimr,xlim=c(floor(min(ages/365)),ceiling(max(ages/365))))

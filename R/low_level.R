@@ -78,11 +78,12 @@ wetherall <- function(da=datain,points=3){
   data2 <- datain
   data2$ML <- datain$ML*0
   z <- rowSums(data2)#sum up all the frequencies
+  nzero <- which(z>0)#get rid of empty rows
   points <- points-1
-  Li=Liprime=z*0
-  for(i in 1:length(data2$ML)){
+  Li=Liprime=z[nzero]*0
+  for(i in 1:length(nzero)){
     Li[i]=datain$ML[i]-(datain$ML[2]-datain$ML[1])/2    #get list of cut off values
-    Liprime[i]=sum(datain$ML[i:length(datain$ML)]*z[i:length(datain$ML)])/sum(z[i:length(datain$ML)])  #get list scaled mean lengths
+    Liprime[i]=sum(datain$ML[i:length(nzero)]*z[i:length(nzero)])/sum(z[i:length(nzero)])  #get list scaled mean lengths
   }
 
   Lipoints=Liprime[(length(Liprime)-points):length(Liprime)]
@@ -240,7 +241,7 @@ width <- (datain$ML[2]-datain$ML[1])/2
 recruitment <- as.data.frame(recruitment)
 
 colnames(recruitment) <- c("month","height")
-print(recruitment)
+#print(recruitment)
 ## temp <- min(recruitment$month)
 ## temprec <- matrix(0,nrow=temp,ncol=2)
 ## colnames(temprec) <- c("month","height")
@@ -251,10 +252,10 @@ print(recruitment)
 ## print(recruitment)
 recruitment <- subset(recruitment, recruitment$month>0) 
 recruitment2 <- aggregate(height~month, data=recruitment, FUN=sum)
-
 recruitment2$height=(recruitment2$height-min(recruitment2$height))/(sum((recruitment2$height-min(recruitment2$height))))*100
-plot(recruitment2$month,recruitment2$height,type="l",col="black",xlim=c(1,12),xlab="One year",ylab="Relative Recruitment")
-polygon( c(min(recruitment2$month), recruitment2$month, max(recruitment2$month)), c(min(recruitment2$height), recruitment2$height, min(recruitment2$height)), density=100,alpha=.2,col="grey" )
+#print(recruitment2)
+plot(recruitment2$month,recruitment2$height,type="points",col="black",xlim=c(1,12),xlab="One year",ylab="Relative Recruitment")
+rect(recruitment2$month-.5, 0*recruitment2$height, recruitment2$month+.5, recruitment2$height, density = 100,col="grey",alpha=.2)
 
 
 } 

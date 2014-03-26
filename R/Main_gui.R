@@ -14,7 +14,7 @@ my_path <- paste(.libPaths()[1],"/ELEFAN",sep="")
 size=1000
 window = gwindow("ELEFAN in R",height=size,width=1.618*size,visible=TRUE)
 biggroup <- ggroup(container=window,expand=TRUE,horizontal=FALSE)
-welcome<- gtext("Welcome to ELEFAN in R; please load a file!", container =biggroup,expand=FALSE,horizontal=FALSE,font.attr=c(size=18))
+welcome<- gtext("Welcome to ELEFAN in R; please load a file!", container =biggroup,expand=FALSE,horizontal=FALSE,font.attr=c(size=13))
 #make big note book!
 nb <- gnotebook(container=biggroup,expand=FALSE,horizontal=FALSE)
 
@@ -51,8 +51,8 @@ datefileinh <- function(h,...){
   lengthunits<<-c("mt")
   datefilein()
   svalue(welcome) <-paste("You are studying: ", basename(sub("(.*\\/)([^.]+)(\\.[[:alnum:]]+$)", "\\2",fname1)),".",sep="")
-  print("datain")
-  print(datain)
+  #print("datain")
+  #print(datain)
   datetmp <- datein
   options(digits=3)
   stdate[] <- c(-1,1:(length(datein[,2])-1))
@@ -368,31 +368,25 @@ add(tmp, Pointslideuc, expand=TRUE)
 plotnonseacatch <- function(h,...){
 visible(Catchcurvegraphic) <- TRUE #make correct picture
 temp<- plotnonseacatchcurve(svalue(Klocslidec),svalue(Linfslidec),svalue(Pointslideuc),svalue(Pointslidelc))
+YieldProbs <<- temp$prob
+temp$data <- correctedlf(temp$prob)
 temptable2<- (signif(temp$data,3))
 temptable2 <- (signif(temp$data,3))
 height<- length(temptable2[,1])
 len<- length(temptable2[1,])
 temptable2[height+1,1] <- as.character(lengthunits)
 temptable2[height+1,2:len] <- as.character(" ")
-visible(Datatablemodified) <- TRUE
 dispose(CorrLFpic)
 Datatablemodified<- gtable(temptable2,container=CorrLFpic,label="Modified data")
-visible(Datatablemodified) <- FALSE
-for(i in 1:4){
-
+Datatablemodified[] <- temptable2
 visible(Datatablemodified) <- TRUE
-#slow things down so windows are 
-(rnorm(10000)/rnorm(10000)^2)#properly refreshed
-
 visible(Datatablemodified) <- TRUE
-}
-
 YieldProbs <<- temp$prob
 YieldAges<<-temp$ages
 filename <- (paste(substr(fname1,start=1,stop=(nchar(fname1)-4)),"corrected.csv",sep="_"))
 if(file.exists(filename)){file.remove(filename)}#remove file
-print(temp$data)
-print(lengthunits)
+#print(temp$data)
+#print(lengthunits)
 #write("hey",file=filename)
 write.table(round(temp$data,4),file=filename,row.names=FALSE,col.names=TRUE,append=TRUE,quote=FALSE,sep=",")
 write.table(lengthunits,file=filename,quote=FALSE,append=TRUE,row.names=FALSE,col.names=FALSE)
@@ -449,18 +443,39 @@ plotprobs <- function(h,...){
   temprob<- cbind(datain$ML,(signif(YieldProbs,3)))
   dispose(probpic)
   dispose(probpic)
+  
   temprobs <- cbind(datain$ML,(signif(YieldProbs,3)))
   Probabilitymodified<- gtable(temprobs,container=probpic,label="Probabilities")
   colnames(Probabilitymodified) <- c("ML","Probabilities")
-  visible(Probabilitymodified) <- TRUE #make correct picture
+  visible(Probabilitymodified) <- FALSE #make correct picture
   visible(Probabilitymodified) <- TRUE #make correct picture
 
   probgraphic<- ggraphics(container = probpic,width=700,height=500,label="Prob. plot")
   visible(probgraphic) <- TRUE #make correct picture  
   probsplot(YieldProbs,datain$ML)
-  
-  visible(probgraphic) <- TRUE #make correct picture  
+  visible(probgraphic) <- FALSE #make correct picture  
   visible(probgraphic) <- TRUE #make correct picture
+
+temper <- correctedlf(YieldProbs)
+temptable3<- (signif(temper,3))
+temptable3 <- (signif(temper,3))
+height<- length(temptable3[,1])
+len<- length(temptable3[1,])
+temptable3[height+1,1] <- as.character(lengthunits)
+temptable3[height+1,2:len] <- as.character(" ")
+
+
+dispose(CorrLFpic)
+Datatablemodified<- gtable(temptable3,container=CorrLFpic,label="Modified data")
+Datatablemodified[] <- temptable3
+visible(Datatablemodified) <- TRUE
+visible(Datatablemodified) <- TRUE
+filename <- (paste(substr(fname1,start=1,stop=(nchar(fname1)-4)),"corrected.csv",sep="_"))
+if(file.exists(filename)){file.remove(filename)}#remove file
+write.table(round(temper,4),file=filename,row.names=FALSE,col.names=TRUE,append=TRUE,quote=FALSE,sep=",")
+write.table(lengthunits,file=filename,quote=FALSE,append=TRUE,row.names=FALSE,col.names=FALSE)
+visible(Catchcurvegraphic) <- TRUE #make correct picture
+visible(Catchcurvegraphic) <- TRUE #make correct picture
 }
 
 
@@ -617,8 +632,8 @@ Yieldbiomass <- yield_biomass_per_recruitf(svalue(M),svalue(Kypr),svalue(Lc),sva
 plot_yield_biomass_per_recruitf(Yieldbiomass,YieldProbs,datain$ML)
 visible(YieldperRecruitgraphic2) <- TRUE #make correct picture
 visible(YieldperRecruitgraphic) <- TRUE #make correct picture
-print("Yieldprobs")
-print(YieldProbs)
+#print("Yieldprobs")
+#print(YieldProbs)
  }
 
 
@@ -730,7 +745,7 @@ add(tmp, slices, expand=TRUE)
 #gimage("png/usaid.png",dirname=my_path,container=LFmanipplotlogo)
 plotlfmanip <- function(h,...){
  hline <- seq(0,ceiling(max(datain$ML))+.5*(datain$ML[2]-datain$ML[1])+svalue(slices),by=svalue(slices))
- print(hline)
+ #print(hline)
  lftemp<-lfmanipplot(hline)
  filename <- (paste(substr(fname1,start=1,stop=(nchar(fname1)-4)),"resliced.csv",sep="_"))
 if(file.exists(filename)){file.remove(filename)}#remove file
