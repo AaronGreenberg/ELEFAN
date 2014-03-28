@@ -255,9 +255,10 @@ P50y=vec$y[which.min((vec$y-.5)^2)]
 P50x=vec$x[which.min((vec$y-.5)^2)]
 vec2=approx(length,n=10000)
 Length=vec2$y[which.min((vec2$x-P50x)^2)]
-par(las=1,bty="n",mar=c(5.1,5.1,0.1,0.1),mpg=c(4,1,0),oma=c(0,1,1,1))
+par(las=1,bty="n",mar=c(5.1,6,4.1,2.1),mpg=c(4,1,0),oma=c(0,1,1,1))
+#par(las=1,bty="n",mar=c(3.5,3.5,0.5,0.5),mpg=c(4,1,0),oma=c(1,1,1,1))
 label <- paste("Length","(",lengthunits,")")
-plot(length,Pi,type="p",xlab=label,ylab="Probability",xlim=c(0,1.1*max(length)),ylim=c(0,1.1))
+plot(length,Pi,type="p",xlab=label,ylab="Probability",xlim=c(0,1.1*max(length)),ylim=c(0,1.2))
 text(length,Pi+.025,as.character(1:length(Pi)),col="black")
 points(vec2$y,vec$y,col="black",type="l")
 points(Length,P50y,col="red",pch=19)       

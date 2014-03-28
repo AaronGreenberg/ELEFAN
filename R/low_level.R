@@ -231,8 +231,8 @@ width <- (datain$ML[2]-datain$ML[1])/2
           { 
             count=count+1
             gcurve <- curves_cpp(Linfloc,Cloc,twloc,Kloc,datain$ML,days,i,datain$ML[j],BIRTHDAY)$tzero
+             # careful there are logs in this function it may not be happy if somehow log(1-blah)=0
             weight <-(log(1-(datain$ML[j]+width)/Linfloc)/(-1*Kloc)-gcurve)-(log(1-(datain$ML[j]-width)/Linfloc)/(-1*Kloc)-gcurve)
-            
             recruitment[count,] <- c(as.numeric(format(as.Date(gcurve,origin=datein$Date[1]),"%m")),lfdata[j,i]/weight)
           }
         }
@@ -241,20 +241,11 @@ width <- (datain$ML[2]-datain$ML[1])/2
 recruitment <- as.data.frame(recruitment)
 
 colnames(recruitment) <- c("month","height")
-#print(recruitment)
-## temp <- min(recruitment$month)
-## temprec <- matrix(0,nrow=temp,ncol=2)
-## colnames(temprec) <- c("month","height")
-
-## temprec$month <- 1:temp
-## temprec$height <- 1:temp*0
-## recruitment <- rbind(temprec,recruitment)
-## print(recruitment)
 recruitment <- subset(recruitment, recruitment$month>0) 
 recruitment2 <- aggregate(height~month, data=recruitment, FUN=sum)
 recruitment2$height=(recruitment2$height-min(recruitment2$height))/(sum((recruitment2$height-min(recruitment2$height))))*100
-#print(recruitment2)
-plot(recruitment2$month,recruitment2$height,type="points",col="black",xlim=c(1,12),xlab="One year",ylab="Relative Recruitment")
+par(las=1,bty='n',oma=c(0,1,1,1))
+plot(recruitment2$month,recruitment2$height,type="points",col="black",xlim=c(1,12),xlab="One year",ylab="Relative recruitment")
 rect(recruitment2$month-.5, 0*recruitment2$height, recruitment2$month+.5, recruitment2$height, density = 100,col="grey",alpha=.2)
 
 

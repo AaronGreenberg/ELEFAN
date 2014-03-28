@@ -168,26 +168,22 @@ plotlf <- function(h,...){
 
  
 LFplotlittlebutton1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=330)
-gtext(text="Main cohort",container=LFplotlittlebutton1,height=15,width=200)
-
+#gtext(text="Main cohort",container=LFplotlittlebutton1,height=10,width=200,font.attr=c(size=3))
 LFplotlittlecohort1<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=330)
 stdate <- gdroplist(list(1:10*0-1))
-tmp <- gframe("SS",container=LFplotlittlecohort1)
+tmp <- gframe("SS-1",container=LFplotlittlecohort1)
 add(tmp,stdate, expand=FALSE)
 midlength <- gdroplist(list(1:20*0))
-tmp <- gframe("SL",container=LFplotlittlecohort1)
+tmp <- gframe("SL-1",container=LFplotlittlecohort1)
 add(tmp,midlength, expand=FALSE)
-
 LFplotlittlebutton2<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=330)
-addSpace(LFplotlittlebutton2,4,horizontal=FALSE)# spacing needs to be tuned for each slide
-gtext(text="2nd cohort",container=LFplotlittlebutton2,height=15,width=200)
-addSpace(LFplotlittlebutton2,4,horizontal=FALSE)# spacing needs to be tuned for each slide
+#gtext(text="2nd cohort",container=LFplotlittlebutton2,height=10,width=200,font.attr=c(size=3))
 LFplotlittlecohort2<-ggroup(container=LFplotlittle,expand=FALSE,horizontal=TRUE,width=330)
 stdate1 <- gdroplist(list(1:10*0-1))
-tmp <- gframe("SS",container=LFplotlittlecohort2)
+tmp <- gframe("SS-2",container=LFplotlittlecohort2)
 add(tmp,stdate1, expand=FALSE)
 midlength1 <- gdroplist(list(1:20*0))
-tmp <- gframe("SL",container=LFplotlittlecohort2)
+tmp <- gframe("SL-2",container=LFplotlittlecohort2)
 add(tmp,midlength1, expand=FALSE)
 plot=gbutton("Make plot",handler=plotlf)
 tmp=gframe("Plot",container=LFplotlittlecohort2)
@@ -288,11 +284,13 @@ computefixedkscan <- function(h,...){
 cfixedkscan(sdate=svalue(stdatek),ML=svalue(midlengthk),Linf=svalue(Linfslidek),C=svalue(Cslidek),tw=svalue(twslidek))
 }
 plotfullkscan <- function(h,...){ 
-visible(Kscangraphic) <- TRUE #make correct picture  
-kscanplot(window=svalue(movingaveragek))
+visible(Kscangraphic) <- TRUE #make correct picture
 
+kscanplot(window=svalue(movingaveragek))
+visible(Kscangraphic) <- FALSE  #make correct picture  
 visible(Recruitgraphic) <- TRUE #make correct picture
 temp<- recruitment(max(zkscan[which.max(zkscan[,1]),1]),svalue(Linfslidek),svalue(Cslidek),svalue(twslidek))
+visible(Recruitgraphic) <- TRUE #make correct picture
 visible(Recruitgraphic) <- TRUE #make correct picture
 visible(Kscangraphic) <- TRUE #make correct picture  
 
@@ -301,8 +299,10 @@ visible(Kscangraphic) <- TRUE #make correct picture
 plotfixedkscan <- function(h,...){ 
 visible(Kscangraphic) <- TRUE #make correct picture  
 fixedkscanplot(window=svalue(movingaveragek))
+visible(Kscangraphic) <- FALSE #make correct picture  
 visible(Recruitgraphic) <- TRUE #make correct picture
 temp<- recruitment(max(fixzkscan[which.max(fixzkscan[,1]),1]),svalue(Linfslidek),svalue(Cslidek),svalue(twslidek))
+visible(Recruitgraphic) <- TRUE #make correct picture
 visible(Recruitgraphic) <- TRUE #make correct picture
 visible(Kscangraphic) <- TRUE #make correct picture  
 
@@ -449,13 +449,12 @@ plotprobs <- function(h,...){
   colnames(Probabilitymodified) <- c("ML","Probabilities")
   visible(Probabilitymodified) <- FALSE #make correct picture
   visible(Probabilitymodified) <- TRUE #make correct picture
-
   probgraphic<- ggraphics(container = probpic,width=700,height=500,label="Prob. plot")
   visible(probgraphic) <- TRUE #make correct picture  
   probsplot(YieldProbs,datain$ML)
   visible(probgraphic) <- FALSE #make correct picture  
   visible(probgraphic) <- TRUE #make correct picture
-
+  visible(probgraphic) <- TRUE #make correct picture
 temper <- correctedlf(YieldProbs)
 temptable3<- (signif(temper,3))
 temptable3 <- (signif(temper,3))
