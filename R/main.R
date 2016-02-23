@@ -38,7 +38,7 @@ lfbin <<-length(datain$ML)
 datein <- top
 datein[1] <- NA
 
-print(datain)
+#print(datain)
 index <- 1:length(top)
 datein <- as.data.frame((cbind(datein,index)))
 colnames(datein)=c("Date","index")
