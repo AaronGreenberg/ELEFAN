@@ -75,8 +75,9 @@ isoplath <- function(M,K,Linf,vline,hline,nlevels,Pi=YieldProbs,pas=NULL)
   #print(Littlecv)
  iso <- array(dim=c(vlength,vlength))
 for(i in 1:vlength){
-   L25=max(which(Pi<.25))#which.min((Pi-.25)^2)#find
-   Pitmp=Pi
+    L25=max(which(Pi<.25))#which.min((Pi-.25)^2)#find
+    L25=max(c(L25,1))
+  Pitmp=Pi
    slope=.25/(Littlecv[i]*Linf-datain$ML[L25])
    Pitmp[L25:length(Pitmp)]=slope*L25:length(Pitmp)+(.25-slope*L25)
    Pitmp=ifelse(Pitmp<1,Pitmp,1)#make sure that propbabilities are less than 1
@@ -112,7 +113,9 @@ isoplathf <- function(M,K,Linf,vline,hline,nlevels,Pi=YieldProbs,pas=NULL)
   #print(Littlecv)
  iso <- array(dim=c(vlength,vlength))
 for(i in 1:vlength){
-   L25=max(which(Pi<.25))#which.min((Pi-.25)^2)#find
+    L25=max(which(Pi<.25))#which.min((Pi-.25)^2)#find
+    L25=max(which(Pi<.25))#which.min((Pi-.25)^2)#find
+    L25=max(c(L25,1))
    Pitmp=Pi
    slope=.25/(Littlecv[i]*Linf-datain$ML[L25])
    Pitmp[L25:length(Pitmp)]=slope*L25:length(Pitmp)+(.25-slope*L25)
