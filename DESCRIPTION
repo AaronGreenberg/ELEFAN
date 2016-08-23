@@ -32,5 +32,5 @@ Collate:
     'plot_yield_biomass_per_recruit.r'
     'yield_biomass_per_recruit.r'
     'RcppExports.R'
-Depends: Rcpp (>= 0.10.1) 
+Imports: Rcpp (>= 0.10.1) 
 LinkingTo: Rcpp 

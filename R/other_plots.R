@@ -31,8 +31,8 @@ if(sdate>0){
 if(K>0){  
 gcurve <- curves_cpp(Linf,Cseasonal,tw,K,datain$ML,days,startime,ML,BIRTHDAY) # compute growth curve this has index, day in growthcurve and properbin.
 asp <- aspcompute(peaks)                      #compute asp
-print("sdate1")
-print(sdate1)
+#print("sdate1")
+#print(sdate1)
 }
 if(sdate1>0){
   
@@ -64,8 +64,85 @@ if(ptype=="LF"){
 
 }
 
+lfmanipplot <- function(hline)
+  {
+    
+#need to convert start date to dime.
+growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+lfdata<- fillgrowthdata(datein,datain,growthdata) #make data structure with length frequency data
+#print("hline")
+#print(datain$ML)
+#get length of lfdata2
+datain2 <- matrix(0,nrow=length(hline),ncol=length(datain[1,]))
+datain2 <- data.frame(datain2)
+colnames(datain2)=colnames(datain)
 
 
+binwidth<-datain$ML[2]-datain$ML[1]
+newbinwidth <- hline[2]-hline[1]#get new bins
+datain2 <- matrix(0,nrow=length(hline-1),ncol=length(datain[1,]))
+datain2<- data.frame(datain2)
+colnames(datain2) <- colnames(datain)
+datain2$ML <- hline+1/2*newbinwidth
+weights <- function(hline1,hline2,ML,binwidth)
+  {# This function computes the weights that get multiplied
+    WA <- vector()
+    hbw <- 1/2*binwidth
+    for(i in 1:length(ML))
+        {
+          if(((ML[i]+hbw)>hline1)||((ML[i]-hbw)<hline2))
+            {#if outside reslice interval set weight =0
+          WA[i]=0
+            }
+           if(((ML[i]-hbw)<hline1) && ((ML[i]+hbw)>hline2))
+            { #if inside of reslice interval set weight=1
+          WA[i]=1
+            }
+
+           if(((ML[i]+hbw)>hline1) && ((ML[i]-hbw)<=hline1))
+            { #get upper weight 
+          WA[i]=(hline1-(ML[i]-hbw))/binwidth
+        }
+          
+           if(((ML[i]+hbw)>hline2) && ((ML[i]-hbw)<=hline2))
+            { #get lower weight 
+          WA[i]=1-((hline2-(ML[i]-hbw))/binwidth)
+        }
+          
+        if((((ML[i]+hbw)>hline2) && ((ML[i]-hbw)<=hline2))&& (((ML[i]+hbw)>hline1) && ((ML[i]-hbw)<=hline1)))
+            { #get lower weight 
+          WA[i]=(hline1-hline2)/binwidth
+        }
+          
+  }
+    return(WA)
+  }
+    
+  for(i in 1:(length(datain[1,])-1)){
+     for(j in 1:(length(hline)-1)){ #for each growth curve
+       Wei <- weights(hline[j+1],hline[j],datain$ML,binwidth)
+       #print(Wei)
+      datain2[j,i+1] <- sum(Wei*datain[,i+1])
+     }
+   }
+
+
+
+
+
+
+
+#print(datain2)
+#print(colSums(datain2))
+growthdata2 <- matrix(0,ncol=days,nrow=length((hline))) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
+lfdata2<- fillgrowthdata(datein,datain2,growthdata2) #make data structure with length frequency data
+## x11()
+## manipFreqPlot(1:days,datain$ML,datain2$ML,lfdata,lfdata2,hline,datein)
+
+return(datain2)
+    
+  
+}
 
 kscanplot <- function(window=window,z=zkscan){
     nzero <- which(z[,1]>0)
@@ -173,16 +250,16 @@ movingAverage <- function(x, n=1, centered=TRUE) {
 probsplot <- function(YieldProbs,length){
 Pi=YieldProbs
  #compute p50
-
 vec=approx(Pi,n=10000)
 P50y=vec$y[which.min((vec$y-.5)^2)]
 P50x=vec$x[which.min((vec$y-.5)^2)]
 vec2=approx(length,n=10000)
 Length=vec2$y[which.min((vec2$x-P50x)^2)]
 par(las=1,bty="n",mar=c(5.1,6,4.1,2.1),mpg=c(4,1,0),oma=c(0,1,1,1))
+#par(las=1,bty="n",mar=c(3.5,3.5,0.5,0.5),mpg=c(4,1,0),oma=c(1,1,1,1))
 label <- paste("Length","(",lengthunits,")")
-plot(length,Pi,type="p",xlab=label,ylab="Probability",xlim=c(0,1.1*max(length)),ylim=c(0,1.1))
-text(length,Pi+.1,as.character(1:length(Pi)),col="black")
+plot(length,Pi,type="p",xlab=label,ylab="Probability",xlim=c(0,1.1*max(length)),ylim=c(0,1.2))
+text(length,Pi+.025,as.character(1:length(Pi)),col="black")
 points(vec2$y,vec$y,col="black",type="l")
 points(Length,P50y,col="red",pch=19)       
 abline(h=.5,col="darkgrey")

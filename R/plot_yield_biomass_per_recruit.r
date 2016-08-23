@@ -20,13 +20,13 @@ Length=vec2$y[which.min((vec2$x-P50x)^2)]
 
 #print(tab_final)
 ylim <- c(0,max(tab_final[,1:2],na.rm=TRUE))
-plot(rownames(tab_final),tab_final[,1],type="l",lwd=.5,lty=2,xaxt="n",yaxt="n",ylab="Relative yield per recruit",xlab="",col=1,ylim=ylim)
+plot(rownames(tab_final),tab_final[,1],type="l",lwd=1.5,lty=2,xaxt="n",yaxt="n",ylab="Relative yield per recruit",xlab="",col=1,ylim=ylim)
 lines(rownames(tab_final),tab_final[,2],type="l",lty=1,lwd=3,col="black")
 axis(1,tck=0.02)
 axis(2,tck=0.02,las=2)
 #legend(x="topright",paste("P50 length=",signif(Length,3), "P50 prob=",signif(P50y,3)))
 ylim <- c(0,max(tab_final[,3:4],na.rm=TRUE))
-plot(rownames(tab_final),tab_final[,3],type="l",lwd=.5,lty=2,xaxt="n",yaxt="n",ylab="Relative biomass per recruit",xlab="Exploitation rate (E = F/Z)",col=1,ylim=ylim)
+plot(rownames(tab_final),tab_final[,3],type="l",lwd=1.5,lty=2,xaxt="n",yaxt="n",ylab="Relative biomass per recruit",xlab="Exploitation rate (E = F/Z)",col=1,ylim=ylim)
 lines(rownames(tab_final),tab_final[,4],type="l",lty=1,lwd=3,col="black")
 axis(1,tck=0.02)
 axis(2,tck=0.02,las=2)
@@ -51,13 +51,13 @@ Length=vec2$y[which.min((vec2$x-P50x)^2)]
 
 #print(tab_final)
 ylim <- c(0,max(tab_final[,1:2],na.rm=TRUE))
-plot(rownames(tab_final),tab_final[,1],type="l",lwd=.5,lty=2,xaxt="n",yaxt="n",ylab="Relative yield per recruit",xlab="",col=1,ylim=ylim)
+plot(rownames(tab_final),tab_final[,1],type="l",lwd=1.5,lty=2,xaxt="n",yaxt="n",ylab="Relative yield per recruit",xlab="",col=1,ylim=ylim)
 lines(rownames(tab_final),tab_final[,2],type="l",lty=1,lwd=3,col="black")
 axis(1,tck=0.02)
 axis(2,tck=0.02,las=2)
 #legend(x="topright",paste("P50 length=",signif(Length,3), "P50 prob=",signif(P50y,3)))
 ylim <- c(0,max(tab_final[,3:4],na.rm=TRUE))
-plot(rownames(tab_final),tab_final[,3],type="l",lwd=.5,lty=2,xaxt="n",yaxt="n",ylab="Relative biomass per recruit",xlab="Fishing mortality rate (F)",col=1,ylim=ylim)
+plot(rownames(tab_final),tab_final[,3],type="l",lwd=1.5,lty=2,xaxt="n",yaxt="n",ylab="Relative biomass per recruit",xlab=bquote(paste("Fishing mortality (F;", year ^-1,")")),col=1,ylim=ylim)
 lines(rownames(tab_final),tab_final[,4],type="l",lty=1,lwd=3,col="black")
 axis(1,tck=0.02)
 axis(2,tck=0.02,las=2)
@@ -75,8 +75,9 @@ isoplath <- function(M,K,Linf,vline,hline,nlevels,Pi=YieldProbs,pas=NULL)
   #print(Littlecv)
  iso <- array(dim=c(vlength,vlength))
 for(i in 1:vlength){
-   L25=max(which(Pi<.25))#which.min((Pi-.25)^2)#find
-   Pitmp=Pi
+    L25=max(which(Pi<.25))#which.min((Pi-.25)^2)#find
+    L25=max(c(L25,1))
+  Pitmp=Pi
    slope=.25/(Littlecv[i]*Linf-datain$ML[L25])
    Pitmp[L25:length(Pitmp)]=slope*L25:length(Pitmp)+(.25-slope*L25)
    Pitmp=ifelse(Pitmp<1,Pitmp,1)#make sure that propbabilities are less than 1
@@ -94,7 +95,7 @@ for(i in 1:vlength){
  points(vline,hline,pch=19,col="blue")
  vtemp=which.min((Ein-vline)^2)
  htemp=which.min((Littlecv-hline)^2)
- legend(x="topleft",as.character(signif(iso[vtemp,htemp]),4),col="black")
+ legend(x="topleft",as.character(signif(iso[vtemp,htemp]),4),col="black",bg="white")
 
   }
 
@@ -112,7 +113,9 @@ isoplathf <- function(M,K,Linf,vline,hline,nlevels,Pi=YieldProbs,pas=NULL)
   #print(Littlecv)
  iso <- array(dim=c(vlength,vlength))
 for(i in 1:vlength){
-   L25=max(which(Pi<.25))#which.min((Pi-.25)^2)#find
+    L25=max(which(Pi<.25))#which.min((Pi-.25)^2)#find
+    L25=max(which(Pi<.25))#which.min((Pi-.25)^2)#find
+    L25=max(c(L25,1))
    Pitmp=Pi
    slope=.25/(Littlecv[i]*Linf-datain$ML[L25])
    Pitmp[L25:length(Pitmp)]=slope*L25:length(Pitmp)+(.25-slope*L25)
@@ -122,16 +125,15 @@ for(i in 1:vlength){
      }
   }
  par(las=1,bty="n",mar=c(5.1,6,4.1,2.1),mpg=c(4,1,0),oma=c(0,1,1,1))
-# temp <- bquote(paste("Mean length of first capture","/","L"[infinity]))
   temp <- "Length at 1st capture / Asymptotic length"
- image(Fin,Littlecv,iso,col = rainbow(100,start=0,end=2/6), axes = TRUE, xlab=expression(paste("Fishing mortality (F;,year", "^-1)")),ylab=temp,xlim=c(0,5),ylim=c(0,1))
+ image(Fin,Littlecv,iso,col = rainbow(100,start=0,end=2/6), axes = TRUE, xlab=bquote(paste("Fishing mortality (F;", year ^-1,")")),ylab=temp,xlim=c(0,5),ylim=c(0,1))
  contour(Fin,Littlecv,iso,nlevels=nlevels,add=TRUE,labcex=1.2)
  abline(h=hline,col="black",lwd=1.5)
  abline(v=vline,col="black",lwd=1.5)
  points(vline,hline,pch=19,col="blue")
  vtemp=which.min((Fin-vline)^2)
  htemp=which.min((Littlecv-hline)^2)
- legend(x="topleft",as.character(signif(iso[vtemp,htemp]),4),col="black")
+ legend(x="topleft",as.character(signif(iso[vtemp,htemp]),4),col="black",bg="white")
   }
 
 

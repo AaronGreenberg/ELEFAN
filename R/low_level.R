@@ -78,11 +78,12 @@ wetherall <- function(da=datain,points=3){
   data2 <- datain
   data2$ML <- datain$ML*0
   z <- rowSums(data2)#sum up all the frequencies
+  nzero <- which(z>0)#get rid of empty rows
   points <- points-1
-  Li=Liprime=z*0
-  for(i in 1:length(data2$ML)){
+  Li=Liprime=z[nzero]*0
+  for(i in 1:length(nzero)){
     Li[i]=datain$ML[i]-(datain$ML[2]-datain$ML[1])/2    #get list of cut off values
-    Liprime[i]=sum(datain$ML[i:length(datain$ML)]*z[i:length(datain$ML)])/sum(z[i:length(datain$ML)])  #get list scaled mean lengths
+    Liprime[i]=sum(datain$ML[i:length(nzero)]*z[i:length(nzero)])/sum(z[i:length(nzero)])  #get list scaled mean lengths
   }
 
   Lipoints=Liprime[(length(Liprime)-points):length(Liprime)]
@@ -91,7 +92,7 @@ wetherall <- function(da=datain,points=3){
   z=lm(Lipoints~Lip)
   Linfest <- -z$coefficients[1]/(z$coefficients[2]-1)#compute Linf
   label1 <- paste("Cutoff Length (L';",lengthunits,")")
-  label2<- quote(paste("Mean length above cutoff (", bar(L),";",lengthunits))
+  label2<- bquote(paste("Mean length above cutoff (",  bar(L), "; ",.(lengthunits),")"))
   plot(Li,Liprime,xlim=c(0,max(Li,Linfest)*1.22),ylim=c(0,max(Liprime,Linfest)*1.22),xlab=label1,ylab=label2,yaxt="n",xaxt="n")
   axis(2,tck=0.02,las=2)
   axis(1,tck=0.02)
@@ -128,7 +129,7 @@ kscan <- function(Linf=Linf,cloc=cloc,tw=tw){
   asp <- aspcompute(peaks)                      #compute asp
   K <- exp(seq(log(.1),log(10),length.out=100))
   zkscan <- matrix(0,nrow=length(K),ncol=4)
-  if(Sys.info()['sysname']!="Linux"){
+  if(!(Sys.info()['sysname']=="Linux") || !(Sys.info()['sysname']=="Darwin")){
   pb <- winProgressBar(title = "Scanning for K", min = 0, max = length(K), width = 500)
 }else{
   pb <- txtProgressBar(min = 0, max = length(K), style = 3)
@@ -136,7 +137,7 @@ kscan <- function(Linf=Linf,cloc=cloc,tw=tw){
  for(i in 1:length(K)){
         index <- 1
         inside <- matrix(0,nrow=length(dat$ML)*d,ncol=3)#
-  if(Sys.info()['sysname']!="Linux"){
+  if(!(Sys.info()['sysname']=="Linux") || !(Sys.info()['sysname']=="Darwin")){
     setWinProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
   }else{
     setTxtProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
@@ -159,9 +160,10 @@ kscan <- function(Linf=Linf,cloc=cloc,tw=tw){
        
   }
 
+  close(pb)
   zkscan<<-zkscan
   return(zkscan)
-  close(pb)
+  
 }                                      
 
 ckscan <- cmpfun(kscan)
@@ -200,9 +202,10 @@ fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,C=C,tw=tw){
         #print(i/length(K))
         fixzkscan[i,] <- c(gf,K[i])
       }
-
+  close(pb)
   fixzkscan<<-fixzkscan
   return(fixzkscan)
+
 }                                      
 
 cfixedkscan <- cmpfun(fixedkscan)
@@ -212,7 +215,11 @@ cfixedkscan <- cmpfun(fixedkscan)
 recruitment<- function(Kloc=K,Linfloc=Linf,Cloc=C,twloc=TW)
 {
 growthdata <- matrix(0,ncol=days,nrow=lfbin) #create matrix of zeros that will represent a years worth of data(see fillgrowth data)
-  lfdata<- fillgrowthdata(datein,datain,growthdata) #make data structure with length
+lfdata<- fillgrowthdata(datein,datain,growthdata) #make data structure with length
+for(i in 1:days)
+  {
+  lfdata[,i] <- ifelse(sum(lfdata[,i])>0,lfdata[,i]/sum(lfdata[,i])*1000,0)
+}
 recruitment <-matrix(0,ncol=2,nrow=length(datain[1,])*length(datain$ML))
 count <- 0
 width <- (datain$ML[2]-datain$ML[1])/2
@@ -224,8 +231,8 @@ width <- (datain$ML[2]-datain$ML[1])/2
           { 
             count=count+1
             gcurve <- curves_cpp(Linfloc,Cloc,twloc,Kloc,datain$ML,days,i,datain$ML[j],BIRTHDAY)$tzero
+             # careful there are logs in this function it may not be happy if somehow log(1-blah)=0
             weight <-(log(1-(datain$ML[j]+width)/Linfloc)/(-1*Kloc)-gcurve)-(log(1-(datain$ML[j]-width)/Linfloc)/(-1*Kloc)-gcurve)
-            
             recruitment[count,] <- c(as.numeric(format(as.Date(gcurve,origin=datein$Date[1]),"%m")),lfdata[j,i]/weight)
           }
         }
@@ -234,38 +241,12 @@ width <- (datain$ML[2]-datain$ML[1])/2
 recruitment <- as.data.frame(recruitment)
 
 colnames(recruitment) <- c("month","height")
-print(recruitment)
-## temp <- min(recruitment$month)
-## temprec <- matrix(0,nrow=temp,ncol=2)
-## colnames(temprec) <- c("month","height")
-
-## temprec$month <- 1:temp
-## temprec$height <- 1:temp*0
-## recruitment <- rbind(temprec,recruitment)
-## print(recruitment)
-print(length(recruitment$month)/length(recruitment$height))
 recruitment <- subset(recruitment, recruitment$month>0) 
 recruitment2 <- aggregate(height~month, data=recruitment, FUN=sum)
-
-print("recruitment2")
-print((recruitment2))
-y=(recruitment2$height-min(recruitment2$height))/(sum((recruitment2$height-min(recruitment2$height))))*100
-#ok so we need to re order the recruitment pattern
-ytmp <- y
-print("First Y")
-print(recruitment2$height)
-print(y)
-cut <- min(which.min(y))
-print(cut)
-ytmp[1:cut]=y[cut:length(y)]
-ytmp[cut:length(y)]=y[1:cut]
-y <- ytmp
-print("Second Y")
-print(y)
-plot(recruitment2$month,y,type="l",col="black",xlim=c(1,12),xlab="One Year",ylab="Percent Recruitment")
-polygon( c(min(recruitment2$month), recruitment2$month, max(recruitment2$month)), c(min(y), y, min(y)), density=100,alpha=.2,col="grey" )
-#points(recruitment2[,1],y,type="p",col="red",xlim=c(1,12),pch=19,cex=.5)
-
+recruitment2$height=(recruitment2$height-min(recruitment2$height))/(sum((recruitment2$height-min(recruitment2$height))))*100
+par(las=1,bty='n',oma=c(0,1,1,1))
+plot(recruitment2$month,recruitment2$height,type="points",col="black",xlim=c(1,12),xlab="One year",ylab="Relative recruitment")
+rect(recruitment2$month-.5, 0*recruitment2$height, recruitment2$month+.5, recruitment2$height, density = 100,col="grey",alpha=.2)
 
 
 } 
