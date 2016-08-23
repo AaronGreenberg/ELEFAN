@@ -129,7 +129,10 @@ kscan <- function(Linf=Linf,cloc=cloc,tw=tw){
   asp <- aspcompute(peaks)                      #compute asp
   K <- exp(seq(log(.1),log(10),length.out=100))
   zkscan <- matrix(0,nrow=length(K),ncol=4)
-  if(!(Sys.info()['sysname']=="Linux") || !(Sys.info()['sysname']=="Darwin")){
+  print("Yo! Your OS is:")
+  print(Sys.info()['sysname'])
+  if(!(Sys.info()['sysname']=="Linux") && !(Sys.info()['sysname']=="Darwin")){
+      print("You better be on windows!")
   pb <- winProgressBar(title = "Scanning for K", min = 0, max = length(K), width = 500)
 }else{
   pb <- txtProgressBar(min = 0, max = length(K), style = 3)
@@ -137,7 +140,7 @@ kscan <- function(Linf=Linf,cloc=cloc,tw=tw){
  for(i in 1:length(K)){
         index <- 1
         inside <- matrix(0,nrow=length(dat$ML)*d,ncol=3)#
-  if(!(Sys.info()['sysname']=="Linux") || !(Sys.info()['sysname']=="Darwin")){
+  if(!(Sys.info()['sysname']=="Linux") && !(Sys.info()['sysname']=="Darwin")){
     setWinProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
   }else{
     setTxtProgressBar(pb, i, label=paste( round(i/length(K)*100, 0),"% done"))
@@ -184,13 +187,15 @@ fixedkscan <- function(sdate=sdate,ML=ML,Linf=Linf,C=C,tw=tw){
   asp <- aspcompute(peaks)                      #compute asp
   K <- exp(seq(log(.1),log(10),length.out=250))
   fixzkscan <- matrix(0,nrow=length(K),ncol=2)
-  if(Sys.info()['sysname']!="Linux"){
+  if(!(Sys.info()['sysname']=="Linux") && !(Sys.info()['sysname']=="Darwin")){
     pb <- winProgressBar(title = "Scanning for K", min = 0, max = length(K), width = 500)
   }else{
     pb <- txtProgressBar(title = "Scanning for K", min = 0, max = length(K), width = 500)
   }
  for(i in 1:length(K)){
-   if(Sys.info()['sysname']!="Linux"){
+
+
+     if(!(Sys.info()['sysname']=="Linux") && !(Sys.info()['sysname']=="Darwin")){
     setWinProgressBar(pb, i, label=paste(round(i/length(K)*100, 0),"% done"))
      }else{
     setTxtProgressBar(pb, i, label=paste(round(i/length(K)*100, 0),"% done"))
